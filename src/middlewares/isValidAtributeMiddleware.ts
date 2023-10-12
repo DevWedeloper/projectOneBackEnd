@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 
-const validAttributes = ['health', 'strength', 'agility', 'intelligence', 'armor', 'critChance'];
+const validAttributes = ['name', 'characterType', 'health', 'strength', 'agility', 'intelligence', 'armor', 'critChance'];
 
 export function isValidAttribute(req: Request, res: Response, next: NextFunction) {
   const { attribute } = req.params;

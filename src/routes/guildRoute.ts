@@ -3,6 +3,8 @@ import {
   createGuild,
   getAllGuilds,
   getGuildById,
+  searchGuildsByName,
+  searchGuildMemberById,
   updateGuildNameById,
   updateGuildLeaderById,
   addMemberToGuildById,
@@ -17,6 +19,8 @@ const router: Router = Router();
 
 router.post("/", isAdminMiddleware, createGuild);
 router.get("/", getAllGuilds);
+router.get("/search", searchGuildsByName);
+router.get("/:id/searchMember", checkGuildExistence, searchGuildMemberById);
 router.get("/:id", getGuildById);
 router.put(
   "/name/:id",

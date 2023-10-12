@@ -14,9 +14,7 @@ export const isAdminMiddleware = (req: AuthRequest, res: Response, next: NextFun
 
   try {
     const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET) as JwtPayload;
-
     req.user = decodedToken;
-
     if (req.user?.role === 'standard' && req.method !== 'GET') {
       return res.status(403).json({ message: 'Standard users cannot perform this action.' });
     }

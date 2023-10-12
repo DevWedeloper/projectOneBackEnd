@@ -9,7 +9,7 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
 
   if (!refreshToken) {
-    return res.sendStatus(401);
+    return res.status(401).json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
   }
 
   try {
@@ -18,13 +18,13 @@ export const refreshAccessToken = async (req: Request, res: Response) => {
     const existingRefreshToken: IRefreshAccessTokenDocument | null = await RefreshToken.findOne({ userId: decoded.userId, token: refreshToken });
 
     if (!existingRefreshToken) {
-      return res.sendStatus(403);
+      return res.status(403).json({ error: 'Forbidden', message: 'Invalid or expired refresh token.' });
     }
 
-    const accessToken = jwt.sign({ userId: decoded.userId }, accessTokenSecret, { expiresIn: '5m' });
+    const accessToken = jwt.sign({ userId: decoded.userId, username: decoded.username, role: decoded.role }, accessTokenSecret, { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` });
 
-    res.json({ accessToken });
+    return res.json({ accessToken });
   } catch (error) {
-    return res.sendStatus(403);
+    return res.status(500).json({ error: 'Failed to refresh token', message: error.message });
   }
 };

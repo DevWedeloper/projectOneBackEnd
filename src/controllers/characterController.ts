@@ -16,14 +16,54 @@ export const getAllCharacters = async (req: Request, res: Response) => {
   try {
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
+    const sortBy: string = req.query.sortBy as string || 'name'; 
+    const sortOrder: string = req.query.sortOrder as string || 'asc'; 
+    const searchQuery: string = req.query.search as string || ''; 
 
-    const totalCharacters: number = await Character.countDocuments();
+    const sortCriteria: any = {};
+    sortCriteria[sortBy] = sortOrder === 'asc' ? 1 : -1;
+
+    const query: any = {}; 
+    if (searchQuery) {
+      if (!isNaN(parseInt(searchQuery))) {
+        query.$or = [
+          { name: { $regex: searchQuery, $options: 'i' } },
+          { characterType: { $regex: searchQuery, $options: 'i' } },
+          { health: { $eq: parseInt(searchQuery) } },
+          { strength: { $eq: parseInt(searchQuery) } },
+          { agility: { $eq: parseInt(searchQuery) } },
+          { intelligence: { $eq: parseInt(searchQuery) } },
+          { armor: { $eq: parseInt(searchQuery) } },
+          { critChance: { $eq: parseFloat(searchQuery) } },
+          { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
+        ];
+      } else {
+        query.$or = [
+          { name: { $regex: searchQuery, $options: 'i' } },
+          { characterType: { $regex: searchQuery, $options: 'i' } },
+          { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
+        ];
+      }
+    }
+
+    const totalCharacters: number = await Character.countDocuments(query);
     const totalPages: number = Math.ceil(totalCharacters / pageSize);
 
-    const characters: ICharacterDocument[] = await Character.find()
+    const charactersQuery = Character.find(query)
+      .sort(sortCriteria)
+      .populate({
+        path: 'guild',
+        select: '_id name leader',
+        populate: {
+          path: 'leader',
+          model: 'Character',
+          select: '_id name',
+        }
+      })
       .skip((page - 1) * pageSize)
-      .limit(pageSize)
-      .populate('guild');
+      .limit(pageSize);
+
+    const characters: ICharacterDocument[] = await charactersQuery;
 
     return res.json({
       page,
@@ -52,67 +92,49 @@ export const getCharacterById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateCharacterNameById = async (req: Request, res: Response) => {
+export const searchCharactersByName = async (req: Request, res: Response) => {
   try {
-    await updateCharacterAttributeById(req, res, 'name');
+    const searchQuery = req.query.name as string;
+    const character = await Character.find({
+      name: { $regex: searchQuery, $options: 'i' }
+    })    
+    .populate({
+      path: 'guild',
+      select: '_id name leader',
+      populate: {
+        path: 'leader',
+        model: 'Character',
+        select: '_id name',
+      }
+    });
+    
+    return res.json(character);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s name', message: error.message });
+    return res.status(500).json({ error: 'Error searching characters', message: error.message });
   }
-}
+};
 
-export const updateCharacterTypeById = async (req: Request, res: Response) => {
+export async function updateCharacterAttributeById(req: Request, res: Response) {
+  const { attribute } = req.params;
   try {
-    await updateCharacterAttributeById(req, res, 'characterType');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s characterType', message: error.message });
-  }
-}
+    const { id } = req.params;
+    const { [attribute]: attributeValue } = req.body;
 
-export const updateCharacterHealthById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'health');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s health', message: error.message });
-  }
-}
+    const updateQuery = { [attribute]: attributeValue };
 
-export const updateCharacterStrengthById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'strength');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s strength', message: error.message });
-  }
-}
+    const updatedCharacter: ICharacterDocument | null = await Character.findByIdAndUpdate(
+      id,
+      updateQuery,
+      { new: true, runValidators: true }
+    );
 
-export const updateCharacterAgilityById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'agility');
+    if (!updatedCharacter) {
+      return res.status(404).json({ error: 'Character not found' });
+    }
+    
+    return res.json({ message: `Character's ${attribute} updated successfully.`, character: updatedCharacter });
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s agility', message: error.message });
-  }
-}
-
-export const updateCharacterIntelligenceById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'intelligence');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s intelligence', message: error.message });
-  }
-}
-
-export const updateCharacterArmorById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'armor');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s armor', message: error.message });
-  }
-}
-
-export const updateCharacterCritChanceById = async (req: Request, res: Response) => {
-  try {
-    await updateCharacterAttributeById(req, res, 'critChance');
-  } catch (error) {
-    return res.status(500).json({ error: 'Failed to update character\'s critChance', message: error.message });
+    return res.status(500).json({ error: `Failed to update character's ${attribute}`, message: error.message });
   }
 }
 
@@ -140,7 +162,7 @@ export const joinGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
-    return res.json({ message: 'Joined guild successfully.', updatedCharacter });
+    return res.json({ message: 'Joined guild successfully.', character: updatedCharacter });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to join guild', message: error.message });
   }
@@ -166,7 +188,7 @@ export const leaveGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
-    return res.json({ message: 'Left guild successfully.', updatedCharacter });
+    return res.json({ message: 'Left guild successfully.', character: updatedCharacter });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to leave guild', message: error.message });
   }
@@ -210,25 +232,10 @@ export const deleteAllCharacters = async (req: Request, res: Response) => {
   }
 };
 
-async function updateCharacterAttributeById(req: Request, res: Response, attributeName: string) {
-  try {
-    const { id } = req.params;
-    const { [attributeName]: attributeValue } = req.body;
+const getGuildIdsByGuildName = async (guildName: string) => {
+  const guildSearchResults = await Guild.find({
+    name: { $regex: guildName, $options: 'i' },
+  });
 
-    const updateQuery = { [attributeName]: attributeValue };
-
-    const updatedCharacter: ICharacterDocument | null = await Character.findByIdAndUpdate(
-      id,
-      updateQuery,
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedCharacter) {
-      return res.status(404).json({ error: 'Character not found' });
-    } 
-
-    return res.json({ message: `Character's ${attributeName} updated successfully.`, character: updatedCharacter });
-  } catch (error) {
-    return res.status(500).json({ error: `Failed to update character's ${attributeName}`, message: error.message });
-  }
-}
+  return guildSearchResults.map((guild) => guild._id);
+};

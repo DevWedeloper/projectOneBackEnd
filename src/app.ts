@@ -12,6 +12,7 @@ import characterRoute from './routes/characterRoute';
 import guildRoute from './routes/guildRoute';
 import characterStatsRoute from './routes/characterStatsRoute'
 import guildStatsRoute from './routes/guildStatsRoute'
+import characterTypeRoute from './routes/characterTypeRoute'
 
 const app: Application = express();
 
@@ -42,6 +43,7 @@ app.use('/character', characterRoute);
 app.use('/guild', guildRoute);
 app.use('/characterStats', characterStatsRoute);
 app.use('/guildStats', guildStatsRoute);
+app.use('/characterTypes', characterTypeRoute);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);

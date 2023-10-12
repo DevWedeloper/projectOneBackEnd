@@ -12,11 +12,11 @@ export async function getTopCharactersByAttribute(req: Request, res: Response) {
           _id: 1,
           name: 1,
           characterType: 1,
-          totalAttribute: { $sum: [`$${attribute}`] },
+          [attribute]: { $sum: [`$${attribute}`] },
         },
       },
       {
-        $sort: { totalAttribute: -1 },
+        $sort: { [attribute]: -1 },
       },
       {
         $limit: Number(limit),

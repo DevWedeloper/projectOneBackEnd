@@ -104,7 +104,13 @@ export async function getTopWellRoundedGuilds(req: Request, res: Response) {
       },
       {
         $addFields: {
-          membersAverage: { $divide: ['$totalAttributes', { $size: '$members' }] },
+          membersAverage: { 
+            $cond: {
+              if: { $ne: [{ $size: '$members' }, 0] },
+              then: { $divide: ['$totalAttributes', { $size: '$members' }] },
+              else: 0,
+            },
+          },
         },
       },
       {

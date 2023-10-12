@@ -11,19 +11,17 @@ export async function login(req: Request, res: Response) {
   const { username, password } = req.body;
   try {
     const user: IUserDocument | null = await User.findOne({ username });
-
     if (!user || !bcrypt.compareSync(password, user.password)) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+      return res.status(401).json({ error: 'Authentication error', message: 'Invalid credentials' });
     }
 
     let refreshTokenEntry: IRefreshAccessTokenDocument | null = await RefreshToken.findOne({ userId: user._id });
-
     if (!refreshTokenEntry) {
-      const expiresInDays = 1;
-      const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
+      const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION;
+      const expiresAt = new Date(Date.now() + parseInt(expiresInDays) * 24 * 60 * 60 * 1000);
 
-      const refreshToken = jwt.sign({ userId: user._id }, refreshTokenSecret, {
-        expiresIn: `${expiresInDays}d`,
+      const refreshToken = jwt.sign({ userId: user._id, username: user.username, role: user.role }, refreshTokenSecret, {
+        expiresIn: `${expiresInDays}`,
       });
 
       refreshTokenEntry = new RefreshToken({
@@ -34,32 +32,32 @@ export async function login(req: Request, res: Response) {
       });
 
       await refreshTokenEntry.save();
-    } else {
-      const refreshTokenData: any = jwt.decode(refreshTokenEntry.token);
-      const currentTime = Math.floor(Date.now() / 1000);
+    } 
 
-      if (refreshTokenData.exp < currentTime) {
-        const expiresInDays = 1;
-        const expiresAt = new Date(Date.now() + expiresInDays * 24 * 60 * 60 * 1000);
-  
-        const newRefreshToken = jwt.sign({ userId: user._id }, refreshTokenSecret, {
-          expiresIn: `${expiresInDays}d`,
-        });
+    const refreshTokenData: any = jwt.decode(refreshTokenEntry.token);
+    const currentTime = Math.floor(Date.now() / 1000);
 
-        refreshTokenEntry.token = newRefreshToken;
-        refreshTokenEntry.expiresAt = expiresAt;
-        await refreshTokenEntry.save();
-      }
+    if (refreshTokenData.exp < currentTime) {
+      const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION;
+      const expiresAt = new Date(Date.now() + parseInt(expiresInDays) * 24 * 60 * 60 * 1000);
+
+      const newRefreshToken = jwt.sign({ userId: user._id, username: user.username, role: user.role }, refreshTokenSecret, {
+        expiresIn: `${expiresInDays}`,
+      });
+
+      refreshTokenEntry.token = newRefreshToken;
+      refreshTokenEntry.expiresAt = expiresAt;
+      await refreshTokenEntry.save();
     }
-
+    
     const accessToken = jwt.sign(
       { userId: user._id, username: user.username, role: user.role },
       accessTokenSecret,
-      { expiresIn: '5m' }
+      { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
     );
 
-    res.json({ accessToken, refreshToken: refreshTokenEntry.token });
+    return res.json({ userId: user._id, accessToken, refreshToken: refreshTokenEntry.token });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: 'Failed to login', message: error.message });
   }
 }

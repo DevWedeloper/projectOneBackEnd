@@ -15,13 +15,15 @@ export const isValidGuild = async (req: Request, res: Response, next: NextFuncti
       if (foundGuild) {
         req.body.guild = foundGuild._id;
       }
-    }
-    const foundGuildByName: IGuildDocument | null = await Guild.findOne({ name: guild });
-    if (!foundGuildByName) {
-      return res.status(500).json({ error: `Guild '${guild}' does not exist.` });
     } else {
-      req.body.guild = foundGuildByName._id;
+      const foundGuildByName: IGuildDocument | null = await Guild.findOne({ name: guild });
+      if (!foundGuildByName) {
+        return res.status(500).json({ error: `Guild '${guild}' does not exist.` });
+      } else {
+        req.body.guild = foundGuildByName._id;
+      }
     }
+
     next();
   } catch (error) {
     return res.status(500).json({ error: 'Failed to validate guild', message: error.message });

@@ -16,7 +16,7 @@ import characterTypeRoute from './routes/characterTypeRoute'
 
 const app: Application = express();
 
-const allowedOrigins = [process.env.ALLOWED_ORIGIN];
+const allowedOrigins = [process.env.ALLOWED_ORIGIN, process.env.ALLOWED_ORIGIN_VERCEL];
 const corsOptions = {
   origin: (origin, callback) => {
     if (allowedOrigins.includes(origin) || !origin) {

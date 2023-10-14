@@ -47,7 +47,7 @@ app.use('/characterTypes', characterTypeRoute);
 app.get('/hi', (req, res) => {
   res.send('Hello, this is a simple message from your API!');
 });
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
 

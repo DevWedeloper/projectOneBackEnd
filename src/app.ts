@@ -14,7 +14,7 @@ import characterStatsRoute from './routes/characterStatsRoute'
 import guildStatsRoute from './routes/guildStatsRoute'
 import characterTypeRoute from './routes/characterTypeRoute'
 
-export const app: Application = express();
+const app: Application = express();
 
 const allowedOrigins = [process.env.ALLOWED_ORIGIN, process.env.ALLOWED_ORIGIN_VERCEL];
 const corsOptions = {

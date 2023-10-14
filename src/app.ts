@@ -1,6 +1,5 @@
 import express, { Application } from 'express';
 import { connect } from 'mongoose';
-import * as functions from 'firebase-functions';
 import cron from 'node-cron';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -48,10 +47,8 @@ app.use('/characterTypes', characterTypeRoute);
 app.get('/hi', (req, res) => {
   res.send('Hello, this is a simple message from your API!');
 });
-app.listen(process.env.MY_PORT || 3000, () => {
-  console.log(`Server is running on http://localhost:${process.env.MY_PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on http://localhost:${process.env.PORT}`);
 });
 
 cron.schedule('0 0 * * *', refreshTokenCleanup);
-
-exports.api = functions.https.onRequest(app);

@@ -1,7 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { Character } from '../models/characterModel';
 
-export const checkCharacterExistence = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+export const checkCharacterExistence = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const character = await Character.findById(id);
@@ -11,7 +15,11 @@ export const checkCharacterExistence = async (req: Request, res: Response, next:
 
     req.body.character = character;
     next();
-  } catch (error: any) {
-    return res.status(500).json({ error: 'An error occurred', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'An error occurred', message: error.message });
+    }
   }
 };

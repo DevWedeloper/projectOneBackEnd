@@ -2,7 +2,11 @@ import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
 import { IGuildDocument, Guild } from '../models/guildModel';
 
-export const isValidGuild = async (req: Request, res: Response, next: NextFunction) => {
+export const isValidGuild = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void | Response> => {
   const { guild } = req.body;
   if (!guild) {
     return next();
@@ -16,16 +20,24 @@ export const isValidGuild = async (req: Request, res: Response, next: NextFuncti
         req.body.guild = foundGuild._id;
       }
     } else {
-      const foundGuildByName: IGuildDocument | null = await Guild.findOne({ name: guild });
+      const foundGuildByName: IGuildDocument | null = await Guild.findOne({
+        name: guild,
+      });
       if (!foundGuildByName) {
-        return res.status(500).json({ error: `Guild '${guild}' does not exist.` });
+        return res
+          .status(500)
+          .json({ error: `Guild '${guild}' does not exist.` });
       } else {
         req.body.guild = foundGuildByName._id;
       }
     }
 
     next();
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to validate guild', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to validate guild', message: error.message });
+    }
   }
 };

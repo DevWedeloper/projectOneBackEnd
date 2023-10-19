@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   createGuild,
   getAllGuilds,
@@ -11,42 +11,42 @@ import {
   removeMemberFromGuildById,
   deleteGuildById,
   deleteAllGuilds,
-} from "../controllers/guildController";
-import { isAdminMiddleware } from "../middlewares/isAdminMiddleware";
-import { checkGuildExistence } from "../middlewares/checkGuildExistence";
+} from '../controllers/guildController';
+import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
+import { checkGuildExistence } from '../middlewares/checkGuildExistence';
 
 const router: Router = Router();
 
-router.post("/", isAdminMiddleware, createGuild);
-router.get("/", getAllGuilds);
-router.get("/search", searchGuildsByName);
-router.get("/:id/searchMember", checkGuildExistence, searchGuildMemberById);
-router.get("/:id", getGuildById);
+router.post('/', isAdminMiddleware, createGuild);
+router.get('/', getAllGuilds);
+router.get('/search', searchGuildsByName);
+router.get('/:id/searchMember', checkGuildExistence, searchGuildMemberById);
+router.get('/:id', getGuildById);
 router.put(
-  "/name/:id",
+  '/name/:id',
   isAdminMiddleware,
   checkGuildExistence,
   updateGuildNameById
 );
 router.put(
-  "/leader/:id",
+  '/leader/:id',
   isAdminMiddleware,
   checkGuildExistence,
   updateGuildLeaderById
 );
 router.put(
-  "/addMember/:id",
+  '/addMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   addMemberToGuildById
 );
 router.put(
-  "/removeMember/:id",
+  '/removeMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   removeMemberFromGuildById
 );
-router.delete("/:id", isAdminMiddleware, checkGuildExistence, deleteGuildById);
-router.delete("/", isAdminMiddleware, deleteAllGuilds);
+router.delete('/:id', isAdminMiddleware, checkGuildExistence, deleteGuildById);
+router.delete('/', isAdminMiddleware, deleteAllGuilds);
 
 export default router;

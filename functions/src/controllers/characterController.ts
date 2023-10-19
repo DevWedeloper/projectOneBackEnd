@@ -1,49 +1,83 @@
 import { Request, Response } from 'express';
 import { Character, ICharacterDocument } from '../models/characterModel';
 import { Guild, IGuildDocument } from '../models/guildModel';
-import { joinGuild, leaveGuild, updateLeaderAndDeleteGuild, updateLeaderOrMembersGuild, isLeader, isDifferentGuild } from '../utils/guildCharacterUtils';
+import {
+  joinGuild,
+  leaveGuild,
+  updateLeaderAndDeleteGuild,
+  updateLeaderOrMembersGuild,
+  isLeader,
+  isDifferentGuild,
+} from '../utils/guildCharacterUtils';
 
-export const createCharacter = async (req: Request, res: Response) => {
+export const createCharacter = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const savedCharacter: ICharacterDocument = await Character.create(req.body);
-    return res.status(201).json({ message: 'Character created successfully', character: savedCharacter });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to create the character', message: error.message });
+    return res
+      .status(201)
+      .json({
+        message: 'Character created successfully',
+        character: savedCharacter,
+      });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to create the character',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const getAllCharacters = async (req: Request, res: Response) => {
+export const getAllCharacters = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
-    const sortBy: string = req.query.sortBy as string || 'name'; 
-    const sortOrder: string = req.query.sortOrder as string || 'asc'; 
-    const searchQuery: string = req.query.search as string || ''; 
+    const sortBy: string = (req.query.sortBy as string) || 'name';
+    const sortOrder: string = (req.query.sortOrder as string) || 'asc';
+    const searchQuery: string = (req.query.search as string) || '';
 
-    const sortCriteria: any = {};
-    sortCriteria[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    const sortCriteria: { [key: string]: 'asc' | 'desc' } = {};
+    sortCriteria[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
 
-    const query: any = {}; 
-    if (searchQuery) {
-      if (!isNaN(parseInt(searchQuery))) {
-        query.$or = [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { characterType: { $regex: searchQuery, $options: 'i' } },
-          { health: { $eq: parseInt(searchQuery) } },
-          { strength: { $eq: parseInt(searchQuery) } },
-          { agility: { $eq: parseInt(searchQuery) } },
-          { intelligence: { $eq: parseInt(searchQuery) } },
-          { armor: { $eq: parseInt(searchQuery) } },
-          { critChance: { $eq: parseFloat(searchQuery) } },
-          { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
-        ];
-      } else {
-        query.$or = [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { characterType: { $regex: searchQuery, $options: 'i' } },
-          { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
-        ];
-      }
+    const query: {
+      $or: Array<{
+        name?: { $regex: string; $options: string };
+        characterType?: { $regex: string; $options: string };
+        health?: { $eq: number };
+        strength?: { $eq: number };
+        agility?: { $eq: number };
+        intelligence?: { $eq: number };
+        armor?: { $eq: number };
+        critChance?: { $eq: number };
+        guild?: { $in: string[] };
+      }>;
+    } = {
+      $or: [
+        { name: { $regex: searchQuery, $options: 'i' } },
+        { characterType: { $regex: searchQuery, $options: 'i' } },
+        { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
+      ],
+    };
+    
+    if (searchQuery && !isNaN(Number(searchQuery))) {
+      const numericValue = Number(searchQuery);
+      query.$or.push(
+        { health: { $eq: numericValue } },
+        { strength: { $eq: numericValue } },
+        { agility: { $eq: numericValue } },
+        { intelligence: { $eq: numericValue } },
+        { armor: { $eq: numericValue } },
+        { critChance: { $eq: numericValue } }
+      );
     }
 
     const totalCharacters: number = await Character.countDocuments(query);
@@ -58,7 +92,7 @@ export const getAllCharacters = async (req: Request, res: Response) => {
           path: 'leader',
           model: 'Character',
           select: '_id name',
-        }
+        },
       })
       .skip((page - 1) * pageSize)
       .limit(pageSize);
@@ -72,49 +106,77 @@ export const getAllCharacters = async (req: Request, res: Response) => {
       totalCharacters,
       characters,
     });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve characters', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve characters',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const getCharacterById = async (req: Request, res: Response) => {
+export const getCharacterById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const character: ICharacterDocument | null = await Character.findById(id).populate('guild');
-    
+    const character: ICharacterDocument | null = await Character.findById(
+      id
+    ).populate('guild');
+
     if (!character) {
       return res.status(404).json({ error: 'Character not found' });
-    } 
+    }
 
     return res.json(character);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve the character', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve the character',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const searchCharactersByName = async (req: Request, res: Response) => {
+export const searchCharactersByName = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
     const character = await Character.find({
-      name: { $regex: searchQuery, $options: 'i' }
-    })    
-    .populate({
+      name: { $regex: searchQuery, $options: 'i' },
+    }).populate({
       path: 'guild',
       select: '_id name leader',
       populate: {
         path: 'leader',
         model: 'Character',
         select: '_id name',
-      }
+      },
     });
-    
+
     return res.json(character);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Error searching characters', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Error searching characters', message: error.message });
+    }
   }
 };
 
-export async function updateCharacterAttributeById(req: Request, res: Response) {
+export const updateCharacterAttributeById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   const { attribute } = req.params;
   try {
     const { id } = req.params;
@@ -122,37 +184,54 @@ export async function updateCharacterAttributeById(req: Request, res: Response) 
 
     const updateQuery = { [attribute]: attributeValue };
 
-    const updatedCharacter: ICharacterDocument | null = await Character.findByIdAndUpdate(
-      id,
-      updateQuery,
-      { new: true, runValidators: true }
-    );
+    const updatedCharacter: ICharacterDocument | null =
+      await Character.findByIdAndUpdate(id, updateQuery, {
+        new: true,
+        runValidators: true,
+      });
 
     if (!updatedCharacter) {
       return res.status(404).json({ error: 'Character not found' });
     }
-    
-    return res.json({ message: `Character's ${attribute} updated successfully.`, character: updatedCharacter });
-  } catch (error: any) {
-    return res.status(500).json({ error: `Failed to update character's ${attribute}`, message: error.message });
-  }
-}
 
-export const joinGuildById = async (req: Request, res: Response) => {
+    return res.json({
+      message: `Character's ${attribute} updated successfully.`,
+      character: updatedCharacter,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: `Failed to update character's ${attribute}`,
+          message: error.message,
+        });
+    }
+  }
+};
+
+export const joinGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { character, guild } = req.body;
 
     if (character.guild) {
-      const previousGuild: IGuildDocument | null = await Guild.findById(character.guild);
+      const previousGuild: IGuildDocument | null = await Guild.findById(
+        character.guild
+      );
       if (!previousGuild) {
         return res.status(404).json({ error: 'Current guild not found' });
       }
-      
+
       if (isDifferentGuild(previousGuild, guild._id.toString())) {
         await updateLeaderOrMembersGuild(previousGuild, id);
       } else {
-        return res.status(400).json({ error: 'Already a member of this guild' });
+        return res
+          .status(400)
+          .json({ error: 'Already a member of this guild' });
       }
     }
 
@@ -162,13 +241,23 @@ export const joinGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
-    return res.json({ message: 'Joined guild successfully.', character: updatedCharacter });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to join guild', message: error.message });
+    return res.json({
+      message: 'Joined guild successfully.',
+      character: updatedCharacter,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to join guild', message: error.message });
+    }
   }
 };
 
-export const leaveGuildById = async (req: Request, res: Response) => {
+export const leaveGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { character } = req.body;
@@ -177,7 +266,9 @@ export const leaveGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
-    const previousGuild: IGuildDocument | null = await Guild.findById(character.guild);
+    const previousGuild: IGuildDocument | null = await Guild.findById(
+      character.guild
+    );
     if (!previousGuild) {
       return res.status(404).json({ error: 'Current guild not found' });
     }
@@ -188,13 +279,23 @@ export const leaveGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
-    return res.json({ message: 'Left guild successfully.', character: updatedCharacter });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to leave guild', message: error.message });
+    return res.json({
+      message: 'Left guild successfully.',
+      character: updatedCharacter,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to leave guild', message: error.message });
+    }
   }
 };
 
-export const deleteCharacterById = async (req: Request, res: Response) => {
+export const deleteCharacterById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { character } = req.body;
@@ -211,13 +312,26 @@ export const deleteCharacterById = async (req: Request, res: Response) => {
     }
 
     await Character.findByIdAndDelete(id);
-    return res.json({ message: 'Character deleted successfully.', character: character });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to delete the character', message: error.message });
+    return res.json({
+      message: 'Character deleted successfully.',
+      character: character,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to delete the character',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const deleteAllCharacters = async (req: Request, res: Response) => {
+export const deleteAllCharacters = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const [characterDeletionResult, guildDeletionResult] = await Promise.all([
       Character.deleteMany({}),
@@ -227,8 +341,15 @@ export const deleteAllCharacters = async (req: Request, res: Response) => {
     return res.json({
       message: `${characterDeletionResult.deletedCount} characters and ${guildDeletionResult.deletedCount} guilds deleted successfully.`,
     });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to delete characters and guilds.', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to delete characters and guilds.',
+          message: error.message,
+        });
+    }
   }
 };
 

@@ -1,9 +1,19 @@
 import { Request, Response } from 'express';
 import { Guild, IGuildDocument } from '../models/guildModel';
 import { Character, ICharacterDocument } from '../models/characterModel';
-import { joinGuild, leaveGuild, updateLeaderAndDeleteGuild, updateLeaderOrMembersGuild, isLeader, isDifferentGuild } from '../utils/guildCharacterUtils';
+import {
+  joinGuild,
+  leaveGuild,
+  updateLeaderAndDeleteGuild,
+  updateLeaderOrMembersGuild,
+  isLeader,
+  isDifferentGuild,
+} from '../utils/guildCharacterUtils';
 
-export const createGuild = async (req: Request, res: Response) => {
+export const createGuild = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { name, leader } = req.body;
     const leaderCharacter = await Character.findById(leader);
@@ -11,7 +21,8 @@ export const createGuild = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Character not found' });
     }
 
-    const leaderHasPreviousGuild: boolean = leaderCharacter && leaderCharacter.guild ? true : false;
+    const leaderHasPreviousGuild: boolean =
+      leaderCharacter && leaderCharacter.guild ? true : false;
     if (leaderHasPreviousGuild) {
       const guild = await Guild.findById(leaderCharacter.guild);
       if (guild) {
@@ -33,37 +44,47 @@ export const createGuild = async (req: Request, res: Response) => {
       { $set: { guild: savedGuild._id } }
     );
 
-    return res.status(201).json({ message: 'Guild created successfully', guild: savedGuild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to create the guild', message: error.message });
+    return res
+      .status(201)
+      .json({ message: 'Guild created successfully', guild: savedGuild });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to create the guild', message: error.message });
+    }
   }
 };
 
-export const getAllGuilds = async (req: Request, res: Response) => {
+export const getAllGuilds = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
-    const sortBy: string = req.query.sortBy as string || 'name';
-    const sortOrder: string = req.query.sortOrder as string || 'asc';
-    const searchQuery: string = req.query.search as string || '';
+    const sortBy: string = (req.query.sortBy as string) || 'name';
+    const sortOrder: string = (req.query.sortOrder as string) || 'asc';
+    const searchQuery: string = (req.query.search as string) || '';
 
-    const sortCriteria: any = {};
-    sortCriteria[sortBy] = sortOrder === 'asc' ? 1 : -1;
+    const sortCriteria: { [key: string]: 'asc' | 'desc' } = {};
+    sortCriteria[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
 
-    const query: any = {};
-    if (searchQuery) {
-      if (!isNaN(parseInt(searchQuery))) {
-        query.$or = [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
-          { totalMembers: parseInt(searchQuery) },
-        ];
-      } else {
-        query.$or = [
-          { name: { $regex: searchQuery, $options: 'i' } },
-          { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
-        ];
-      }
+    const query: {
+      $or: Array<{
+        name?: { $regex: string; $options: string };
+        leader?: { $in: string[] };
+        totalMembers?: number;
+      }>;
+    } = {
+      $or: [
+        { name: { $regex: searchQuery, $options: 'i' } },
+        { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
+      ],
+    };
+    
+    if (searchQuery && !isNaN(parseInt(searchQuery))) {
+      query.$or.push({ totalMembers: parseInt(searchQuery) });
     }
 
     const totalGuilds: number = await Guild.countDocuments(query);
@@ -87,52 +108,91 @@ export const getAllGuilds = async (req: Request, res: Response) => {
       totalGuilds,
       guilds,
     });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve guilds', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to retrieve guilds', message: error.message });
+    }
   }
 };
 
-export const getGuildById = async (req: Request, res: Response) => {
+export const getGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const guild = await Guild.findById(id).populate('leader members', 'name _id');
+    const guild = await Guild.findById(id).populate(
+      'leader members',
+      'name _id'
+    );
     if (!guild) {
       return res.status(404).json({ error: 'Guild not found' });
     }
 
     return res.json(guild);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve the guild', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve the guild',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const searchGuildsByName = async (req: Request, res: Response) => {
+export const searchGuildsByName = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
     const guild = await Guild.find({
-      name: { $regex: searchQuery, $options: 'i' }
+      name: { $regex: searchQuery, $options: 'i' },
     });
-    
+
     return res.json(guild);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Error searching guilds', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Error searching guilds', message: error.message });
+    }
   }
 };
 
-export const searchGuildMemberById = async (req: Request, res: Response) => {
+export const searchGuildMemberById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
     const { guild } = req.body;
     const memberObjects = await Character.find({ _id: { $in: guild.members } });
-    const searchResults = memberObjects.filter(member => member.name.includes(searchQuery));
+    const searchResults = memberObjects.filter((member) =>
+      member.name.includes(searchQuery)
+    );
 
     return res.status(200).json(searchResults);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Error searching guild members', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Error searching guild members',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const updateGuildNameById = async (req: Request, res: Response) => {
+export const updateGuildNameById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { name, ...guildDataToUpdate }: Partial<IGuildDocument> = req.body;
@@ -150,27 +210,47 @@ export const updateGuildNameById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Failed to update the guild' });
     }
 
-    return res.json({ message: 'Guild name updated successfully', guild: updatedGuild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to update the guild name', message: error.message });
+    return res.json({
+      message: 'Guild name updated successfully',
+      guild: updatedGuild,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to update the guild name',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const updateGuildLeaderById = async (req: Request, res: Response) => {
+export const updateGuildLeaderById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { guild, leader, ...guildDataToUpdate } = req.body;
 
-    const newLeader:ICharacterDocument | null = await Character.findById(leader);
+    const newLeader: ICharacterDocument | null = await Character.findById(
+      leader
+    );
     if (!newLeader) {
       return res.status(404).json({ error: 'New leader not found' });
     }
 
-    const isChangingLeader:boolean = leader && leader.toString() !== guild.leader.toString();
+    const isChangingLeader: boolean =
+      leader && leader.toString() !== guild.leader.toString();
     if (isChangingLeader) {
-      const isLeaderNotMemberOfGuild:boolean = !newLeader.guild || isDifferentGuild(newLeader.guild as IGuildDocument, id);
+      const isLeaderNotMemberOfGuild: boolean =
+        !newLeader.guild ||
+        isDifferentGuild(newLeader.guild as IGuildDocument, id);
       if (isLeaderNotMemberOfGuild) {
-        return res.status(400).json({ error: 'New leader must be a member of the guild' });
+        return res
+          .status(400)
+          .json({ error: 'New leader must be a member of the guild' });
       }
 
       const previousLeader = await Character.findById(guild.leader);
@@ -198,13 +278,26 @@ export const updateGuildLeaderById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Failed to update the guild' });
     }
 
-    return res.json({ message: 'Guild leader updated successfully', guild: updatedGuild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to update the guild leader', message: error.message });
+    return res.json({
+      message: 'Guild leader updated successfully',
+      guild: updatedGuild,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to update the guild leader',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const addMemberToGuildById = async (req: Request, res: Response) => {
+export const addMemberToGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { guild, member } = req.body;
@@ -214,11 +307,19 @@ export const addMemberToGuildById = async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'Member not found' });
     }
 
-    if (newMember.guild && !isDifferentGuild(newMember.guild as IGuildDocument, id)) {
-      return res.status(400).json({ error: 'Member is already a member or leader of the guild' });
+    if (
+      newMember.guild &&
+      !isDifferentGuild(newMember.guild as IGuildDocument, id)
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Member is already a member or leader of the guild' });
     }
-    
-    if (newMember.guild && isDifferentGuild(newMember.guild as IGuildDocument, id)) {
+
+    if (
+      newMember.guild &&
+      isDifferentGuild(newMember.guild as IGuildDocument, id)
+    ) {
       const previousGuild = await Guild.findById(newMember.guild);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Guild not found' });
@@ -228,22 +329,34 @@ export const addMemberToGuildById = async (req: Request, res: Response) => {
     }
 
     await joinGuild(newMember._id, guild);
-    const updatedGuild = await Guild.findById(id)
-      .populate({
-        path: 'leader members',
-        select: '_id name',
-      });
+    const updatedGuild = await Guild.findById(id).populate({
+      path: 'leader members',
+      select: '_id name',
+    });
     if (!updatedGuild) {
       return res.status(404).json({ error: 'Guild not found' });
     }
 
-    return res.json({ message: 'Member added to guild successfully', guild: updatedGuild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to add member to the guild', message: error.message });
+    return res.json({
+      message: 'Member added to guild successfully',
+      guild: updatedGuild,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to add member to the guild',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const removeMemberFromGuildById = async (req: Request, res: Response) => {
+export const removeMemberFromGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { id } = req.params;
     const { guild, member } = req.body;
@@ -253,31 +366,51 @@ export const removeMemberFromGuildById = async (req: Request, res: Response) => 
       return res.status(404).json({ error: 'Member not found' });
     }
 
-    if (!newMember.guild || newMember.guild && isDifferentGuild(newMember.guild as IGuildDocument, id)) {
-      return res.status(400).json({ error: 'Member is not a part of the guild' });
+    if (
+      !newMember.guild ||
+      (newMember.guild &&
+        isDifferentGuild(newMember.guild as IGuildDocument, id))
+    ) {
+      return res
+        .status(400)
+        .json({ error: 'Member is not a part of the guild' });
     }
 
     if (isLeader(guild, newMember._id.toString())) {
-      return res.status(403).json({ error: 'Cannot kick the leader of the guild' });
+      return res
+        .status(403)
+        .json({ error: 'Cannot kick the leader of the guild' });
     }
 
     await leaveGuild(newMember._id);
-    const updatedGuild = await Guild.findById(id)
-      .populate({
-        path: 'leader members',
-        select: '_id name',
-      });
+    const updatedGuild = await Guild.findById(id).populate({
+      path: 'leader members',
+      select: '_id name',
+    });
     if (!updatedGuild) {
       return res.status(404).json({ error: 'Guild not found' });
     }
 
-    return res.json({ message: 'Member removed from guild successfully', guild: updatedGuild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to add member to the guild', message: error.message });
+    return res.json({
+      message: 'Member removed from guild successfully',
+      guild: updatedGuild,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to add member to the guild',
+          message: error.message,
+        });
+    }
   }
 };
 
-export const deleteGuildById = async (req: Request, res: Response) => {
+export const deleteGuildById = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { guild } = req.body;
     const leaderCharacter = await Character.findById(guild.leader);
@@ -287,23 +420,36 @@ export const deleteGuildById = async (req: Request, res: Response) => {
 
     await updateLeaderAndDeleteGuild(guild);
     return res.json({ message: 'Guild deleted successfully', guild: guild });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to delete the guild', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({ error: 'Failed to delete the guild', message: error.message });
+    }
   }
 };
 
-export const deleteAllGuilds = async (req: Request, res: Response) => {
+export const deleteAllGuilds = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const guilds = await Guild.find({});
-    const deletePromises = guilds.map(guild => updateLeaderAndDeleteGuild(guild));
+    const deletePromises = guilds.map((guild) =>
+      updateLeaderAndDeleteGuild(guild)
+    );
     await Promise.all(deletePromises);
-    return res.json({ message: `${guilds.length} guilds deleted successfully.` });
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to delete guilds' });
+    return res.json({
+      message: `${guilds.length} guilds deleted successfully.`,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({ error: 'Failed to delete guilds' });
+    }
   }
 };
 
-const getLeaderIdsByCharacterName = async (leaderName: string) => {
+const getLeaderIdsByCharacterName = async (leaderName: string): Promise<string[]> => {
   const leaderSearchResults = await Character.find({
     name: { $regex: leaderName, $options: 'i' },
   }).distinct('_id');

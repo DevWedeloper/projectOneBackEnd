@@ -1,7 +1,10 @@
 import { Request, Response } from 'express';
 import { Character } from '../models/characterModel';
 
-export async function getTopCharactersByAttribute(req: Request, res: Response) {
+export const getTopCharactersByAttribute = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   const { attribute } = req.params;
   try {
     const { limit = 5 } = req.query;
@@ -24,12 +27,22 @@ export async function getTopCharactersByAttribute(req: Request, res: Response) {
     ]);
 
     return res.json(characters);
-  } catch (error: any) {
-    return res.status(500).json({ error: `Failed to retrieve characters with highest ${attribute}`, message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: `Failed to retrieve characters with highest ${attribute}`,
+          message: error.message,
+        });
+    }
   }
-}
+};
 
-export async function getTopWellRoundedCharacters(req: Request, res: Response) {
+export const getTopWellRoundedCharacters = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { limit = 5 } = req.query;
 
@@ -67,12 +80,22 @@ export async function getTopWellRoundedCharacters(req: Request, res: Response) {
     ]);
 
     return res.json(characters);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve well-rounded characters', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve well-rounded characters',
+          message: error.message,
+        });
+    }
   }
-}
+};
 
-export async function getAverageCharacterStats(req: Request, res: Response) {
+export const getAverageCharacterStats = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const averageStats = await Character.aggregate([
       {
@@ -90,15 +113,25 @@ export async function getAverageCharacterStats(req: Request, res: Response) {
 
     if (averageStats.length === 0) {
       throw new Error('No characters found');
-    } 
+    }
 
     return res.json(averageStats[0]);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve average character stats', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve average character stats',
+          message: error.message,
+        });
+    }
   }
-}
+};
 
-export async function getCharacterDistributionByType(req: Request, res: Response) {
+export const getCharacterDistributionByType = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const characterDistribution = await Character.aggregate([
       {
@@ -113,7 +146,14 @@ export async function getCharacterDistributionByType(req: Request, res: Response
     ]);
 
     return res.json(characterDistribution);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve character distribution by type', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve character distribution by type',
+          message: error.message,
+        });
+    }
   }
-}
+};

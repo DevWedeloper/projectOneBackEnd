@@ -1,12 +1,23 @@
 import { Request, Response } from 'express';
 import { Guild } from '../models/guildModel';
 
-export async function getTopGuildsByAttribute(req: Request, res: Response) {
+export const getTopGuildsByAttribute = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
     const { limit = 5 } = req.query;
 
-    const projection: any = {
+    interface Projection {
+      _id: number;
+      name: number;
+      totalMembers: number;
+      critChances?: string;
+      combinedAttribute?: { $sum: string };
+    }
+
+    const projection: Projection = {
       _id: 1,
       name: 1,
       totalMembers: 1,
@@ -32,7 +43,10 @@ export async function getTopGuildsByAttribute(req: Request, res: Response) {
       },
       {
         $addFields: {
-          combinedAttribute: attribute === 'critChance' ? { $avg: '$critChances' } : '$combinedAttribute',
+          combinedAttribute:
+            attribute === 'critChance'
+              ? { $avg: '$critChances' }
+              : '$combinedAttribute',
         },
       },
       {
@@ -40,7 +54,10 @@ export async function getTopGuildsByAttribute(req: Request, res: Response) {
           _id: 1,
           name: 1,
           totalMembers: 1,
-          combinedAttribute: attribute === 'critChance' ? { $round: ['$combinedAttribute', 2] } : '$combinedAttribute',
+          combinedAttribute:
+            attribute === 'critChance'
+              ? { $round: ['$combinedAttribute', 2] }
+              : '$combinedAttribute',
         },
       },
       {
@@ -52,12 +69,22 @@ export async function getTopGuildsByAttribute(req: Request, res: Response) {
     ]);
 
     return res.json(topGuilds);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve top guilds by attribute', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve top guilds by attribute',
+          message: error.message,
+        });
+    }
   }
-}
+};
 
-export async function getTopWellRoundedGuilds(req: Request, res: Response) {
+export const getTopWellRoundedGuilds = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   const { limit = 5 } = req.query;
 
   try {
@@ -104,7 +131,7 @@ export async function getTopWellRoundedGuilds(req: Request, res: Response) {
       },
       {
         $addFields: {
-          membersAverage: { 
+          membersAverage: {
             $cond: {
               if: { $ne: [{ $size: '$members' }, 0] },
               then: { $divide: ['$totalAttributes', { $size: '$members' }] },
@@ -128,19 +155,38 @@ export async function getTopWellRoundedGuilds(req: Request, res: Response) {
         $limit: Number(limit),
       },
     ]);
-  
-    return res.json(guilds);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve top well-rounded guilds', message: error.message });
-  }
-}
 
-export async function getTopGuildsByAverageAttribute(req: Request, res: Response) {
+    return res.json(guilds);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve top well-rounded guilds',
+          message: error.message,
+        });
+    }
+  }
+};
+
+export const getTopGuildsByAverageAttribute = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
     const { limit = 5 } = req.query;
-  
-    const projection: any = {
+
+    interface Projection {
+      _id: number;
+      name: number;
+      totalMembers: number;
+      averageAttribute?: {
+        $round: (number | { $avg: string })[];
+      };
+    }
+
+    const projection: Projection = {
       _id: 1,
       name: 1,
       totalMembers: 1,
@@ -168,7 +214,14 @@ export async function getTopGuildsByAverageAttribute(req: Request, res: Response
     ]);
 
     return res.json(topGuilds);
-  } catch (error: any) {
-    return res.status(500).json({ error: 'Failed to retrieve top guilds by average attribute', message: error.message });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res
+        .status(500)
+        .json({
+          error: 'Failed to retrieve top guilds by average attribute',
+          message: error.message,
+        });
+    }
   }
-}
+};

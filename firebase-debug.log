@@ -1,0 +1,247 @@
+[debug] [2023-10-19T13:18:27.306Z] ----------------------------------------------------------------------
+[debug] [2023-10-19T13:18:27.308Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ACER N5\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2023-10-19T13:18:27.309Z] CLI Version:   12.7.0
+[debug] [2023-10-19T13:18:27.309Z] Platform:      win32
+[debug] [2023-10-19T13:18:27.309Z] Node Version:  v18.16.1
+[debug] [2023-10-19T13:18:27.310Z] Time:          Thu Oct 19 2023 21:18:27 GMT+0800 (China Standard Time)
+[debug] [2023-10-19T13:18:27.310Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-10-19T13:18:27.411Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-10-19T13:18:27.412Z] > authorizing via signed-in user (vicnathangabrielle@gmail.com)
+[debug] [2023-10-19T13:18:27.412Z] [iam] checking project tactile-runway-402007 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-10-19T13:18:27.414Z] > refreshing access token with scopes: []
+[debug] [2023-10-19T13:18:27.416Z] >>> [apiv2][query] POST https://www.googleapis.com/oauth2/v3/token [none]
+[debug] [2023-10-19T13:18:27.417Z] >>> [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-10-19T13:18:27.631Z] <<< [apiv2][status] POST https://www.googleapis.com/oauth2/v3/token 200
+[debug] [2023-10-19T13:18:27.631Z] <<< [apiv2][body] POST https://www.googleapis.com/oauth2/v3/token [omitted]
+[debug] [2023-10-19T13:18:27.644Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions [none]
+[debug] [2023-10-19T13:18:27.644Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:18:27.644Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-19T13:18:28.538Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions 200
+[debug] [2023-10-19T13:18:28.538Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-19T13:18:28.539Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-10-19T13:18:28.539Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-10-19T13:18:29.485Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2023-10-19T13:18:29.486Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'tactile-runway-402007'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] +  functions: Finished running predeploy script. 
+[debug] [2023-10-19T13:18:41.954Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 [none]
+[debug] [2023-10-19T13:18:42.316Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 200
+[debug] [2023-10-19T13:18:42.316Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 {"projectId":"tactile-runway-402007","projectNumber":"629280809364","displayName":"projectOneBackEnd","name":"projects/tactile-runway-402007","resources":{"hostingSite":"tactile-runway-402007"},"state":"ACTIVE","etag":"1_8ef9c41c-348a-4f92-9032-234ff1fb9400"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2023-10-19T13:18:42.319Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com [none]
+[debug] [2023-10-19T13:18:42.319Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:18:42.320Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com [none]
+[debug] [2023-10-19T13:18:42.320Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:18:42.321Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com [none]
+[debug] [2023-10-19T13:18:42.321Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:18:42.322Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com [none]
+[debug] [2023-10-19T13:18:42.322Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:18:43.566Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com 200
+[debug] [2023-10-19T13:18:43.566Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2023-10-19T13:18:43.568Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com 200
+[debug] [2023-10-19T13:18:43.568Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2023-10-19T13:18:43.568Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com 200
+[debug] [2023-10-19T13:18:43.568Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2023-10-19T13:18:43.585Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com 200
+[debug] [2023-10-19T13:18:43.585Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2023-10-19T13:18:43.586Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig [none]
+[debug] [2023-10-19T13:18:43.946Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig 200
+[debug] [2023-10-19T13:18:43.946Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig {"projectId":"tactile-runway-402007","storageBucket":"tactile-runway-402007.appspot.com"}
+[debug] [2023-10-19T13:18:43.947Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs [none]
+[debug] [2023-10-19T13:18:45.126Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs 200
+[debug] [2023-10-19T13:18:45.126Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs {}
+[debug] [2023-10-19T13:18:45.128Z] Validating nodejs source
+[debug] [2023-10-19T13:18:47.851Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "nodemon --exec ts-node src/index.ts",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.1",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.51.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "firebase-functions-test": "^3.1.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.0",
+    "unique-username-generator": "^1.2.0"
+  },
+  "private": true
+}
+[debug] [2023-10-19T13:18:47.851Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2023-10-19T13:18:47.853Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-10-19T13:18:47.863Z] Found firebase-functions binary at 'C:\GitHub\projectOneBackEnd\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8163
+
+[info] Server is running on http://localhost:3000
+
+[debug] [2023-10-19T13:18:49.134Z] Got response from /__/functions.yaml {"endpoints":{"api":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"api"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[info] DB connected
+
+[info] shutdown requested via /__/quitquitquit
+
+[info] DB connected
+
+[debug] [2023-10-19T13:18:59.159Z] Failed to validate key PORT: Error: Key PORT is reserved for internal use.
+[error] Error: Failed to load environment variables from .env.:
+[error] - Error Key PORT is reserved for internal use.
+[debug] [2023-10-19T13:19:23.415Z] ----------------------------------------------------------------------
+[debug] [2023-10-19T13:19:23.417Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\ACER N5\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy --only functions
+[debug] [2023-10-19T13:19:23.417Z] CLI Version:   12.7.0
+[debug] [2023-10-19T13:19:23.418Z] Platform:      win32
+[debug] [2023-10-19T13:19:23.418Z] Node Version:  v18.16.1
+[debug] [2023-10-19T13:19:23.419Z] Time:          Thu Oct 19 2023 21:19:23 GMT+0800 (China Standard Time)
+[debug] [2023-10-19T13:19:23.419Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-10-19T13:19:23.510Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-10-19T13:19:23.511Z] > authorizing via signed-in user (vicnathangabrielle@gmail.com)
+[debug] [2023-10-19T13:19:23.511Z] [iam] checking project tactile-runway-402007 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]
+[debug] [2023-10-19T13:19:23.514Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions [none]
+[debug] [2023-10-19T13:19:23.514Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:19:23.515Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-19T13:19:24.455Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions 200
+[debug] [2023-10-19T13:19:24.455Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/tactile-runway-402007:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get"]}
+[debug] [2023-10-19T13:19:24.456Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2023-10-19T13:19:24.456Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2023-10-19T13:19:25.310Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2023-10-19T13:19:25.310Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/tactile-runway-402007/serviceAccounts/tactile-runway-402007@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[info] 
+[info] === Deploying to 'tactile-runway-402007'...
+[info] 
+[info] i  deploying functions 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] +  functions: Finished running predeploy script. 
+[debug] [2023-10-19T13:19:36.584Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 [none]
+[debug] [2023-10-19T13:19:37.052Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 200
+[debug] [2023-10-19T13:19:37.052Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007 {"projectId":"tactile-runway-402007","projectNumber":"629280809364","displayName":"projectOneBackEnd","name":"projects/tactile-runway-402007","resources":{"hostingSite":"tactile-runway-402007"},"state":"ACTIVE","etag":"1_8ef9c41c-348a-4f92-9032-234ff1fb9400"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2023-10-19T13:19:37.056Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com [none]
+[debug] [2023-10-19T13:19:37.056Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:19:37.057Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com [none]
+[debug] [2023-10-19T13:19:37.057Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:19:37.058Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com [none]
+[debug] [2023-10-19T13:19:37.058Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:19:37.059Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com [none]
+[debug] [2023-10-19T13:19:37.059Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com x-goog-quota-user=projects/tactile-runway-402007
+[debug] [2023-10-19T13:19:38.301Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com 200
+[debug] [2023-10-19T13:19:38.302Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2023-10-19T13:19:38.335Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com 200
+[debug] [2023-10-19T13:19:38.336Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudfunctions.googleapis.com [omitted]
+[info] +  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2023-10-19T13:19:38.375Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com 200
+[debug] [2023-10-19T13:19:38.375Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/artifactregistry.googleapis.com [omitted]
+[info] +  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2023-10-19T13:19:38.388Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com 200
+[debug] [2023-10-19T13:19:38.388Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/tactile-runway-402007/services/cloudbuild.googleapis.com [omitted]
+[info] +  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2023-10-19T13:19:38.388Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig [none]
+[debug] [2023-10-19T13:19:38.846Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig 200
+[debug] [2023-10-19T13:19:38.846Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/tactile-runway-402007/adminSdkConfig {"projectId":"tactile-runway-402007","storageBucket":"tactile-runway-402007.appspot.com"}
+[debug] [2023-10-19T13:19:38.846Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs [none]
+[debug] [2023-10-19T13:19:39.443Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs 200
+[debug] [2023-10-19T13:19:39.443Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/tactile-runway-402007/configs {}
+[debug] [2023-10-19T13:19:39.446Z] Validating nodejs source
+[debug] [2023-10-19T13:19:41.366Z] > [functions] package.json contents: {
+  "name": "functions",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "nodemon --exec ts-node src/index.ts",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "lib/index.js",
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0",
+    "bcrypt": "^5.1.0",
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.3.1",
+    "jsonwebtoken": "^9.0.1",
+    "mongoose": "^7.4.1",
+    "node-cron": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/express": "^4.17.17",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@typescript-eslint/eslint-plugin": "^6.8.0",
+    "@typescript-eslint/parser": "^6.8.0",
+    "eslint": "^8.51.0",
+    "eslint-plugin-import": "^2.28.1",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "firebase-functions-test": "^3.1.0",
+    "nodemon": "^3.0.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.0",
+    "unique-username-generator": "^1.2.0"
+  },
+  "private": true
+}
+[debug] [2023-10-19T13:19:41.367Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2023-10-19T13:19:41.368Z] Could not find functions.yaml. Must use http discovery
+[debug] [2023-10-19T13:19:41.376Z] Found firebase-functions binary at 'C:\GitHub\projectOneBackEnd\functions\node_modules\.bin\firebase-functions'
+[info] Serving at port 8329
+
+[debug] [2023-10-19T13:19:42.507Z] Got response from /__/functions.yaml {"endpoints":{"api":{"platform":"gcfv1","availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"serviceAccountEmail":null,"vpc":null,"httpsTrigger":{},"entryPoint":"api"}},"specVersion":"v1alpha1","requiredAPIs":[]}
+[info] shutdown requested via /__/quitquitquit
+
+[info] DB connected
+
+[debug] [2023-10-19T13:19:52.526Z] Failed to validate key PORT: Error: Key PORT is reserved for internal use.
+[error] Error: Failed to load environment variables from .env.:
+[error] - Error Key PORT is reserved for internal use.

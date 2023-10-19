@@ -5,7 +5,7 @@ import { joinGuild, leaveGuild, updateLeaderAndDeleteGuild, updateLeaderOrMember
 
 export const createCharacter = async (req: Request, res: Response) => {
   try {
-    let savedCharacter: ICharacterDocument = await Character.create(req.body);
+    const savedCharacter: ICharacterDocument = await Character.create(req.body);
     return res.status(201).json({ message: 'Character created successfully', character: savedCharacter });
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to create the character', message: error.message });
@@ -166,7 +166,7 @@ export const joinGuildById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to join guild', message: error.message });
   }
-}
+};
 
 export const leaveGuildById = async (req: Request, res: Response) => {
   try {
@@ -192,7 +192,7 @@ export const leaveGuildById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to leave guild', message: error.message });
   }
-}
+};
 
 export const deleteCharacterById = async (req: Request, res: Response) => {
   try {

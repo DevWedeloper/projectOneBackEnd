@@ -1,7 +1,7 @@
 import { Character } from '../models/characterModel';
 import { Guild } from '../models/guildModel';
 import mongoose, { connect } from 'mongoose';
-import { generateUsername } from "unique-username-generator";
+import { generateUsername } from 'unique-username-generator';
 
 connect(process.env.DB_URL!)
   .then(async () => {
@@ -28,7 +28,7 @@ const generateRandomGuild = async () => {
       name: generateUsername(),
       leader: randomLeader._id,
       totalMembers: 1,
-    }
+    };
 
     const savedGuild = await Guild.create(guildData);
     console.log('Guild created successfully:', savedGuild);

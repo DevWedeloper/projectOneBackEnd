@@ -1,5 +1,5 @@
-import { ICharacterDocument, Character } from "../models/characterModel";
-import { Guild, IGuildDocument } from "../models/guildModel";
+import { ICharacterDocument, Character } from '../models/characterModel';
+import { Guild, IGuildDocument } from '../models/guildModel';
 
 export const joinGuild = async (characterId: string, guildId: IGuildDocument) => {
   try {
@@ -54,7 +54,7 @@ export const updateLeaderAndDeleteGuild = async (guild: IGuildDocument) => {
   } catch (error: any) {
     throw new Error('Failed to remove all members and delete guild:' + error.message);
   }
-}
+};
 
 export const updateLeaderOrMembersGuild = async (guild: IGuildDocument, memberId: string) => {
   try {

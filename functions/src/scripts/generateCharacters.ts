@@ -1,7 +1,7 @@
 import { Character } from '../models/characterModel';
 import { CharacterType } from '../models/characterTypeModel';
 import mongoose, { connect } from 'mongoose';
-import { generateUsername } from "unique-username-generator";
+import { generateUsername } from 'unique-username-generator';
 
 connect(process.env.DB_URL!)
   .then(async () => {

@@ -24,9 +24,9 @@ export const createGuild = async (req: Request, res: Response) => {
       name,
       leader,
       totalMembers,
-    }
+    };
 
-    let savedGuild = await Guild.create(guildData);
+    const savedGuild = await Guild.create(guildData);
 
     await Character.findOneAndUpdate(
       { _id: leaderCharacter._id },
@@ -130,7 +130,7 @@ export const searchGuildMemberById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Error searching guild members', message: error.message });
   }
-}
+};
 
 export const updateGuildNameById = async (req: Request, res: Response) => {
   try {
@@ -154,7 +154,7 @@ export const updateGuildNameById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to update the guild name', message: error.message });
   }
-}
+};
 
 export const updateGuildLeaderById = async (req: Request, res: Response) => {
   try {
@@ -202,7 +202,7 @@ export const updateGuildLeaderById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to update the guild leader', message: error.message });
   }
-}
+};
 
 export const addMemberToGuildById = async (req: Request, res: Response) => {
   try {
@@ -241,7 +241,7 @@ export const addMemberToGuildById = async (req: Request, res: Response) => {
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to add member to the guild', message: error.message });
   }
-}
+};
 
 export const removeMemberFromGuildById = async (req: Request, res: Response) => {
   try {
@@ -258,7 +258,7 @@ export const removeMemberFromGuildById = async (req: Request, res: Response) => 
     }
 
     if (isLeader(guild, newMember._id.toString())) {
-      return res.status(403).json({ error: `Cannot kick the leader of the guild` });
+      return res.status(403).json({ error: 'Cannot kick the leader of the guild' });
     }
 
     await leaveGuild(newMember._id);
@@ -275,7 +275,7 @@ export const removeMemberFromGuildById = async (req: Request, res: Response) => 
   } catch (error: any) {
     return res.status(500).json({ error: 'Failed to add member to the guild', message: error.message });
   }
-}
+};
 
 export const deleteGuildById = async (req: Request, res: Response) => {
   try {

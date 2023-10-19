@@ -54,7 +54,7 @@ app.use('/guildStats', guildStatsRoute);
 app.use('/characterTypes', characterTypeRoute);
 
 // app.listen(3000, () => {
-//   console.log(`Server is running on http://localhost:3000`);
+//   console.log('Server is running on http://localhost:3000');
 // });
 // cron.schedule('0 0 * * *', refreshTokenCleanup);
 

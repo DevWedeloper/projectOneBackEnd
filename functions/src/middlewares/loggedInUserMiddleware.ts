@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 
 interface AuthRequest extends Request {
@@ -6,21 +6,27 @@ interface AuthRequest extends Request {
   authRole: 'admin' | 'standard';
 }
 
-export const loggedInUserMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const loggedInUserMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void | Response> => {
   try {
     const authReq = req as AuthRequest;
     const token = req.header('Authorization')?.split(' ')[1];
     if (!token) {
       return res.status(401).json({ error: 'Authentication required' });
     }
-  
-    const decodedToken: any = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string);
+
+    const decodedToken = jwt.verify(
+      token,
+      process.env.ACCESS_TOKEN_SECRET!
+    ) as JwtPayload;
     authReq.authUserId = decodedToken.userId;
     authReq.authRole = decodedToken.role;
-    
+
     next();
   } catch (error) {
     return res.status(403).json({ error: 'Invalid token' });
   }
-  return undefined;
 };

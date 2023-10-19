@@ -32,8 +32,10 @@ const generateRandomGuild = async () => {
 
     const savedGuild = await Guild.create(guildData);
     console.log('Guild created successfully:', savedGuild);
-  } catch (error: any) {
-    console.error('Failed to create the guild:', error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error('Failed to create the guild:', error.message);
+    }
   }
 };
 

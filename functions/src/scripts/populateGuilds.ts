@@ -11,7 +11,7 @@ connect(process.env.DB_URL!)
   })
   .catch((err) => {
     console.error('Error connecting to DB:', err);
-});
+  });
 
 const populateGuildsWithCharacters = async () => {
   try {
@@ -27,18 +27,31 @@ const populateGuildsWithCharacters = async () => {
         const randomGuild = guilds[Math.floor(Math.random() * guilds.length)];
         try {
           await joinGuild(character._id.toString(), randomGuild._id);
-          console.log(`Character ${character.name} joined guild ${randomGuild.name}`);
-        } catch (error: any) {
-          if (error.message === 'Failed to join guild') {
-            console.log(`Skipped joining guild ${randomGuild.name} due to member limit.`);
-            guilds.splice(guilds.indexOf(randomGuild), 1);
-          } else {
-            console.error(`Some other error: ${randomGuild.name}: ${error.message}`);
+          console.log(
+            `Character ${character.name} joined guild ${randomGuild.name}`
+          );
+        } catch (error) {
+          if (error instanceof Error) {
+            if (error.message === 'Failed to join guild') {
+              console.log(
+                `Skipped joining guild ${randomGuild.name} due to member limit.`
+              );
+              guilds.splice(guilds.indexOf(randomGuild), 1);
+            } else {
+              console.error(
+                `Some other error: ${randomGuild.name}: ${error.message}`
+              );
+            }
           }
         }
       }
     }
-  } catch (error: any) {
-    console.error('Failed to populate guilds with characters:', error.message);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(
+        'Failed to populate guilds with characters:',
+        error.message
+      );
+    }
   }
 };

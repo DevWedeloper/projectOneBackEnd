@@ -7,15 +7,23 @@ interface IRefreshAccessToken {
   expiresAt: Date;
 }
 
-export interface IRefreshAccessTokenDocument extends IRefreshAccessToken, Document {}
+export interface IRefreshAccessTokenDocument
+  extends IRefreshAccessToken,
+    Document {}
 
 interface IRefreshAccessTokenModel extends Model<IRefreshAccessTokenDocument> {}
 
-const RefreshTokenSchema: Schema<IRefreshAccessTokenDocument, IRefreshAccessTokenModel> = new Schema({
+const RefreshTokenSchema: Schema<
+  IRefreshAccessTokenDocument,
+  IRefreshAccessTokenModel
+> = new Schema({
   userId: { type: Schema.Types.ObjectId, required: true },
   username: { type: String, required: true },
   token: { type: String, required: true },
   expiresAt: { type: Date, required: true },
 });
 
-export const RefreshToken: IRefreshAccessTokenModel = model<IRefreshAccessTokenDocument, IRefreshAccessTokenModel>('RefreshToken', RefreshTokenSchema);
+export const RefreshToken: IRefreshAccessTokenModel = model<
+  IRefreshAccessTokenDocument,
+  IRefreshAccessTokenModel
+>('RefreshToken', RefreshTokenSchema);

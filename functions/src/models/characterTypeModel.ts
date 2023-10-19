@@ -8,8 +8,12 @@ export interface ICharacterTypeDocument extends ICharacterType, Document {}
 
 interface ICharacterTypeModel extends Model<ICharacterTypeDocument> {}
 
-const characterTypeSchema: Schema<ICharacterTypeDocument, ICharacterTypeModel> = new Schema({
-  typeName: { type: String, required: true, unique: true }
-});
+const characterTypeSchema: Schema<ICharacterTypeDocument, ICharacterTypeModel> =
+  new Schema({
+    typeName: { type: String, required: true, unique: true },
+  });
 
-export const CharacterType: ICharacterTypeModel = model<ICharacterTypeDocument, ICharacterTypeModel>('CharacterType', characterTypeSchema);
+export const CharacterType: ICharacterTypeModel = model<
+  ICharacterTypeDocument,
+  ICharacterTypeModel
+>('CharacterType', characterTypeSchema);

@@ -17,16 +17,21 @@ export interface ICharacterDocument extends ICharacter, Document {}
 
 interface ICharacterModel extends Model<ICharacterDocument> {}
 
-const characterSchema: Schema<ICharacterDocument, ICharacterModel> = new Schema({
-  name: { type: String, required: true, unique: true },
-  characterType: { type: String, required: true },
-  health: { type: Number, required: true, min: 1000, max: 10000 },
-  strength: { type: Number, required: true, min: 1, max: 100 },
-  agility: { type: Number, required: true, min: 1, max: 100 },
-  intelligence: { type: Number, required: true, min: 1, max: 100 },
-  armor: { type: Number, required: true, min: 1, max: 100 },
-  critChance: { type: Number, required: true, min: 0.01, max: 1 },
-  guild: { type: Schema.Types.ObjectId, ref: 'Guild', default: null },
-});
+const characterSchema: Schema<ICharacterDocument, ICharacterModel> = new Schema(
+  {
+    name: { type: String, required: true, unique: true },
+    characterType: { type: String, required: true },
+    health: { type: Number, required: true, min: 1000, max: 10000 },
+    strength: { type: Number, required: true, min: 1, max: 100 },
+    agility: { type: Number, required: true, min: 1, max: 100 },
+    intelligence: { type: Number, required: true, min: 1, max: 100 },
+    armor: { type: Number, required: true, min: 1, max: 100 },
+    critChance: { type: Number, required: true, min: 0.01, max: 1 },
+    guild: { type: Schema.Types.ObjectId, ref: 'Guild', default: null },
+  }
+);
 
-export const Character: ICharacterModel = model<ICharacterDocument, ICharacterModel>('Character', characterSchema);
+export const Character: ICharacterModel = model<
+  ICharacterDocument,
+  ICharacterModel
+>('Character', characterSchema);

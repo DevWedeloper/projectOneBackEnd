@@ -82,7 +82,7 @@ export const getAllGuilds = async (
         { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
       ],
     };
-    
+
     if (searchQuery && !isNaN(parseInt(searchQuery))) {
       query.$or.push({ totalMembers: parseInt(searchQuery) });
     }
@@ -134,12 +134,10 @@ export const getGuildById = async (
     return res.json(guild);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve the guild',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve the guild',
+        message: error.message,
+      });
     }
   }
 };
@@ -179,12 +177,10 @@ export const searchGuildMemberById = async (
     return res.status(200).json(searchResults);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Error searching guild members',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Error searching guild members',
+        message: error.message,
+      });
     }
   }
 };
@@ -200,7 +196,7 @@ export const updateGuildNameById = async (
     const updatedGuild = await Guild.findByIdAndUpdate(
       id,
       { ...guildDataToUpdate, name: name },
-      { new: true }
+      { new: true, runValidators: true }
     ).populate({
       path: 'leader members',
       select: '_id name',
@@ -216,12 +212,10 @@ export const updateGuildNameById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to update the guild name',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to update the guild name',
+        message: error.message,
+      });
     }
   }
 };
@@ -284,12 +278,10 @@ export const updateGuildLeaderById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to update the guild leader',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to update the guild leader',
+        message: error.message,
+      });
     }
   }
 };
@@ -343,12 +335,10 @@ export const addMemberToGuildById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to add member to the guild',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to add member to the guild',
+        message: error.message,
+      });
     }
   }
 };
@@ -397,12 +387,10 @@ export const removeMemberFromGuildById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to add member to the guild',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to add member to the guild',
+        message: error.message,
+      });
     }
   }
 };
@@ -449,7 +437,9 @@ export const deleteAllGuilds = async (
   }
 };
 
-const getLeaderIdsByCharacterName = async (leaderName: string): Promise<string[]> => {
+const getLeaderIdsByCharacterName = async (
+  leaderName: string
+): Promise<string[]> => {
   const leaderSearchResults = await Character.find({
     name: { $regex: leaderName, $options: 'i' },
   }).distinct('_id');

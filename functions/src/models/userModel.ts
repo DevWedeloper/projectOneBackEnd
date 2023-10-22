@@ -11,8 +11,25 @@ export interface IUserDocument extends IUser, Document {}
 interface IUserModel extends Model<IUserDocument> {}
 
 const userSchema: Schema<IUserDocument, IUserModel> = new Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
+  username: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 6,
+    maxlength: 20,
+    match: /^[A-Za-z0-9_]*$/,
+  },
+  password: {
+    type: String,
+    required: true,
+    validate: {
+      validator: (value: string) => {
+        return /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/.test(value);
+      },
+      message:
+        'Password must be at least 8 characters long and include at least one lowercase letter, one uppercase letter, and one digit.',
+    },
+  },
   role: { type: String, enum: ['admin', 'standard'], default: 'standard' },
 });
 

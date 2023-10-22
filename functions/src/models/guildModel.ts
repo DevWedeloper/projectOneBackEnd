@@ -12,7 +12,14 @@ export interface IGuildDocument extends IGuild, Document {}
 interface IGuildModel extends Model<IGuildDocument> {}
 
 const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
-  name: { type: String, required: true, unique: true },
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+    minlength: 6,
+    maxlength: 20,
+    match: /^[A-Za-z0-9_]*$/,
+  },
   leader: {
     type: Schema.Types.ObjectId,
     ref: 'Character',

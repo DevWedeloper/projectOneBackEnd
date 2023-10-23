@@ -226,17 +226,17 @@ export const updateGuildLeaderById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { guild, leader, ...guildDataToUpdate } = req.body;
+    const { guild, character, ...guildDataToUpdate } = req.body;
 
     const newLeader: ICharacterDocument | null = await Character.findById(
-      leader
+      character
     );
     if (!newLeader) {
       return res.status(404).json({ error: 'New leader not found' });
     }
 
     const isChangingLeader: boolean =
-      leader && leader.toString() !== guild.leader.toString();
+      newLeader && newLeader.toString() !== guild.leader.toString();
     if (isChangingLeader) {
       const isLeaderNotMemberOfGuild: boolean =
         !newLeader.guild ||
@@ -292,9 +292,9 @@ export const addMemberToGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { guild, member } = req.body;
+    const { guild, character } = req.body;
 
-    const newMember = await Character.findById(member);
+    const newMember = await Character.findById(character);
     if (!newMember) {
       return res.status(404).json({ error: 'Member not found' });
     }

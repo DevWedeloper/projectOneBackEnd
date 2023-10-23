@@ -14,6 +14,7 @@ import guildRoute from './routes/guildRoute';
 import characterStatsRoute from './routes/characterStatsRoute';
 import guildStatsRoute from './routes/guildStatsRoute';
 import characterTypeRoute from './routes/characterTypeRoute';
+import checkNameUniquenessRoute from './routes/checkNameUniquenessRoute';
 
 const app: Application = express();
 
@@ -52,6 +53,7 @@ app.use('/guild', guildRoute);
 app.use('/characterStats', characterStatsRoute);
 app.use('/guildStats', guildStatsRoute);
 app.use('/characterTypes', characterTypeRoute);
+app.use('/', checkNameUniquenessRoute);
 
 // app.listen(process.env.MY_PORT, () => {
 //   console.log(`Server is running on PORT ${process.env.MY_PORT}`);

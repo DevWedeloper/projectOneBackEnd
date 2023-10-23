@@ -14,6 +14,7 @@ import {
 } from '../controllers/guildController';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
 import { checkGuildExistence } from '../middlewares/checkGuildExistence';
+import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
 
 const router: Router = Router();
 
@@ -32,18 +33,21 @@ router.put(
   '/leader/:id',
   isAdminMiddleware,
   checkGuildExistence,
+  isValidCharacter,
   updateGuildLeaderById
 );
 router.put(
   '/addMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
+  isValidCharacter,
   addMemberToGuildById
 );
 router.put(
   '/removeMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
+  isValidCharacter,
   removeMemberFromGuildById
 );
 router.delete('/:id', isAdminMiddleware, checkGuildExistence, deleteGuildById);

@@ -19,6 +19,7 @@ const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
     minlength: 6,
     maxlength: 20,
     match: /^[A-Za-z0-9_]*$/,
+    index: true,
   },
   leader: {
     type: Schema.Types.ObjectId,

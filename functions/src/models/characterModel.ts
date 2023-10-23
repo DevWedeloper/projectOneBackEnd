@@ -26,6 +26,7 @@ const characterSchema: Schema<ICharacterDocument, ICharacterModel> = new Schema(
       minlength: 6,
       maxlength: 20,
       match: /^[A-Za-z0-9_]*$/,
+      index: true,
     },
     characterType: { type: String, required: true },
     health: { type: Number, required: true, min: 1000, max: 10000 },

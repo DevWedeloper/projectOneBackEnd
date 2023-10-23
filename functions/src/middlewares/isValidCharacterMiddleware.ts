@@ -15,7 +15,7 @@ export const isValidCharacter = async (
   try {
     const isValidObjectId = Types.ObjectId.isValid(character);
     if (isValidObjectId) {
-      const foundCharacter: ICharacterDocument | null = await Character.findById(Character);
+      const foundCharacter: ICharacterDocument | null = await Character.findById(character);
       if (foundCharacter) {
         req.body.character = foundCharacter._id;
       }
@@ -31,6 +31,7 @@ export const isValidCharacter = async (
         req.body.character = foundCharacterByName._id;
       }
     }
+    
 
     next();
   } catch (error) {

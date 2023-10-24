@@ -15,8 +15,8 @@ export const createGuild = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { name, leader } = req.body;
-    const leaderCharacter = await Character.findById(leader);
+    const { name, character } = req.body;
+    const leaderCharacter = await Character.findById(character);
     if (!leaderCharacter) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -33,7 +33,7 @@ export const createGuild = async (
     const totalMembers = 1;
     const guildData = {
       name,
-      leader,
+      leader: leaderCharacter,
       totalMembers,
     };
 
@@ -48,6 +48,8 @@ export const createGuild = async (
       .status(201)
       .json({ message: 'Guild created successfully', guild: savedGuild });
   } catch (error) {
+    console.log(error);
+    
     if (error instanceof Error) {
       return res
         .status(500)

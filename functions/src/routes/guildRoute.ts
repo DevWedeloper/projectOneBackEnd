@@ -18,7 +18,7 @@ import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
 
 const router: Router = Router();
 
-router.post('/', isAdminMiddleware, createGuild);
+router.post('/', isAdminMiddleware, isValidCharacter, createGuild);
 router.get('/', getAllGuilds);
 router.get('/search', searchGuildsByName);
 router.get('/:id/searchMember', checkGuildExistence, searchGuildMemberById);

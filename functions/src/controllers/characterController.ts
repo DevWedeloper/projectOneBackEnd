@@ -16,20 +16,16 @@ export const createCharacter = async (
 ): Promise<void | Response> => {
   try {
     const savedCharacter: ICharacterDocument = await Character.create(req.body);
-    return res
-      .status(201)
-      .json({
-        message: 'Character created successfully',
-        character: savedCharacter,
-      });
+    return res.status(201).json({
+      message: 'Character created successfully',
+      character: savedCharacter,
+    });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to create the character',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to create the character',
+        message: error.message,
+      });
     }
   }
 };
@@ -67,7 +63,7 @@ export const getAllCharacters = async (
         { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
       ],
     };
-    
+
     if (searchQuery && !isNaN(Number(searchQuery))) {
       const numericValue = Number(searchQuery);
       query.$or.push(
@@ -108,12 +104,10 @@ export const getAllCharacters = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve characters',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve characters',
+        message: error.message,
+      });
     }
   }
 };
@@ -135,12 +129,10 @@ export const getCharacterById = async (
     return res.json(character);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve the character',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve the character',
+        message: error.message,
+      });
     }
   }
 };
@@ -200,12 +192,10 @@ export const updateCharacterAttributeById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: `Failed to update character's ${attribute}`,
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: `Failed to update character's ${attribute}`,
+        message: error.message,
+      });
     }
   }
 };
@@ -236,7 +226,15 @@ export const joinGuildById = async (
     }
 
     await joinGuild(character._id, guild);
-    const updatedCharacter = await Character.findById(id);
+    const updatedCharacter = await Character.findById(id).populate({
+      path: 'guild',
+      select: '_id name leader',
+      populate: {
+        path: 'leader',
+        model: 'Character',
+        select: '_id name',
+      },
+    });
     if (!updatedCharacter) {
       return res.status(404).json({ error: 'Character not found' });
     }
@@ -318,12 +316,10 @@ export const deleteCharacterById = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to delete the character',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to delete the character',
+        message: error.message,
+      });
     }
   }
 };
@@ -343,12 +339,10 @@ export const deleteAllCharacters = async (
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to delete characters and guilds.',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to delete characters and guilds.',
+        message: error.message,
+      });
     }
   }
 };

@@ -26,8 +26,6 @@ export const checkGuildRelationStatus = async (
       selectedCharacter?.guild !== null &&
       selectedCharacter?._id.toString() !== selectedCharacter?.guild?.leader._id.toString()
     ) {
-      console.log(selectedCharacter._id, selectedCharacter.guild.leader._id);
-      
       return res.status(200).json({ memberOfGuild: true });
     }
 

@@ -145,15 +145,17 @@ export const searchCharactersByName = async (
     const searchQuery = req.query.name as string;
     const character = await Character.find({
       name: { $regex: searchQuery, $options: 'i' },
-    }).populate({
-      path: 'guild',
-      select: '_id name leader',
-      populate: {
-        path: 'leader',
-        model: 'Character',
-        select: '_id name',
-      },
-    });
+    })
+      .populate({
+        path: 'guild',
+        select: '_id name leader',
+        populate: {
+          path: 'leader',
+          model: 'Character',
+          select: '_id name',
+        },
+      })
+      .limit(10);
 
     return res.json(character);
   } catch (error) {

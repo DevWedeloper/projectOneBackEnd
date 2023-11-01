@@ -16,9 +16,13 @@ export const createGuild = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { name, character }: { name: string; character: ICharacter } = req.body;
+    const { name, character }: { name: string; character: ICharacter } =
+      req.body;
     if (character.guild) {
-      await updateLeaderOrMembersGuild(character.guild as unknown as IGuildDocument, character._id.toString());
+      await updateLeaderOrMembersGuild(
+        character.guild as unknown as IGuildDocument,
+        character._id.toString()
+      );
     }
 
     const totalMembers = 1;
@@ -141,7 +145,7 @@ export const searchGuildsByName = async (
     const searchQuery = req.query.name as string;
     const guild = await Guild.find({
       name: { $regex: searchQuery, $options: 'i' },
-    });
+    }).limit(10);
 
     return res.json(guild);
   } catch (error) {
@@ -160,7 +164,9 @@ export const searchGuildMemberById = async (
   try {
     const searchQuery = req.query.name as string;
     const { guild } = req.body;
-    const memberObjects = await Character.find({ _id: { $in: guild.members } });
+    const memberObjects = await Character.find({
+      _id: { $in: guild.members },
+    }).limit(10);
     const searchResults = memberObjects.filter((member) =>
       member.name.includes(searchQuery)
     );

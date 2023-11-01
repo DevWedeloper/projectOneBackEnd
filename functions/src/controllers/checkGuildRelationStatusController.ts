@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Character } from '../models/characterModel';
 import { Character as ICharacter } from '../interface/characterInterface';
 
 export const checkGuildRelationStatus = async (
@@ -7,31 +6,21 @@ export const checkGuildRelationStatus = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { character } = req.body;
-    const selectedCharacter = await Character.findById(character).populate({
-      path: 'guild',
-      select: '_id name leader',
-      populate: {
-        path: 'leader',
-        model: 'Character',
-        select: '_id name',
-      },
-    }) as ICharacter;
-
-    if (selectedCharacter?.guild === null) {
+    const { character }: { character: ICharacter } = req.body;
+    if (character?.guild === null) {
       return res.status(200).json({ hasNoGuild: true });
     }
 
     if (
-      selectedCharacter?.guild !== null &&
-      selectedCharacter?._id.toString() !== selectedCharacter?.guild?.leader._id.toString()
+      character?.guild !== null &&
+      character?._id.toString() !== character?.guild?.leader._id.toString()
     ) {
       return res.status(200).json({ memberOfGuild: true });
     }
 
     if (
-      selectedCharacter?.guild !== null &&
-      selectedCharacter?._id.toString() === selectedCharacter?.guild?.leader._id.toString()
+      character?.guild !== null &&
+      character?._id.toString() === character?.guild?.leader._id.toString()
     ) {
       return res.status(200).json({ leaderOfGuild: true });
     }

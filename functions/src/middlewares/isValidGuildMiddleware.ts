@@ -1,37 +1,25 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { IGuildDocument, Guild } from '../models/guildModel';
+import { Guild } from '../models/guildModel';
 
 export const isValidGuild = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
-  const { guild } = req.body;
-  if (!guild) {
-    return next();
-  }
-
   try {
-    const isValidObjectId = Types.ObjectId.isValid(guild);
-    if (isValidObjectId) {
-      const foundGuild: IGuildDocument | null = await Guild.findById(guild);
-      if (foundGuild) {
-        req.body.guild = foundGuild._id;
-      }
-    } else {
-      const foundGuildByName: IGuildDocument | null = await Guild.findOne({
-        name: guild,
-      });
-      if (!foundGuildByName) {
-        return res
-          .status(500)
-          .json({ error: `Guild '${guild}' does not exist.` });
-      } else {
-        req.body.guild = foundGuildByName._id;
-      }
+    const { guild } = req.body;
+    if (!guild) {
+      return next();
     }
 
+    const guildQuery = Types.ObjectId.isValid(guild)
+      ? { _id: guild }
+      : { name: guild };
+
+    const foundGuild = await Guild.findOne(guildQuery);
+
+    req.body.guild = foundGuild;
     next();
   } catch (error) {
     if (error instanceof Error) {

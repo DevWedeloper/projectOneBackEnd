@@ -1,13 +1,14 @@
 import { Request, Response } from 'express';
+import { Character as ICharacter } from '../interface/characterInterface';
+import { Character } from '../models/characterModel';
 import { Guild, IGuildDocument } from '../models/guildModel';
-import { Character, ICharacterDocument } from '../models/characterModel';
 import {
+  isDifferentGuild,
+  isLeader,
   joinGuild,
   leaveGuild,
   updateLeaderAndDeleteGuild,
   updateLeaderOrMembersGuild,
-  isLeader,
-  isDifferentGuild,
 } from '../utils/guildCharacterUtils';
 
 export const createGuild = async (
@@ -15,32 +16,22 @@ export const createGuild = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { name, character } = req.body;
-    const leaderCharacter = await Character.findById(character);
-    if (!leaderCharacter) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
-    const leaderHasPreviousGuild: boolean =
-      leaderCharacter && leaderCharacter.guild ? true : false;
-    if (leaderHasPreviousGuild) {
-      const guild = await Guild.findById(leaderCharacter.guild);
-      if (guild) {
-        await updateLeaderOrMembersGuild(guild, leaderCharacter._id.toString());
-      }
+    const { name, character }: { name: string; character: ICharacter } = req.body;
+    if (character.guild) {
+      await updateLeaderOrMembersGuild(character.guild as unknown as IGuildDocument, character._id.toString());
     }
 
     const totalMembers = 1;
     const guildData = {
       name,
-      leader: leaderCharacter,
+      leader: character,
       totalMembers,
     };
 
     const savedGuild = await Guild.create(guildData);
 
     await Character.findOneAndUpdate(
-      { _id: leaderCharacter._id },
+      { _id: character._id },
       { $set: { guild: savedGuild._id } }
     );
 
@@ -48,8 +39,6 @@ export const createGuild = async (
       .status(201)
       .json({ message: 'Guild created successfully', guild: savedGuild });
   } catch (error) {
-    console.log(error);
-    
     if (error instanceof Error) {
       return res
         .status(500)
@@ -230,12 +219,7 @@ export const updateGuildLeaderById = async (
     const { id } = req.params;
     const { guild, character, ...guildDataToUpdate } = req.body;
 
-    const newLeader: ICharacterDocument | null = await Character.findById(
-      character
-    );
-    if (!newLeader) {
-      return res.status(404).json({ error: 'New leader not found' });
-    }
+    const newLeader = character;
 
     const isChangingLeader: boolean =
       newLeader && newLeader.toString() !== guild.leader.toString();
@@ -296,10 +280,7 @@ export const addMemberToGuildById = async (
     const { id } = req.params;
     const { guild, character } = req.body;
 
-    const newMember = await Character.findById(character);
-    if (!newMember) {
-      return res.status(404).json({ error: 'Member not found' });
-    }
+    const newMember = character;
 
     if (
       newMember.guild &&
@@ -351,12 +332,9 @@ export const removeMemberFromGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { guild, member } = req.body;
+    const { guild, character } = req.body;
 
-    const newMember = await Character.findById(member);
-    if (!newMember) {
-      return res.status(404).json({ error: 'Member not found' });
-    }
+    const newMember = character;
 
     if (
       !newMember.guild ||

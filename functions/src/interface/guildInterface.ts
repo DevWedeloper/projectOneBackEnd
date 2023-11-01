@@ -8,9 +8,4 @@ export interface Guild {
   totalMembers: number;
 }
 
-export interface GuildWithoutId {
-  name: string;
-  leader: Character;
-  members: Character[];
-  totalMembers: number;
-}
+export interface GuildWithoutId extends Omit<Guild, '_id'> {}

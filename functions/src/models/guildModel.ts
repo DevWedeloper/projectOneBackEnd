@@ -6,6 +6,12 @@ export interface IGuild {
   members?: Schema.Types.ObjectId[];
   totalMembers: number;
   maxMembers: number;
+  totalHealth: number;
+  totalStrength: number;
+  totalAgility: number;
+  totalIntelligence: number;
+  totalArmor: number;
+  totalCritChance: number;
 }
 
 export interface IGuildDocument extends IGuild, Document {}
@@ -30,7 +36,13 @@ const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
   },
   members: [{ type: Schema.Types.ObjectId, ref: 'Character' }],
   totalMembers: { type: Number, default: 1, min: 1, max: 50 },
-  maxMembers: { type: Number, default: 50 }
+  maxMembers: { type: Number, default: 50 },
+  totalHealth: { type: Number },
+  totalStrength: { type: Number },
+  totalAgility: { type: Number },
+  totalIntelligence: { type: Number },
+  totalArmor: { type: Number },
+  totalCritChance: { type: Number },
 });
 
 guildSchema.pre('findOneAndUpdate', async function (next) {

@@ -28,7 +28,7 @@ const populateGuildsWithCharacters = async () => {
       if (Math.random() < 0.8) {
         const randomGuild = availableGuilds[Math.floor(Math.random() * availableGuilds.length)];
         try {
-          await joinGuild(character._id.toString(), randomGuild._id);
+          await joinGuild(character, randomGuild._id);
           console.log(
             `Character ${character.name} joined guild ${randomGuild.name}`
           );

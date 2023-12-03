@@ -2,14 +2,14 @@ import { ICharacterDocument, Character } from '../models/characterModel';
 import { Guild, IGuildDocument } from '../models/guildModel';
 
 export const joinGuild = async (
-  characterId: string,
+  character: ICharacterDocument,
   guildId: IGuildDocument
 ) => {
   try {
     await Promise.all([
-      Character.findByIdAndUpdate(characterId, { guild: guildId }),
+      Character.findByIdAndUpdate(character._id, { guild: guildId }),
       Guild.findByIdAndUpdate(guildId, {
-        $push: { members: characterId as unknown as IGuildDocument },
+        $push: { members: character as unknown as IGuildDocument },
         $inc: { totalMembers: 1 },
       }),
     ]);

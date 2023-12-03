@@ -227,7 +227,7 @@ export const joinGuildById = async (
       }
     }
 
-    await joinGuild(character._id, guild);
+    await joinGuild(character, guild);
     const updatedCharacter = await Character.findById(id).populate({
       path: 'guild',
       select: '_id name leader',

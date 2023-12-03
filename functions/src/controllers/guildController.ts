@@ -241,7 +241,7 @@ export const updateGuildLeaderById = async (
 
       const previousLeader = await Character.findById(guild.leader);
       if (previousLeader && previousLeader.guild) {
-        await joinGuild(previousLeader, guild._id);
+        await joinGuild(previousLeader, guild);
       }
 
       await leaveGuild(newLeader._id);

@@ -45,20 +45,6 @@ const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
   totalCritChance: { type: Number },
 });
 
-guildSchema.pre('findOneAndUpdate', async function (next) {
-  try {
-    const guild = (await this.model.findOne(this.getQuery())) as IGuildDocument;
-    if (guild.totalMembers >= guild.maxMembers) {
-      throw new Error('Guild is full. Cannot add more members.');
-    }
-    next();
-  } catch (error) {
-    if (error instanceof Error) {
-      next(error);
-    }
-  }
-});
-
 export const Guild: IGuildModel = model<IGuildDocument, IGuildModel>(
   'Guild',
   guildSchema

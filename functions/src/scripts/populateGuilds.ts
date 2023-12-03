@@ -1,30 +1,32 @@
-import { Character } from '../models/characterModel';
-import { Guild } from '../models/guildModel';
+import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
+import { Character } from '../models/characterModel';
+import { Guild, IGuildDocument } from '../models/guildModel';
 import { joinGuild } from '../utils/guildCharacterUtils';
+dotenv.config({ path: '../../.env' });
 
-connect(process.env.DB_URL!)
-  .then(async () => {
+let availableGuilds: IGuildDocument[] = [];
+
+const connectToDatabase = async () => {
+  try {
+    await connect(process.env.DB_URL!);
     console.log('DB connected');
+    await fetchAvailableGuilds();
     await populateGuildsWithCharacters();
     mongoose.disconnect();
-  })
-  .catch((err) => {
+  } catch (err) {
     console.error('Error connecting to DB:', err);
-  });
+  }
+};
+
+connectToDatabase();
 
 const populateGuildsWithCharacters = async () => {
   try {
-    const guilds = await Guild.find();
-    if (guilds.length === 0) {
-      console.error('No available guilds found in the database.');
-      return;
-    }
-
-    const characters = await Character.find();
+    const characters = await Character.find({ guild: null });
     for (const character of characters) {
       if (Math.random() < 0.8) {
-        const randomGuild = guilds[Math.floor(Math.random() * guilds.length)];
+        const randomGuild = availableGuilds[Math.floor(Math.random() * availableGuilds.length)];
         try {
           await joinGuild(character._id.toString(), randomGuild._id);
           console.log(
@@ -36,7 +38,7 @@ const populateGuildsWithCharacters = async () => {
               console.log(
                 `Skipped joining guild ${randomGuild.name} due to member limit.`
               );
-              guilds.splice(guilds.indexOf(randomGuild), 1);
+              availableGuilds.splice(availableGuilds.indexOf(randomGuild), 1);
             } else {
               console.error(
                 `Some other error: ${randomGuild.name}: ${error.message}`
@@ -52,6 +54,19 @@ const populateGuildsWithCharacters = async () => {
         'Failed to populate guilds with characters:',
         error.message
       );
+    }
+  }
+};
+
+const fetchAvailableGuilds = async () => {
+  try {
+    availableGuilds = await Guild.find();
+    if (availableGuilds.length === 0) {
+      throw new Error('No available guilds found in the database to choose from.');
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error('Failed to fetch available guilds: ' + error.message);
     }
   }
 };

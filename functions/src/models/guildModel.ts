@@ -1,9 +1,10 @@
 import { Document, Model, Schema, model } from 'mongoose';
+import { ICharacter } from './characterModel';
 
 export interface IGuild {
   name: string;
-  leader: Schema.Types.ObjectId;
-  members?: Schema.Types.ObjectId[];
+  leader: ICharacter;
+  members?: ICharacter[];
   totalMembers: number;
   maxMembers: number;
   totalHealth: number;

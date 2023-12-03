@@ -1,7 +1,7 @@
 import { Document, Model, Schema, model } from 'mongoose';
-import { IGuildDocument } from './guildModel';
+import { IGuild } from './guildModel';
 
-interface ICharacter {
+export interface ICharacter {
   name: string;
   characterType: string;
   health: number;
@@ -10,7 +10,7 @@ interface ICharacter {
   intelligence: number;
   armor: number;
   critChance: number;
-  guild: Schema.Types.ObjectId | IGuildDocument;
+  guild: IGuild;
 }
 
 export interface ICharacterDocument extends ICharacter, Document {}

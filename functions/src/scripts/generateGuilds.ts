@@ -61,7 +61,7 @@ const fetchAvailableCharacters = async () => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Failed to fetch available characters:', error.message);
+      throw new Error('Failed to fetch available characters: ' + error.message);
     }
   }
 };

@@ -3,14 +3,25 @@ import { Guild, IGuildDocument } from '../models/guildModel';
 
 export const joinGuild = async (
   character: ICharacterDocument,
-  guildId: IGuildDocument
+  guild: IGuildDocument
 ) => {
   try {
+    if (guild.totalMembers >= guild.maxMembers) {
+      throw new Error('Guild is full. Cannot add more members.');
+    }
+
     await Promise.all([
-      Character.findByIdAndUpdate(character._id, { guild: guildId }),
-      Guild.findByIdAndUpdate(guildId, {
+      Character.findByIdAndUpdate(character._id, { guild: guild._id }),
+      Guild.findByIdAndUpdate(guild, {
         $push: { members: character as unknown as IGuildDocument },
-        $inc: { totalMembers: 1 },
+        $inc: {
+          totalMembers: 1,
+          totalHealth: character.health || 0,
+          totalStrength: character.strength || 0,
+          totalAgility: character.agility || 0,
+          totalIntelligence: character.intelligence || 0,
+          totalArmor: character.armor || 0,
+        },
       }),
     ]);
   } catch (error) {
@@ -31,7 +42,14 @@ export const leaveGuild = async (characterId: string) => {
       Character.findByIdAndUpdate(characterId, { guild: null }),
       Guild.findByIdAndUpdate(guildId, {
         $pull: { members: characterId as unknown as IGuildDocument },
-        $inc: { totalMembers: -1 },
+        $inc: {
+          totalMembers: -1,
+          totalHealth: -(character?.health || 0),
+          totalStrength: -(character?.strength || 0),
+          totalAgility: -(character?.agility || 0),
+          totalIntelligence: -(character?.intelligence || 0),
+          totalArmor: -(character?.armor || 0),
+        },
       }),
     ]);
   } catch (error) {

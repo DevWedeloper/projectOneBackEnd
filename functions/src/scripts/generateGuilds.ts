@@ -57,14 +57,12 @@ const fetchAvailableCharacters = async () => {
   try {
     availableCharacters = await Character.find({ guild: null });
     if (availableCharacters.length === 0) {
-      console.error('No available characters found in the database to choose as guild leader.');
-      return;
+      throw new Error('No available characters found in the database to choose as guild leader.');
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Failed to fetch available character types:', error.message);
+      console.error('Failed to fetch available characters:', error.message);
     }
-    process.exit(1);
   }
 };
 

@@ -77,7 +77,6 @@ const fetchAvailableCharacterTypes = async () => {
     if (error instanceof Error) {
       console.error('Failed to fetch available character types:', error.message);
     }
-    process.exit(1);
   }
 };
 

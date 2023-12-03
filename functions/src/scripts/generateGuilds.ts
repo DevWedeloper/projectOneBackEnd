@@ -55,7 +55,7 @@ const generateRandomGuild = async () => {
 
 const fetchAvailableCharacters = async () => {
   try {
-    availableCharacters = await Character.find();
+    availableCharacters = await Character.find({ guild: null });
     if (availableCharacters.length === 0) {
       console.error('No available characters found in the database to choose as guild leader.');
       return;

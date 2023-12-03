@@ -6,7 +6,12 @@ export const joinGuild = async (
   guild: IGuildDocument
 ) => {
   try {
-    if (guild.totalMembers >= guild.maxMembers) {
+    const checkGuild = await Guild.findById(guild._id).
+      populate({
+        path: 'leader members',
+        select: 'name _id critChance',
+      });
+    if (checkGuild && checkGuild.totalMembers >= checkGuild.maxMembers) {
       throw new Error('Guild is full. Cannot add more members.');
     }
 
@@ -21,6 +26,7 @@ export const joinGuild = async (
           totalAgility: character.agility || 0,
           totalIntelligence: character.intelligence || 0,
           totalArmor: character.armor || 0,
+          totalCritChance: character.critChance || 0,
         },
       }),
     ]);
@@ -49,6 +55,7 @@ export const leaveGuild = async (characterId: string) => {
           totalAgility: -(character?.agility || 0),
           totalIntelligence: -(character?.intelligence || 0),
           totalArmor: -(character?.armor || 0),
+          totalCritChance: -(character?.critChance || 0),
         },
       }),
     ]);

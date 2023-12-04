@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Character as ICharacter } from '../interface/characterInterface';
+import { Character as ICharacter } from '../types/characterInterface';
 import { Character } from '../models/characterModel';
 import { Guild, IGuild } from '../models/guildModel';
 import {

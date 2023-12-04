@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { Character as ICharacter } from '../interface/characterInterface';
-import { Guild as IGuild } from '../interface/guildInterface';
+import { Character as ICharacter } from '../types/characterInterface';
+import { Guild as IGuild } from '../types/guildInterface';
 
 export const checkIfMember = async (
   req: Request,

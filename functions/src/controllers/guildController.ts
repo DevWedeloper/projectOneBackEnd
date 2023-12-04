@@ -306,7 +306,7 @@ export const addMemberToGuildById = async (
         return res.status(404).json({ error: 'Guild not found' });
       }
 
-      await updateLeaderOrMembersGuild(previousGuild, newMember._id.toString());
+      await updateLeaderOrMembersGuild(previousGuild.toObject(), newMember._id.toString());
     }
 
     await joinGuild(newMember, guild);
@@ -410,7 +410,7 @@ export const deleteAllGuilds = async (
   try {
     const guilds = await Guild.find({});
     const deletePromises = guilds.map((guild) =>
-      updateLeaderAndDeleteGuild(guild)
+      updateLeaderAndDeleteGuild(guild.toObject())
     );
     await Promise.all(deletePromises);
     return res.json({

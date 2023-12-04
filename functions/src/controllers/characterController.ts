@@ -218,8 +218,8 @@ export const joinGuildById = async (
         return res.status(404).json({ error: 'Current guild not found' });
       }
 
-      if (isDifferentGuild(previousGuild, guild._id.toString())) {
-        await updateLeaderOrMembersGuild(previousGuild, id);
+      if (isDifferentGuild(previousGuild.toObject(), guild._id.toString())) {
+        await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
       } else {
         return res
           .status(400)
@@ -272,7 +272,7 @@ export const leaveGuildById = async (
     if (!previousGuild) {
       return res.status(404).json({ error: 'Current guild not found' });
     }
-    await updateLeaderOrMembersGuild(previousGuild, id);
+    await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
 
     const updatedCharacter = await Character.findById(id);
     if (!updatedCharacter) {
@@ -351,5 +351,5 @@ const getGuildIdsByGuildName = async (guildName: string) => {
     name: { $regex: guildName, $options: 'i' },
   });
 
-  return guildSearchResults.map((guild) => guild._id);
+  return guildSearchResults.map((guild) => guild._id.toString());
 };

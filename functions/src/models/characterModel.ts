@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { IGuild } from './guildModel';
 
 export interface ICharacter {
@@ -16,11 +16,7 @@ export interface ICharacter {
 
 export type ICharacterWithoutId = Omit<ICharacter, '_id'>;
 
-export interface ICharacterDocument extends ICharacterWithoutId, Document {}
-
-interface ICharacterModel extends Model<ICharacterDocument> {}
-
-const characterSchema: Schema<ICharacterDocument, ICharacterModel> = new Schema(
+const characterSchema = new Schema(
   {
     name: {
       type: String,
@@ -42,7 +38,4 @@ const characterSchema: Schema<ICharacterDocument, ICharacterModel> = new Schema(
   }
 );
 
-export const Character: ICharacterModel = model<
-  ICharacterDocument,
-  ICharacterModel
->('Character', characterSchema);
+export const Character = model('Character', characterSchema);

@@ -1,4 +1,4 @@
-import { Document, Model, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 import { ICharacter } from './characterModel';
 
 export interface IGuild {
@@ -18,11 +18,7 @@ export interface IGuild {
 
 export type IGuildWithoutId = Omit<IGuild, '_id'>;
 
-export interface IGuildDocument extends IGuildWithoutId, Document {}
-
-interface IGuildModel extends Model<IGuildDocument> {}
-
-const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
+const guildSchema = new Schema<IGuildWithoutId>({
   name: {
     type: String,
     required: true,
@@ -49,7 +45,4 @@ const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
   totalCritChance: { type: Number, default: 0 },
 });
 
-export const Guild: IGuildModel = model<IGuildDocument, IGuildModel>(
-  'Guild',
-  guildSchema
-);
+export const Guild = model<IGuildWithoutId>('Guild', guildSchema);

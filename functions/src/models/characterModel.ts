@@ -16,7 +16,7 @@ export interface ICharacter {
 
 export type ICharacterWithoutId = Omit<ICharacter, '_id'>;
 
-const characterSchema = new Schema(
+const characterSchema = new Schema<ICharacterWithoutId>(
   {
     name: {
       type: String,
@@ -38,4 +38,4 @@ const characterSchema = new Schema(
   }
 );
 
-export const Character = model('Character', characterSchema);
+export const Character = model<ICharacterWithoutId>('Character', characterSchema);

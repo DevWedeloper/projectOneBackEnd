@@ -1,15 +1,15 @@
 import { Request, Response } from 'express';
+import * as CharacterModel from '../models/characterModel';
 import { Character } from '../models/characterModel';
 import { Guild } from '../models/guildModel';
 import {
+  isDifferentGuild,
+  isLeader,
   joinGuild,
   leaveGuild,
   updateLeaderAndDeleteGuild,
   updateLeaderOrMembersGuild,
-  isLeader,
-  isDifferentGuild,
 } from '../utils/guildCharacterUtils';
-import * as CharacterModel from '../models/characterModel';
 
 export const createCharacter = async (
   req: Request,

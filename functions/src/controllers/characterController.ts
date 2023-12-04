@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { Character, ICharacterDocument } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import { Character } from '../models/characterModel';
+import { Guild } from '../models/guildModel';
 import {
   joinGuild,
   leaveGuild,
@@ -15,7 +15,7 @@ export const createCharacter = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const savedCharacter: ICharacterDocument = await Character.create(req.body);
+    const savedCharacter = await Character.create(req.body);
     return res.status(201).json({
       message: 'Character created successfully',
       character: savedCharacter,
@@ -93,7 +93,7 @@ export const getAllCharacters = async (
       .skip((page - 1) * pageSize)
       .limit(pageSize);
 
-    const characters: ICharacterDocument[] = await charactersQuery;
+    const characters = await charactersQuery;
 
     return res.json({
       page,
@@ -118,7 +118,7 @@ export const getCharacterById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const character: ICharacterDocument | null = await Character.findById(
+    const character = await Character.findById(
       id
     ).populate('guild');
 
@@ -178,7 +178,7 @@ export const updateCharacterAttributeById = async (
 
     const updateQuery = { [attribute]: attributeValue };
 
-    const updatedCharacter: ICharacterDocument | null =
+    const updatedCharacter =
       await Character.findByIdAndUpdate(id, updateQuery, {
         new: true,
         runValidators: true,
@@ -300,7 +300,7 @@ export const deleteCharacterById = async (
     const { id } = req.params;
     const { character } = req.body;
     if (character.guild) {
-      const guildId = character.guild as IGuildDocument['_id'];
+      const guildId = character.guild;
       const guild = await Guild.findById(guildId);
       if (guild) {
         if (isLeader(guild, id)) {

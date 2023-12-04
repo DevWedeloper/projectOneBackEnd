@@ -38,12 +38,12 @@ const guildSchema: Schema<IGuildDocument, IGuildModel> = new Schema({
   members: [{ type: Schema.Types.ObjectId, ref: 'Character' }],
   totalMembers: { type: Number, default: 1, min: 1, max: 50 },
   maxMembers: { type: Number, default: 50 },
-  totalHealth: { type: Number },
-  totalStrength: { type: Number },
-  totalAgility: { type: Number },
-  totalIntelligence: { type: Number },
-  totalArmor: { type: Number },
-  totalCritChance: { type: Number },
+  totalHealth: { type: Number, default: 0 },
+  totalStrength: { type: Number, default: 0 },
+  totalAgility: { type: Number, default: 0 },
+  totalIntelligence: { type: Number, default: 0 },
+  totalArmor: { type: Number, default: 0 },
+  totalCritChance: { type: Number, default: 0 },
 });
 
 export const Guild: IGuildModel = model<IGuildDocument, IGuildModel>(

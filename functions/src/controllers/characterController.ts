@@ -299,15 +299,12 @@ export const deleteCharacterById = async (
   try {
     const { id } = req.params;
     const { character } = req.body;
+
     if (character.guild) {
-      const guildId = character.guild;
-      const guild = await Guild.findById(guildId);
-      if (guild) {
-        if (isLeader(guild, id)) {
-          await updateLeaderAndDeleteGuild(guild);
-        } else {
-          await leaveGuild(id);
-        }
+      if (isLeader(character.guild, id)) {
+        await updateLeaderAndDeleteGuild(character.guild);
+      } else {
+        await leaveGuild(id);
       }
     }
 

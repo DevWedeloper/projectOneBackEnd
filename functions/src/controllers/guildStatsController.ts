@@ -9,64 +9,18 @@ export const getTopGuildsByAttribute = async (
     const { attribute } = req.params;
     const { limit = 5 } = req.query;
 
-    interface Projection {
-      _id: number;
-      name: number;
-      totalMembers: number;
-      critChances?: string;
-      combinedAttribute?: { $sum: string };
+    const actualAttribute = attributeMapping[attribute];
+    if (!actualAttribute) {
+      return res.status(400).json({
+        error: 'Invalid attribute',
+        message: `Attribute "${attribute}" is not supported.`,
+      });
     }
 
-    const projection: Projection = {
-      _id: 1,
-      name: 1,
-      totalMembers: 1,
-    };
-
-    if (attribute === 'critChance') {
-      projection.critChances = '$members.critChance';
-    } else {
-      projection.combinedAttribute = { $sum: `$members.${attribute}` };
-    }
-
-    const topGuilds = await Guild.aggregate([
-      {
-        $lookup: {
-          from: 'characters',
-          localField: 'members',
-          foreignField: '_id',
-          as: 'members',
-        },
-      },
-      {
-        $project: projection,
-      },
-      {
-        $addFields: {
-          combinedAttribute:
-            attribute === 'critChance'
-              ? { $avg: '$critChances' }
-              : '$combinedAttribute',
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          totalMembers: 1,
-          combinedAttribute:
-            attribute === 'critChance'
-              ? { $round: ['$combinedAttribute', 2] }
-              : '$combinedAttribute',
-        },
-      },
-      {
-        $sort: { combinedAttribute: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
+    const topGuilds = await Guild.find()
+      .sort({ [actualAttribute]: -1 })
+      .limit(Number(limit))
+      .select(`_id name ${actualAttribute}`);
 
     return res.json(topGuilds);
   } catch (error) {
@@ -85,67 +39,35 @@ export const getTopWellRoundedGuilds = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
-  const { limit = 5 } = req.query;
-
   try {
+    const { limit = 5 } = req.query;
+
     const guilds = await Guild.aggregate([
-      {
-        $lookup: {
-          from: 'characters',
-          localField: 'members',
-          foreignField: '_id',
-          as: 'members',
-        },
-      },
-      {
-        $addFields: {
-          membersAttributes: {
-            $map: {
-              input: '$members',
-              as: 'member',
-              in: {
-                health: { $divide: ['$$member.health', 100] },
-                strength: '$$member.strength',
-                agility: '$$member.agility',
-                intelligence: '$$member.intelligence',
-                armor: '$$member.armor',
-                critChance: { $multiply: ['$$member.critChance', 100] },
-              },
-            },
-          },
-        },
-      },
-      {
-        $addFields: {
-          totalAttributes: {
-            $sum: [
-              { $sum: '$membersAttributes.health' },
-              { $sum: '$membersAttributes.strength' },
-              { $sum: '$membersAttributes.agility' },
-              { $sum: '$membersAttributes.intelligence' },
-              { $sum: '$membersAttributes.armor' },
-              { $sum: '$membersAttributes.critChance' },
-            ],
-          },
-        },
-      },
-      {
-        $addFields: {
-          membersAverage: {
-            $cond: {
-              if: { $ne: [{ $size: '$members' }, 0] },
-              then: { $divide: ['$totalAttributes', { $size: '$members' }] },
-              else: 0,
-            },
-          },
-        },
-      },
       {
         $project: {
           _id: 1,
           name: 1,
-          totalMembers: { $size: '$members' },
-          membersAverage: { $round: ['$membersAverage', 2] },
+          membersAverage: {
+            $cond: {
+              if: { $ne: ['$totalMembers', 0] },
+              then: {
+                $divide: [
+                  {
+                    $sum: [
+                      { $divide: ['$totalHealth', 100] }, 
+                      '$totalStrength',
+                      '$totalAgility',
+                      '$totalIntelligence',
+                      '$totalArmor',
+                      { $multiply: ['$totalCritChance', 100] },
+                    ],
+                  },
+                  '$totalMembers',
+                ],
+              },
+              else: 0,
+            },
+          },
         },
       },
       {
@@ -177,33 +99,21 @@ export const getTopGuildsByAverageAttribute = async (
     const { attribute } = req.params;
     const { limit = 5 } = req.query;
 
-    interface Projection {
-      _id: number;
-      name: number;
-      totalMembers: number;
-      averageAttribute?: {
-        $round: (number | { $avg: string })[];
-      };
+    const actualAttribute = attributeMapping[attribute];
+    if (!actualAttribute) {
+      return res.status(400).json({
+        error: 'Invalid attribute',
+        message: `Attribute "${attribute}" is not supported.`,
+      });
     }
-
-    const projection: Projection = {
-      _id: 1,
-      name: 1,
-      totalMembers: 1,
-      averageAttribute: { $round: [{ $avg: `$members.${attribute}` }, 2] },
-    };
 
     const topGuilds = await Guild.aggregate([
       {
-        $lookup: {
-          from: 'characters',
-          localField: 'members',
-          foreignField: '_id',
-          as: 'members',
+        $project: {
+          _id: 1,
+          name: 1,
+          averageAttribute: { $divide: [`$${actualAttribute}`, '$totalMembers'] },
         },
-      },
-      {
-        $project: projection,
       },
       {
         $sort: { averageAttribute: -1 },
@@ -224,4 +134,13 @@ export const getTopGuildsByAverageAttribute = async (
         });
     }
   }
+};
+
+const attributeMapping: { [key: string]: string } = {
+  health: 'totalHealth',
+  strength: 'totalStrength',
+  agility: 'totalAgility',
+  intelligence: 'totalIntelligence',
+  armor: 'totalArmor',
+  critChance: 'totalCritChance',
 };

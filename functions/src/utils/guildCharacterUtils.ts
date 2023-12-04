@@ -1,9 +1,9 @@
-import { ICharacterDocument, Character } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import { ICharacter, Character } from '../models/characterModel';
+import { Guild, IGuild } from '../models/guildModel';
 
 export const joinGuild = async (
-  character: ICharacterDocument,
-  guild: IGuildDocument
+  character: ICharacter,
+  guild: IGuild
 ) => {
   try {
     const checkGuild = await Guild.findById(guild._id).
@@ -18,7 +18,7 @@ export const joinGuild = async (
     await Promise.all([
       Character.findByIdAndUpdate(character._id, { guild: guild._id }),
       Guild.findByIdAndUpdate(guild, {
-        $push: { members: character as unknown as IGuildDocument },
+        $push: { members: character as unknown as IGuild },
         $inc: {
           totalMembers: 1,
           totalHealth: character.health || 0,
@@ -39,15 +39,15 @@ export const joinGuild = async (
 
 export const leaveGuild = async (characterId: string) => {
   try {
-    const character: ICharacterDocument | null = await Character.findById(
+    const character: ICharacter | null = await Character.findById(
       characterId
     );
-    const guildId = character!.guild as IGuildDocument;
+    const guildId = character!.guild as IGuild;
 
     await Promise.all([
       Character.findByIdAndUpdate(characterId, { guild: null }),
       Guild.findByIdAndUpdate(guildId, {
-        $pull: { members: characterId as unknown as IGuildDocument },
+        $pull: { members: characterId as unknown as IGuild },
         $inc: {
           totalMembers: -1,
           totalHealth: -(character?.health || 0),
@@ -66,7 +66,7 @@ export const leaveGuild = async (characterId: string) => {
   }
 };
 
-export const updateLeaderAndDeleteGuild = async (guild: IGuildDocument) => {
+export const updateLeaderAndDeleteGuild = async (guild: IGuild) => {
   try {
     const guildId = guild._id;
     const leaderId = guild.leader.toString();
@@ -89,7 +89,7 @@ export const updateLeaderAndDeleteGuild = async (guild: IGuildDocument) => {
 };
 
 export const updateLeaderOrMembersGuild = async (
-  guild: IGuildDocument,
+  guild: IGuild,
   memberId: string
 ) => {
   try {
@@ -107,12 +107,12 @@ export const updateLeaderOrMembersGuild = async (
   }
 };
 
-export function isLeader(guild: IGuildDocument, memberId: string): boolean {
+export function isLeader(guild: IGuild, memberId: string): boolean {
   return guild && guild.leader.toString() === memberId;
 }
 
 export function isDifferentGuild(
-  guild: IGuildDocument,
+  guild: IGuild,
   oldGuildId: string
 ): boolean {
   return guild && guild._id.toString() !== oldGuildId;

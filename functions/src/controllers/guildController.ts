@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Character as ICharacter } from '../interface/characterInterface';
 import { Character } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import { Guild, IGuild } from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -20,7 +20,7 @@ export const createGuild = async (
       req.body;
     if (character.guild) {
       await updateLeaderOrMembersGuild(
-        character.guild as unknown as IGuildDocument,
+        character.guild as IGuild,
         character._id.toString()
       );
     }
@@ -94,7 +94,7 @@ export const getAllGuilds = async (
       .skip((page - 1) * pageSize)
       .limit(pageSize);
 
-    const guilds: IGuildDocument[] = await guildsQuery;
+    const guilds = await guildsQuery;
 
     return res.json({
       page,
@@ -188,7 +188,7 @@ export const updateGuildNameById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { name, ...guildDataToUpdate }: Partial<IGuildDocument> = req.body;
+    const { name, ...guildDataToUpdate } = req.body;
 
     const updatedGuild = await Guild.findByIdAndUpdate(
       id,
@@ -232,7 +232,7 @@ export const updateGuildLeaderById = async (
     if (isChangingLeader) {
       const isLeaderNotMemberOfGuild: boolean =
         !newLeader.guild ||
-        isDifferentGuild(newLeader.guild as IGuildDocument, id);
+        isDifferentGuild(newLeader.guild, id);
       if (isLeaderNotMemberOfGuild) {
         return res
           .status(400)
@@ -290,7 +290,7 @@ export const addMemberToGuildById = async (
 
     if (
       newMember.guild &&
-      !isDifferentGuild(newMember.guild as IGuildDocument, id)
+      !isDifferentGuild(newMember.guild, id)
     ) {
       return res
         .status(400)
@@ -299,7 +299,7 @@ export const addMemberToGuildById = async (
 
     if (
       newMember.guild &&
-      isDifferentGuild(newMember.guild as IGuildDocument, id)
+      isDifferentGuild(newMember.guild, id)
     ) {
       const previousGuild = await Guild.findById(newMember.guild);
       if (!previousGuild) {
@@ -345,7 +345,7 @@ export const removeMemberFromGuildById = async (
     if (
       !newMember.guild ||
       (newMember.guild &&
-        isDifferentGuild(newMember.guild as IGuildDocument, id))
+        isDifferentGuild(newMember.guild, id))
     ) {
       return res
         .status(400)

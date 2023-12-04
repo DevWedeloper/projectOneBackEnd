@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { Character } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import { Guild, IGuild } from '../models/guildModel';
 import { joinGuild } from '../utils/guildCharacterUtils';
 dotenv.config({ path: '../../.env' });
 
-let availableGuilds: IGuildDocument[] = [];
+let availableGuilds: IGuild[] = [];
 
 const connectToDatabase = async () => {
   try {

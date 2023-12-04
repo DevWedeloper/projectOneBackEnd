@@ -211,7 +211,7 @@ export const joinGuildById = async (
     const { character, guild } = req.body;
 
     if (character.guild) {
-      const previousGuild: IGuildDocument | null = await Guild.findById(
+      const previousGuild = await Guild.findById(
         character.guild
       );
       if (!previousGuild) {
@@ -266,7 +266,7 @@ export const leaveGuildById = async (
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
-    const previousGuild: IGuildDocument | null = await Guild.findById(
+    const previousGuild = await Guild.findById(
       character.guild
     );
     if (!previousGuild) {

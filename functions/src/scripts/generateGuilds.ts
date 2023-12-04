@@ -1,12 +1,12 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { generateUsername } from 'unique-username-generator';
-import { Character, ICharacterDocument } from '../models/characterModel';
+import { Character, ICharacter } from '../models/characterModel';
 import { Guild } from '../models/guildModel';
 dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;
-let availableCharacters: ICharacterDocument[] = [];
+let availableCharacters: ICharacter[] = [];
 let guildCtr = 0;
 
 const connectToDatabase = async () => {
@@ -66,6 +66,6 @@ const fetchAvailableCharacters = async () => {
   }
 };
 
-const randomLeader = async (): Promise<ICharacterDocument> => {
+const randomLeader = async (): Promise<ICharacter> => {
   return availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
 };

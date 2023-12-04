@@ -39,3 +39,7 @@ const characterSchema = new Schema<ICharacterWithoutId>(
 );
 
 export const Character = model<ICharacterWithoutId>('Character', characterSchema);
+
+export const create = async (character: ICharacterWithoutId): Promise<ICharacter> => {
+  return (await Character.create(character)).toObject();
+};

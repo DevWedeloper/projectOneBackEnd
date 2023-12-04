@@ -9,13 +9,14 @@ import {
   isLeader,
   isDifferentGuild,
 } from '../utils/guildCharacterUtils';
+import * as CharacterModel from '../models/characterModel';
 
 export const createCharacter = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
   try {
-    const savedCharacter = await Character.create(req.body);
+    const savedCharacter = CharacterModel.create(req.body);
     return res.status(201).json({
       message: 'Character created successfully',
       character: savedCharacter,

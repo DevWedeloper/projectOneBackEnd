@@ -45,7 +45,7 @@ const connectToDatabase = async () => {
   }
 };
 
-// connectToDatabase();
+connectToDatabase();
 app.use(express.json());
 
 app.use('/user', userRouter);
@@ -59,9 +59,9 @@ app.use('/', checkNameUniquenessRoute);
 app.use('/', checkGuildRelationStatusRoute);
 app.use('/', checkIfMemberRoute);
 
-// app.listen(process.env.MY_PORT, () => {
-//   console.log(`Server is running on PORT ${process.env.MY_PORT}`);
-// });
+app.listen(process.env.MY_PORT, () => {
+  console.log(`Server is running on PORT ${process.env.MY_PORT}`);
+});
 // cron.schedule('0 0 * * *', refreshTokenCleanup);
 
 export const api = functions.https.onRequest((connectToDatabase(), app));

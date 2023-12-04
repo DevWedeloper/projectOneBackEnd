@@ -2,6 +2,7 @@ import { Document, Model, Schema, model } from 'mongoose';
 import { IGuild } from './guildModel';
 
 export interface ICharacter {
+  _id: string;
   name: string;
   characterType: string;
   health: number;
@@ -13,7 +14,9 @@ export interface ICharacter {
   guild: IGuild;
 }
 
-export interface ICharacterDocument extends ICharacter, Document {}
+export type ICharacterWithoutId = Omit<ICharacter, '_id'>;
+
+export interface ICharacterDocument extends ICharacterWithoutId, Document {}
 
 interface ICharacterModel extends Model<ICharacterDocument> {}
 

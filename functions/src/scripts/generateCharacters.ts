@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { generateUsername } from 'unique-username-generator';
-import { Character } from '../models/characterModel';
+import * as Character from '../models/characterModel';
 import * as CharacterType from '../models/characterTypeModel';
 import { ICharacterType } from '../types/characterTypeTypes';
 dotenv.config({ path: '../../.env' });

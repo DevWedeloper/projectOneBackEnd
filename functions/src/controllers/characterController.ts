@@ -49,7 +49,7 @@ export const getAllCharacters = async (
       sortOrder,
       searchQuery
     );
-    return res.json(characters);
+    return res.status(200).json(characters);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
@@ -69,7 +69,7 @@ export const getCharacterById = async (
     const { id } = req.params;
 
     const character = await CharacterModel.findById(id);
-    return res.json(character);
+    return res.status(200).json(character);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -92,7 +92,7 @@ export const searchCharactersByName = async (
       searchQuery,
       limit
     );
-    return res.json(character);
+    return res.status(200).json(character);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -114,7 +114,7 @@ export const updateCharacterAttributeById = async (
     const character = await CharacterModel.updateById(id, {
       [attribute]: attributeValue,
     });
-    return res.json({
+    return res.status(200).json({
       message: `Character's ${attribute} updated successfully.`,
       character,
     });
@@ -154,7 +154,7 @@ export const joinGuildById = async (
     await joinGuild(character, guild);
 
     const updatedCharacter = await CharacterModel.findById(id);
-    return res.json({
+    return res.status(200).json({
       message: 'Joined guild successfully.',
       character: updatedCharacter,
     });
@@ -186,7 +186,7 @@ export const leaveGuildById = async (
     await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
     
     const updatedCharacter = await CharacterModel.findById(id);
-    return res.json({
+    return res.status(200).json({
       message: 'Left guild successfully.',
       character: updatedCharacter,
     });
@@ -215,7 +215,7 @@ export const deleteCharacterById = async (
     }
 
     const deletedCharacter = await CharacterModel.deleteById(id);
-    return res.json({
+    return res.status(200).json({
       message: 'Character deleted successfully.',
       character: deletedCharacter,
     });
@@ -239,7 +239,7 @@ export const deleteAllCharacters = async (
       Guild.deleteMany({}),
     ]);
 
-    return res.json({
+    return res.status(200).json({
       message: `${characterDeletionResult.deletedCount} characters and ${guildDeletionResult.deletedCount} guilds deleted successfully.`,
     });
   } catch (error) {

@@ -25,18 +25,15 @@ export const createGuild = async (
       );
     }
 
-    const totalMembers = 1;
     const guildData = {
       name,
       leader: character,
-      totalMembers,
+      totalMembers: 1,
       maxMembers: 50,
     };
 
     const guild = await GuildModel.create(guildData);
-
     await CharacterModel.updateById(character._id, { guild: guild._id });
-
     return res
       .status(201)
       .json({ message: 'Guild created successfully', guild });

@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document as MongooseDocument } from 'mongoose';
 
 export interface ICharacterType {
   _id: string;
@@ -17,14 +17,15 @@ export const CharacterType = model<ICharacterTypeWithoutId>(
 );
 
 export const getAll = async (): Promise<ICharacterType[]> => {
-  return await CharacterType.find();
+  const result = await CharacterType.find().sort({ typeName: 1 });
+  return result.map(mapCharacterType);
 };
 
 export const populate = async (
   data: ICharacterTypeWithoutId[]
 ): Promise<ICharacterType[]> => {
   const result = await CharacterType.insertMany(data);
-  return result.map((characterType) => characterType.toObject());
+  return result.map(mapCharacterType);
 };
 
 export const findOne = async (
@@ -34,4 +35,11 @@ export const findOne = async (
     (await CharacterType.findOne({ typeName: characterType }))?.toObject() ||
     null
   );
+};
+
+const mapCharacterType = (
+  rawCharacter: MongooseDocument<unknown, unknown, ICharacterType>
+): ICharacterType => {
+  const { _id, ...characterWithoutId } = rawCharacter.toObject();
+  return { _id: _id.toString(), ...characterWithoutId } as ICharacterType;
 };

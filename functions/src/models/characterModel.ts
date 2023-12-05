@@ -151,7 +151,9 @@ export const findMultipleByName = async (
   return characters.map(mapCharacter) || null;
 };
 
-const mapCharacter = (rawCharacter: MongooseDocument<unknown, unknown, ICharacter>): ICharacter => {
+const mapCharacter = (
+  rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
+): ICharacter => {
   const { _id, ...characterWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...characterWithoutId } as ICharacter;
 };

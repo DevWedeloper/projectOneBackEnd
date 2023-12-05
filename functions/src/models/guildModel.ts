@@ -114,6 +114,14 @@ export const findById = async (id: string): Promise<IGuild | null> => {
   );
 };
 
+export const findByName = async (name: string): Promise<IGuild | null> => {
+  return (
+    (
+      await Guild.findOne({ name }).populate('leader members', 'name _id')
+    )?.toObject() || null
+  );
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

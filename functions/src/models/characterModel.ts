@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IGuild } from './guildModel';
+import { Guild, IGuild } from './guildModel';
 
 export interface ICharacter {
   _id: string;
@@ -45,4 +45,80 @@ export const create = async (
   character: ICharacterWithoutId
 ): Promise<ICharacter> => {
   return (await Character.create(character)).toObject();
+};
+
+export const getAll = async (
+  page: number,
+  pageSize: number,
+  sortBy: string,
+  sortOrder: 'asc' | 'desc',
+  searchQuery: string
+): Promise<{
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalCharacters: number;
+  characters: ICharacter[];
+}> => {
+  // Calculate the skip value for pagination
+  const skip = (page - 1) * pageSize;
+
+  // Build the sort object based on sortBy and sortOrder
+  const sort: { [key: string]: 'asc' | 'desc' } = {};
+  sort[sortBy] = sortOrder;
+
+  // Build the search query
+  const regex = new RegExp(searchQuery, 'i');
+  const query = searchQuery
+    ? {
+        $or: [
+          { name: { $regex: regex } },
+          {
+            guild: {
+              $in: (
+                await Guild.find({
+                  name: { $regex: searchQuery, $options: 'i' },
+                })
+              ).map((guild) => guild._id.toString()),
+            },
+          },
+        ],
+      }
+    : {};
+
+  // Fetch characters from the database based on the provided parameters
+  const rawCharacters = await Character.find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(pageSize)
+    .populate({
+      path: 'guild',
+      select: '_id name leader',
+      populate: {
+        path: 'leader',
+        model: 'Character',
+        select: '_id name',
+      },
+    });
+
+  // Convert each Mongoose document to a plain JavaScript object
+  const characters = rawCharacters.map((rawCharacter) => {
+    const { _id, ...characterWithoutId } = rawCharacter.toObject();
+    return { _id: _id.toString(), ...characterWithoutId } as ICharacter;
+  });
+
+  // Get the total count of characters for pagination
+  const totalCharacters = await Character.countDocuments(query);
+
+  // Calculate the total pages based on pageSize
+  const totalPages = Math.ceil(totalCharacters / pageSize);
+
+  // Return the result as a Promise
+  return {
+    page,
+    pageSize,
+    totalPages,
+    totalCharacters,
+    characters,
+  };
 };

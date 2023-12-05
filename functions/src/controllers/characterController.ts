@@ -39,72 +39,15 @@ export const getAllCharacters = async (
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
     const sortBy: string = (req.query.sortBy as string) || 'name';
-    const sortOrder: string = (req.query.sortOrder as string) || 'asc';
+    const sortOrder: 'asc' | 'desc' = (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const sortCriteria: { [key: string]: 'asc' | 'desc' } = {};
-    sortCriteria[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
+    const characters = await CharacterModel.getAll(page, pageSize, sortBy, sortOrder, searchQuery);
 
-    const query: {
-      $or: Array<{
-        name?: { $regex: string; $options: string };
-        characterType?: { $regex: string; $options: string };
-        health?: { $eq: number };
-        strength?: { $eq: number };
-        agility?: { $eq: number };
-        intelligence?: { $eq: number };
-        armor?: { $eq: number };
-        critChance?: { $eq: number };
-        guild?: { $in: string[] };
-      }>;
-    } = {
-      $or: [
-        { name: { $regex: searchQuery, $options: 'i' } },
-        { characterType: { $regex: searchQuery, $options: 'i' } },
-        { guild: { $in: await getGuildIdsByGuildName(searchQuery) } },
-      ],
-    };
-
-    if (searchQuery && !isNaN(Number(searchQuery))) {
-      const numericValue = Number(searchQuery);
-      query.$or.push(
-        { health: { $eq: numericValue } },
-        { strength: { $eq: numericValue } },
-        { agility: { $eq: numericValue } },
-        { intelligence: { $eq: numericValue } },
-        { armor: { $eq: numericValue } },
-        { critChance: { $eq: numericValue } }
-      );
-    }
-
-    const totalCharacters: number = await Character.countDocuments(query);
-    const totalPages: number = Math.ceil(totalCharacters / pageSize);
-
-    const charactersQuery = Character.find(query)
-      .sort(sortCriteria)
-      .populate({
-        path: 'guild',
-        select: '_id name leader',
-        populate: {
-          path: 'leader',
-          model: 'Character',
-          select: '_id name',
-        },
-      })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-
-    const characters = await charactersQuery;
-
-    return res.json({
-      page,
-      pageSize,
-      totalPages,
-      totalCharacters,
-      characters,
-    });
+    return res.json(characters);
   } catch (error) {
     if (error instanceof Error) {
+      console.log(error.message);
       return res.status(500).json({
         error: 'Failed to retrieve characters',
         message: error.message,
@@ -345,12 +288,4 @@ export const deleteAllCharacters = async (
       });
     }
   }
-};
-
-const getGuildIdsByGuildName = async (guildName: string) => {
-  const guildSearchResults = await Guild.find({
-    name: { $regex: guildName, $options: 'i' },
-  });
-
-  return guildSearchResults.map((guild) => guild._id.toString());
 };

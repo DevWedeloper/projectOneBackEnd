@@ -39,10 +39,17 @@ export const getAllCharacters = async (
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
     const sortBy: string = (req.query.sortBy as string) || 'name';
-    const sortOrder: 'asc' | 'desc' = (req.query.sortOrder as 'asc' | 'desc') || 'asc';
+    const sortOrder: 'asc' | 'desc' =
+      (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
-    
-    const characters = await CharacterModel.getAll(page, pageSize, sortBy, sortOrder, searchQuery);
+
+    const characters = await CharacterModel.getAll(
+      page,
+      pageSize,
+      sortBy,
+      sortOrder,
+      searchQuery
+    );
     return res.json(characters);
   } catch (error) {
     if (error instanceof Error) {
@@ -82,7 +89,10 @@ export const searchCharactersByName = async (
     const searchQuery: string = (req.query.search as string) || '';
     const limit = 10;
 
-    const character = await CharacterModel.findMultipleByName(searchQuery, limit);
+    const character = await CharacterModel.findMultipleByName(
+      searchQuery,
+      limit
+    );
     return res.json(character);
   } catch (error) {
     if (error instanceof Error) {
@@ -102,7 +112,9 @@ export const updateCharacterAttributeById = async (
     const { id } = req.params;
     const { [attribute]: attributeValue } = req.body;
 
-    const character = await CharacterModel.updateById(id, { [attribute]: attributeValue });
+    const character = await CharacterModel.updateById(id, {
+      [attribute]: attributeValue,
+    });
     return res.json({
       message: `Character's ${attribute} updated successfully.`,
       character,
@@ -126,9 +138,7 @@ export const joinGuildById = async (
     const { character, guild } = req.body;
 
     if (character.guild) {
-      const previousGuild = await Guild.findById(
-        character.guild
-      );
+      const previousGuild = await Guild.findById(character.guild);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Current guild not found' });
       }
@@ -181,9 +191,7 @@ export const leaveGuildById = async (
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
-    const previousGuild = await Guild.findById(
-      character.guild
-    );
+    const previousGuild = await Guild.findById(character.guild);
     if (!previousGuild) {
       return res.status(404).json({ error: 'Current guild not found' });
     }

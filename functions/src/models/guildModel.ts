@@ -113,7 +113,7 @@ export const getPaginated = async (
 export const findOneByQuery = async (
   query: Record<string, string | number>
 ): Promise<IGuild | null> => {
-  return await Guild.findOne(query);
+  return await Guild.findOne(query).populate('leader members', 'name _id');
 };
 
 export const findById = async (id: string): Promise<IGuild | null> => {

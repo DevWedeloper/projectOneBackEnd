@@ -219,7 +219,7 @@ export const addMemberToGuildById = async (
     }
 
     if (character.guild && isDifferentGuild(character.guild, id)) {
-      const previousGuild = await GuildModel.findById(id);
+      const previousGuild = await GuildModel.findById(character.guild._id);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Guild not found' });
       }

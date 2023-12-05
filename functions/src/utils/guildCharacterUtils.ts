@@ -69,7 +69,7 @@ export const leaveGuild = async (characterId: string) => {
 export const updateLeaderAndDeleteGuild = async (guild: IGuild) => {
   try {
     const guildId = guild._id;
-    const leaderId = guild.leader.toString();
+    const leaderId = guild.leader._id.toString();
 
     await Promise.all([
       Character.updateMany(
@@ -108,7 +108,7 @@ export const updateLeaderOrMembersGuild = async (
 };
 
 export function isLeader(guild: IGuild, memberId: string): boolean {
-  return guild && guild.leader.toString() === memberId;
+  return guild && guild.leader._id.toString() === memberId.toString();
 }
 
 export function isDifferentGuild(

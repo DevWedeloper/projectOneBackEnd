@@ -165,6 +165,10 @@ export const updateById = async (
   );
 };
 
+export const deleteById = async (id: string): Promise<ICharacter | null> => {
+  return (await Character.findByIdAndDelete(id))?.toObject() || null;
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

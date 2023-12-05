@@ -214,7 +214,6 @@ export const deleteCharacterById = async (
   try {
     const { id } = req.params;
     const { character } = req.body;
-
     if (character.guild) {
       if (isLeader(character.guild, id)) {
         await updateLeaderAndDeleteGuild(character.guild);
@@ -223,10 +222,10 @@ export const deleteCharacterById = async (
       }
     }
 
-    await Character.findByIdAndDelete(id);
+    const deletedCharacter = await CharacterModel.deleteById(id);
     return res.json({
       message: 'Character deleted successfully.',
-      character: character,
+      character: deletedCharacter,
     });
   } catch (error) {
     if (error instanceof Error) {

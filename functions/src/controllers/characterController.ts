@@ -243,7 +243,7 @@ export const deleteAllCharacters = async (
 ): Promise<void | Response> => {
   try {
     const [characterDeletionResult, guildDeletionResult] = await Promise.all([
-      Character.deleteMany({}),
+      CharacterModel.deleteAll(),
       Guild.deleteMany({}),
     ]);
 

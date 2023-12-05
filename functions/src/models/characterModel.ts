@@ -169,6 +169,13 @@ export const deleteById = async (id: string): Promise<ICharacter | null> => {
   return (await Character.findByIdAndDelete(id))?.toObject() || null;
 };
 
+export const deleteAll = async (): Promise<{
+  acknowledged: boolean;
+  deletedCount: number;
+}> => {
+  return await Character.deleteMany();
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

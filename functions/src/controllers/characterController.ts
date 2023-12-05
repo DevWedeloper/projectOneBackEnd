@@ -16,7 +16,7 @@ export const createCharacter = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const character = CharacterModel.create(req.body);
+    const character = await CharacterModel.create(req.body);
     return res.status(201).json({
       message: 'Character created successfully',
       character,

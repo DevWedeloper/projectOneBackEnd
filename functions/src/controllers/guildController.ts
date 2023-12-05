@@ -102,10 +102,7 @@ export const searchGuildsByName = async (
     const searchQuery = req.query.name as string;
     const limit = 10;
 
-    const guild = await GuildModel.findMultipleByName(
-      searchQuery,
-      limit
-    );
+    const guild = await GuildModel.findMultipleByName(searchQuery, limit);
     return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
@@ -122,15 +119,15 @@ export const searchGuildMemberById = async (
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
+    const limit = 10;
     const { guild } = req.body;
-    const memberObjects = await Character.find({
-      _id: { $in: guild.members },
-    }).limit(10);
-    const searchResults = memberObjects.filter((member) =>
-      member.name.includes(searchQuery)
-    );
 
-    return res.status(200).json(searchResults);
+    const members = await GuildModel.findMembersByGuild(
+      guild._id,
+      searchQuery,
+      limit
+    );
+    return res.status(200).json(members);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -347,7 +344,9 @@ export const deleteGuildById = async (
     }
 
     await updateLeaderAndDeleteGuild(guild);
-    return res.status(200).json({ message: 'Guild deleted successfully', guild: guild });
+    return res
+      .status(200)
+      .json({ message: 'Guild deleted successfully', guild: guild });
   } catch (error) {
     if (error instanceof Error) {
       return res

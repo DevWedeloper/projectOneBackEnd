@@ -135,6 +135,25 @@ export const findMultipleByName = async (
   return guilds.map(mapGuild) || null;
 };
 
+export const findMembersByGuild = async (
+  guildId: string,
+  query: string,
+  limit: number
+): Promise<ICharacter[] | null> => {
+  return (
+    (
+      await Guild.findById(guildId)
+        .populate({
+          path: 'members',
+          match: {
+            $or: [{ name: { $regex: new RegExp(query, 'i') } }],
+          },
+        })
+        .limit(limit)
+    )?.members || null
+  );
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

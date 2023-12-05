@@ -154,6 +154,23 @@ export const findMembersByGuild = async (
   );
 };
 
+export const updateById = async (
+  id: string,
+  query: Record<string, string | number>
+): Promise<IGuild | null> => {
+  return (
+    (
+      await Guild.findByIdAndUpdate(id, query, {
+        new: true,
+        runValidators: true,
+      }).populate({
+        path: 'leader members',
+        select: '_id name',
+      })
+    )?.toObject() || null
+  );
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

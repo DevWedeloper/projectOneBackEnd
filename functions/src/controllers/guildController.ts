@@ -144,24 +144,12 @@ export const updateGuildNameById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { name, ...guildDataToUpdate } = req.body;
+    const { name } = req.body;
 
-    const updatedGuild = await Guild.findByIdAndUpdate(
-      id,
-      { ...guildDataToUpdate, name: name },
-      { new: true, runValidators: true }
-    ).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Failed to update the guild' });
-    }
-
+    const guild = await GuildModel.updateById(id, { name });
     return res.status(200).json({
       message: 'Guild name updated successfully',
-      guild: updatedGuild,
+      guild,
     });
   } catch (error) {
     if (error instanceof Error) {

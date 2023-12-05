@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
-import { Character } from '../models/characterModel';
-import { Guild, IGuild } from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
+import { IGuild } from '../models/guildModel';
 import { joinGuild } from '../utils/guildCharacterUtils';
 dotenv.config({ path: '../../.env' });
 
@@ -23,12 +24,12 @@ connectToDatabase();
 
 const populateGuildsWithCharacters = async () => {
   try {
-    const characters = await Character.find({ guild: null });
+    const characters = await Character.getAllWithoutGuild();
     for (const character of characters) {
       if (Math.random() < 0.8) {
         const randomGuild = availableGuilds[Math.floor(Math.random() * availableGuilds.length)];
         try {
-          await joinGuild(character.toObject(), randomGuild);
+          await joinGuild(character, randomGuild);
           console.log(
             `Character ${character.name} joined guild ${randomGuild.name}`
           );
@@ -60,7 +61,7 @@ const populateGuildsWithCharacters = async () => {
 
 const fetchAvailableGuilds = async () => {
   try {
-    availableGuilds = await Guild.find();
+    availableGuilds = await Guild.getAll();
     if (availableGuilds.length === 0) {
       throw new Error('No available guilds found in the database to choose from.');
     }

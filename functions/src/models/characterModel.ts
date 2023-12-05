@@ -128,7 +128,15 @@ export const getPaginated = async (
 export const findOneByQuery = async (
   query: Record<string, string | number>
 ): Promise<ICharacter | null> => {
-  return await Character.findOne(query);
+  return await Character.findOne(query).populate({
+    path: 'guild',
+    select: '_id name leader',
+    populate: {
+      path: 'leader',
+      model: 'Character',
+      select: '_id name',
+    },
+  });
 };
 
 export const findById = async (id: string): Promise<ICharacter | null> => {

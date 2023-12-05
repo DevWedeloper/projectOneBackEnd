@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { Character as ICharacter } from '../types/characterInterface';
 import { Character } from '../models/characterModel';
+import * as GuildModel from '../models/guildModel';
 import { Guild, IGuild } from '../models/guildModel';
 import {
   isDifferentGuild,
@@ -10,14 +10,14 @@ import {
   updateLeaderAndDeleteGuild,
   updateLeaderOrMembersGuild,
 } from '../utils/guildCharacterUtils';
+import * as CharacterModel from '../models/characterModel';
 
 export const createGuild = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { name, character }: { name: string; character: ICharacter } =
-      req.body;
+    const { name, character } = req.body;
     if (character.guild) {
       await updateLeaderOrMembersGuild(
         character.guild as IGuild,
@@ -30,18 +30,16 @@ export const createGuild = async (
       name,
       leader: character,
       totalMembers,
+      maxMembers: 50,
     };
 
-    const savedGuild = await Guild.create(guildData);
+    const guild = await GuildModel.create(guildData);
 
-    await Character.findOneAndUpdate(
-      { _id: character._id },
-      { $set: { guild: savedGuild._id } }
-    );
+    await CharacterModel.updateById(character._id, { guild: guild._id });
 
     return res
       .status(201)
-      .json({ message: 'Guild created successfully', guild: savedGuild });
+      .json({ message: 'Guild created successfully', guild });
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -231,8 +229,7 @@ export const updateGuildLeaderById = async (
       newLeader && newLeader.toString() !== guild.leader.toString();
     if (isChangingLeader) {
       const isLeaderNotMemberOfGuild: boolean =
-        !newLeader.guild ||
-        isDifferentGuild(newLeader.guild, id);
+        !newLeader.guild || isDifferentGuild(newLeader.guild, id);
       if (isLeaderNotMemberOfGuild) {
         return res
           .status(400)
@@ -288,25 +285,22 @@ export const addMemberToGuildById = async (
 
     const newMember = character;
 
-    if (
-      newMember.guild &&
-      !isDifferentGuild(newMember.guild, id)
-    ) {
+    if (newMember.guild && !isDifferentGuild(newMember.guild, id)) {
       return res
         .status(400)
         .json({ error: 'Member is already a member or leader of the guild' });
     }
 
-    if (
-      newMember.guild &&
-      isDifferentGuild(newMember.guild, id)
-    ) {
+    if (newMember.guild && isDifferentGuild(newMember.guild, id)) {
       const previousGuild = await Guild.findById(newMember.guild);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Guild not found' });
       }
 
-      await updateLeaderOrMembersGuild(previousGuild.toObject(), newMember._id.toString());
+      await updateLeaderOrMembersGuild(
+        previousGuild.toObject(),
+        newMember._id.toString()
+      );
     }
 
     await joinGuild(newMember, guild);
@@ -344,8 +338,7 @@ export const removeMemberFromGuildById = async (
 
     if (
       !newMember.guild ||
-      (newMember.guild &&
-        isDifferentGuild(newMember.guild, id))
+      (newMember.guild && isDifferentGuild(newMember.guild, id))
     ) {
       return res
         .status(400)

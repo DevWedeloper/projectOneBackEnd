@@ -15,3 +15,7 @@ export const CharacterType = model<ICharacterTypeWithoutId>(
   'CharacterType',
   characterTypeSchema
 );
+
+export const getAll = async (): Promise<ICharacterType[]> => {
+  return CharacterType.find();
+};

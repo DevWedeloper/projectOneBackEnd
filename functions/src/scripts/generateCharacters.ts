@@ -2,7 +2,8 @@ import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { generateUsername } from 'unique-username-generator';
 import { Character } from '../models/characterModel';
-import { CharacterType, ICharacterType } from '../models/characterTypeModel';
+import * as CharacterType from '../models/characterTypeModel';
+import { ICharacterType } from '../models/characterTypeModel';
 dotenv.config({ path: '../../.env' });
 
 const numCharactersToGenerate = 100;
@@ -69,7 +70,7 @@ const generateRandomCharacter = async () => {
 
 const fetchAvailableCharacterTypes = async () => {
   try {
-    availableCharacterTypes = await CharacterType.find();
+    availableCharacterTypes = await CharacterType.getAll();
     if (availableCharacterTypes.length === 0) {
       throw new Error('No available character types found in the database.');
     }

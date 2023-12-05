@@ -1,11 +1,5 @@
 import { Schema, model, Document as MongooseDocument } from 'mongoose';
-
-export type ICharacterType = {
-  _id: string;
-  typeName: string;
-}
-
-export type ICharacterTypeWithoutId = Omit<ICharacterType, '_id'>;
+import { ICharacterTypeWithoutId, ICharacterType } from '../types/characterTypeTypes';
 
 const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
   typeName: { type: String, required: true, unique: true },

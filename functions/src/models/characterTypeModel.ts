@@ -19,3 +19,10 @@ export const CharacterType = model<ICharacterTypeWithoutId>(
 export const getAll = async (): Promise<ICharacterType[]> => {
   return await CharacterType.find();
 };
+
+export const populate = async (
+  data: ICharacterTypeWithoutId[]
+): Promise<ICharacterType[]> => {
+  const result = await CharacterType.insertMany(data);
+  return result.map((characterType) => characterType.toObject());
+};

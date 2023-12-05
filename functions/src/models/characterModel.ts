@@ -121,12 +121,34 @@ export const getAll = async (
 };
 
 export const findById = async (id: string): Promise<ICharacter | null> => {
-  return (await Character.findById(id).populate('guild'))?.toObject() || null;
+  return (
+    (
+      await Character.findById(id).populate({
+        path: 'guild',
+        select: '_id name leader',
+        populate: {
+          path: 'leader',
+          model: 'Character',
+          select: '_id name',
+        },
+      })
+    )?.toObject() || null
+  );
 };
 
 export const findByName = async (name: string): Promise<ICharacter | null> => {
   return (
-    (await Character.findOne({ name }).populate('guild'))?.toObject() || null
+    (
+      await Character.findOne({ name }).populate({
+        path: 'guild',
+        select: '_id name leader',
+        populate: {
+          path: 'leader',
+          model: 'Character',
+          select: '_id name',
+        },
+      })
+    )?.toObject() || null
   );
 };
 

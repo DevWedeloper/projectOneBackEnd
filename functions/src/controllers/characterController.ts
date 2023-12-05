@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as CharacterModel from '../models/characterModel';
-import * as GuildModel from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -15,7 +15,7 @@ export const createCharacter = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const character = await CharacterModel.create(req.body);
+    const character = await Character.create(req.body);
     return res.status(201).json({
       message: 'Character created successfully',
       character,
@@ -42,7 +42,7 @@ export const getAllCharacters = async (
       (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const characters = await CharacterModel.getAll(
+    const characters = await Character.getAll(
       page,
       pageSize,
       sortBy,
@@ -68,7 +68,7 @@ export const getCharacterById = async (
   try {
     const { id } = req.params;
 
-    const character = await CharacterModel.findById(id);
+    const character = await Character.findById(id);
     return res.status(200).json(character);
   } catch (error) {
     if (error instanceof Error) {
@@ -88,7 +88,7 @@ export const searchCharactersByName = async (
     const searchQuery: string = (req.query.search as string) || '';
     const limit = 10;
 
-    const character = await CharacterModel.findMultipleByName(
+    const character = await Character.findMultipleByName(
       searchQuery,
       limit
     );
@@ -111,7 +111,7 @@ export const updateCharacterAttributeById = async (
     const { id } = req.params;
     const { [attribute]: attributeValue } = req.body;
 
-    const character = await CharacterModel.updateById(id, {
+    const character = await Character.updateById(id, {
       [attribute]: attributeValue,
     });
     return res.status(200).json({
@@ -137,7 +137,7 @@ export const joinGuildById = async (
     const { character, guild } = req.body;
 
     if (character.guild) {
-      const previousGuild = await GuildModel.findById(character.guild._id);
+      const previousGuild = await Guild.findById(character.guild._id);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Current guild not found' });
       }
@@ -153,7 +153,7 @@ export const joinGuildById = async (
 
     await joinGuild(character, guild);
 
-    const updatedCharacter = await CharacterModel.findById(id);
+    const updatedCharacter = await Character.findById(id);
     return res.status(200).json({
       message: 'Joined guild successfully.',
       character: updatedCharacter,
@@ -179,13 +179,13 @@ export const leaveGuildById = async (
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
-    const previousGuild = await GuildModel.findById(character.guild._id);
+    const previousGuild = await Guild.findById(character.guild._id);
     if (!previousGuild) {
       return res.status(404).json({ error: 'Current guild not found' });
     }
     await updateLeaderOrMembersGuild(previousGuild, id);
     
-    const updatedCharacter = await CharacterModel.findById(id);
+    const updatedCharacter = await Character.findById(id);
     return res.status(200).json({
       message: 'Left guild successfully.',
       character: updatedCharacter,
@@ -214,7 +214,7 @@ export const deleteCharacterById = async (
       }
     }
 
-    const deletedCharacter = await CharacterModel.deleteById(id);
+    const deletedCharacter = await Character.deleteById(id);
     return res.status(200).json({
       message: 'Character deleted successfully.',
       character: deletedCharacter,
@@ -235,8 +235,8 @@ export const deleteAllCharacters = async (
 ): Promise<void | Response> => {
   try {
     const [characterDeletionResult, guildDeletionResult] = await Promise.all([
-      CharacterModel.deleteAll(),
-      GuildModel.deleteAll(),
+      Character.deleteAll(),
+      Guild.deleteAll(),
     ]);
 
     return res.status(200).json({

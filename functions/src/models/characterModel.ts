@@ -125,10 +125,10 @@ export const getPaginated = async (
   };
 };
 
-export const findOne = async (
-  attribute: string
+export const findOneByName = async (
+  name: string
 ): Promise<ICharacter | null> => {
-  return await Character.findOne({ attribute }) || null;
+  return await Character.findOne({ name });
 };
 
 export const findById = async (id: string): Promise<ICharacter | null> => {

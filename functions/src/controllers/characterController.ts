@@ -153,19 +153,8 @@ export const joinGuildById = async (
     }
 
     await joinGuild(character, guild);
-    const updatedCharacter = await Character.findById(id).populate({
-      path: 'guild',
-      select: '_id name leader',
-      populate: {
-        path: 'leader',
-        model: 'Character',
-        select: '_id name',
-      },
-    });
-    if (!updatedCharacter) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
+    
+    const updatedCharacter = await CharacterModel.findById(id);
     return res.json({
       message: 'Joined guild successfully.',
       character: updatedCharacter,

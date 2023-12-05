@@ -79,21 +79,10 @@ export const searchCharactersByName = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const searchQuery = req.query.name as string;
-    const character = await Character.find({
-      name: { $regex: searchQuery, $options: 'i' },
-    })
-      .populate({
-        path: 'guild',
-        select: '_id name leader',
-        populate: {
-          path: 'leader',
-          model: 'Character',
-          select: '_id name',
-        },
-      })
-      .limit(10);
+    const searchQuery: string = (req.query.search as string) || '';
+    const limit = 10;
 
+    const character = await CharacterModel.findMultipleByName(searchQuery, limit);
     return res.json(character);
   } catch (error) {
     if (error instanceof Error) {

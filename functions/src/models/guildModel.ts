@@ -55,10 +55,10 @@ export const getAll = async (): Promise<IGuild[]> => {
   return await Guild.find();
 };
 
-export const findOneByName = async (
-  name: string
+export const findOneByQuery = async (
+  query: Record<string, string | number>
 ): Promise<IGuild | null> => {
-  return await Guild.findOne({ name });
+  return await Guild.findOne(query);
 };
 
 export const getPaginated = async (

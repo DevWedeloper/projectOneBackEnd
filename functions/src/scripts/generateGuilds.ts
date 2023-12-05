@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { generateUsername } from 'unique-username-generator';
-import { Character, ICharacter } from '../models/characterModel';
-import { Guild } from '../models/guildModel';
+import { ICharacter } from '../models/characterModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
 dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;
@@ -34,15 +35,13 @@ const generateRandomGuild = async () => {
     const leader = await randomLeader();
     const guildData = {
       name: generateUsername('', 0, 20),
-      leader: leader._id,
+      leader: leader,
+      maxMembers: 50,
       totalMembers: 1,
     };
 
     const savedGuild = await Guild.create(guildData);
-    await Character.findOneAndUpdate(
-      { _id: leader._id },
-      { $set: { guild: savedGuild._id } }
-    );
+    await Character.updateById(leader._id, { guild: savedGuild._id });
     availableCharacters = availableCharacters.filter(character => character._id !== leader._id);
     console.log(guildCtr + 1, ' Guild created successfully:', savedGuild.name);
     guildCtr++;
@@ -55,7 +54,7 @@ const generateRandomGuild = async () => {
 
 const fetchAvailableCharacters = async () => {
   try {
-    availableCharacters = await Character.find({ guild: null });
+    availableCharacters = await Character.getAllWithoutGuild();
     if (availableCharacters.length === 0) {
       throw new Error('No available characters found in the database to choose as guild leader.');
     }

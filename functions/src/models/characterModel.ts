@@ -207,6 +207,10 @@ export const leaveAllGuild = async (): Promise<UpdateWriteOpResult> => {
   return await Character.updateMany({ $set: { guild: null } });
 };
 
+export const getAllWithoutGuild = async (): Promise<ICharacter[]> => {
+  return await Character.find({ guild: null });
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

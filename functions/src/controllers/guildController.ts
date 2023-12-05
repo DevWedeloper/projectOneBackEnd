@@ -223,10 +223,7 @@ export const addMemberToGuildById = async (
         return res.status(404).json({ error: 'Guild not found' });
       }
 
-      await updateLeaderOrMembersGuild(
-        previousGuild,
-        character._id
-      );
+      await updateLeaderOrMembersGuild(previousGuild, character._id);
     }
 
     await joinGuild(character, guild);
@@ -271,7 +268,7 @@ export const removeMemberFromGuildById = async (
 
     await leaveGuild(character._id);
 
-    const updatedGuild =  await GuildModel.findById(id);
+    const updatedGuild = await GuildModel.findById(id);
     return res.status(200).json({
       message: 'Member removed from guild successfully',
       guild: updatedGuild,
@@ -294,7 +291,7 @@ export const deleteGuildById = async (
     const { guild } = req.body;
 
     await updateLeaderAndDeleteGuild(guild);
-    
+
     return res
       .status(200)
       .json({ message: 'Guild deleted successfully', guild: guild });

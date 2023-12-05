@@ -102,10 +102,7 @@ export const getAll = async (
     });
 
   // Convert each Mongoose document to a plain JavaScript object
-  const characters = rawCharacters.map((rawCharacter) => {
-    const { _id, ...characterWithoutId } = rawCharacter.toObject();
-    return { _id: _id.toString(), ...characterWithoutId } as ICharacter;
-  });
+  const characters = rawCharacters.map(mapCharacter);
 
   // Get the total count of characters for pagination
   const totalCharacters = await Character.countDocuments(query);

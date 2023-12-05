@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { CharacterType } from '../models/characterTypeModel';
+import * as CharacterType from '../models/characterTypeModel';
 
 export const isValidCharacterType = async (
   req: Request,
@@ -12,9 +12,7 @@ export const isValidCharacterType = async (
   }
 
   try {
-    const foundCharacterType = await CharacterType.findOne({
-      typeName: characterType,
-    });
+    const foundCharacterType = await CharacterType.findOne(characterType);
     if (!foundCharacterType) {
       return res
         .status(500)

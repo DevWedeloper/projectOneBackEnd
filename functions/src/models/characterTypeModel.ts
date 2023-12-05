@@ -26,3 +26,12 @@ export const populate = async (
   const result = await CharacterType.insertMany(data);
   return result.map((characterType) => characterType.toObject());
 };
+
+export const findOne = async (
+  characterType: string
+): Promise<ICharacterType | null> => {
+  return (
+    (await CharacterType.findOne({ typeName: characterType }))?.toObject() ||
+    null
+  );
+};

@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as CharacterModel from '../models/characterModel';
-import { Character } from '../models/characterModel';
 import * as GuildModel from '../models/guildModel';
 import { Guild, IGuild } from '../models/guildModel';
 import {
@@ -293,12 +292,9 @@ export const deleteGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { guild } = req.body;
-    const leaderCharacter = await Character.findById(guild.leader);
-    if (!leaderCharacter) {
-      return res.status(404).json({ error: 'Leader not found' });
-    }
 
     await updateLeaderAndDeleteGuild(guild);
+    
     return res
       .status(200)
       .json({ message: 'Guild deleted successfully', guild: guild });

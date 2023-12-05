@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import * as CharacterModel from '../models/characterModel';
-import { Guild } from '../models/guildModel';
+import * as GuildModel from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -137,13 +137,13 @@ export const joinGuildById = async (
     const { character, guild } = req.body;
 
     if (character.guild) {
-      const previousGuild = await Guild.findById(character.guild);
+      const previousGuild = await GuildModel.findById(character.guild._id);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Current guild not found' });
       }
 
-      if (isDifferentGuild(previousGuild.toObject(), guild._id.toString())) {
-        await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
+      if (isDifferentGuild(previousGuild, guild._id.toString())) {
+        await updateLeaderOrMembersGuild(previousGuild, id);
       } else {
         return res
           .status(400)
@@ -179,11 +179,11 @@ export const leaveGuildById = async (
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
-    const previousGuild = await Guild.findById(character.guild);
+    const previousGuild = await GuildModel.findById(character.guild._id);
     if (!previousGuild) {
       return res.status(404).json({ error: 'Current guild not found' });
     }
-    await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
+    await updateLeaderOrMembersGuild(previousGuild, id);
     
     const updatedCharacter = await CharacterModel.findById(id);
     return res.status(200).json({
@@ -236,7 +236,7 @@ export const deleteAllCharacters = async (
   try {
     const [characterDeletionResult, guildDeletionResult] = await Promise.all([
       CharacterModel.deleteAll(),
-      Guild.deleteMany({}),
+      GuildModel.deleteAll(),
     ]);
 
     return res.status(200).json({

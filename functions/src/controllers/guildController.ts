@@ -167,46 +167,29 @@ export const updateGuildLeaderById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { guild, character, ...guildDataToUpdate } = req.body;
-
-    const newLeader = character;
+    const { guild, character } = req.body;
 
     const isChangingLeader: boolean =
-      newLeader && newLeader.toString() !== guild.leader.toString();
+      character && character.toString() !== guild.leader.toString();
     if (isChangingLeader) {
       const isLeaderNotMemberOfGuild: boolean =
-        !newLeader.guild || isDifferentGuild(newLeader.guild, id);
+        !character.guild || isDifferentGuild(character.guild, id);
       if (isLeaderNotMemberOfGuild) {
         return res
           .status(400)
           .json({ error: 'New leader must be a member of the guild' });
       }
 
-      const previousLeader = await Character.findById(guild.leader);
+      const previousLeader = await CharacterModel.findById(guild.leader._id);
       if (previousLeader && previousLeader.guild) {
-        await joinGuild(previousLeader.toObject(), guild);
+        await joinGuild(previousLeader, guild);
       }
 
-      await leaveGuild(newLeader._id);
-      await Character.findOneAndUpdate(
-        { _id: newLeader._id },
-        { $set: { guild: guild._id } }
-      );
+      await leaveGuild(character._id);
+      await CharacterModel.updateById(character._id, { guild: guild._id });
     }
 
-    const updatedGuild = await Guild.findByIdAndUpdate(
-      id,
-      { ...guildDataToUpdate, leader: newLeader },
-      { new: true }
-    ).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Failed to update the guild' });
-    }
-
+    const updatedGuild = await GuildModel.updateById(id, { leader: character });
     return res.status(200).json({
       message: 'Guild leader updated successfully',
       guild: updatedGuild,

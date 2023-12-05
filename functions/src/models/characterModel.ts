@@ -122,3 +122,7 @@ export const getAll = async (
     characters,
   };
 };
+
+export const findById = async (id: string): Promise<ICharacter | null> => {
+  return (await Character.findById(id).populate('guild'))?.toObject() || null;
+};

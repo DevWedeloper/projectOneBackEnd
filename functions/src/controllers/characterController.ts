@@ -61,14 +61,8 @@ export const getCharacterById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const character = await Character.findById(
-      id
-    ).populate('guild');
 
-    if (!character) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
+    const character = await CharacterModel.findById(id);
     return res.json(character);
   } catch (error) {
     if (error instanceof Error) {

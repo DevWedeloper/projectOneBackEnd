@@ -93,10 +93,7 @@ export const getPaginated = async (
     .sort(sort)
     .skip(skip)
     .limit(pageSize)
-    .populate({
-      path: 'leader members',
-      select: 'name _id',
-    });
+    .populate(populateCharacters());
 
   const guilds = rawGuilds.map(mapGuild);
   const totalGuilds = await Guild.countDocuments(query);
@@ -113,13 +110,13 @@ export const getPaginated = async (
 export const findOneByQuery = async (
   query: Record<string, string | number>
 ): Promise<IGuild | null> => {
-  return await Guild.findOne(query).populate('leader members', 'name _id');
+  return await Guild.findOne(query).populate(populateCharacters());
 };
 
 export const findById = async (id: string): Promise<IGuild | null> => {
   return (
     (
-      await Guild.findById(id).populate('leader members', 'name _id')
+      await Guild.findById(id).populate(populateCharacters())
     )?.toObject() || null
   );
 };
@@ -127,7 +124,7 @@ export const findById = async (id: string): Promise<IGuild | null> => {
 export const findByName = async (name: string): Promise<IGuild | null> => {
   return (
     (
-      await Guild.findOne({ name }).populate('leader members', 'name _id')
+      await Guild.findOne({ name }).populate(populateCharacters())
     )?.toObject() || null
   );
 };
@@ -139,7 +136,7 @@ export const findMultipleByName = async (
   const guilds = await Guild.find({
     name: { $regex: query, $options: 'i' },
   })
-    .populate('leader members', 'name _id')
+    .populate(populateCharacters())
     .limit(limit);
 
   return guilds.map(mapGuild) || null;
@@ -173,10 +170,7 @@ export const updateById = async (
       await Guild.findByIdAndUpdate(id, query, {
         new: true,
         runValidators: true,
-      }).populate({
-        path: 'leader members',
-        select: '_id name',
-      })
+      }).populate(populateCharacters())
     )?.toObject() || null
   );
 };
@@ -198,3 +192,8 @@ const mapGuild = (
   const { _id, ...guildWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...guildWithoutId } as IGuild;
 };
+
+const populateCharacters = () => ({
+  path: 'leader members',
+  select: '_id name',
+});

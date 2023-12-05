@@ -16,7 +16,7 @@ export interface ICharacter {
   intelligence: number;
   armor: number;
   critChance: number;
-  guild: IGuild;
+  guild?: IGuild | null;
 }
 
 export type ICharacterWithoutId = Omit<ICharacter, '_id'>;

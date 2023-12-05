@@ -47,9 +47,7 @@ const guildSchema = new Schema<IGuildWithoutId>({
 
 export const Guild = model<IGuildWithoutId>('Guild', guildSchema);
 
-export const create = async (
-  guild: IGuildWithoutId
-): Promise<IGuild> => {
+export const create = async (guild: IGuildWithoutId): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
 };
 
@@ -71,21 +69,21 @@ export const getAll = async (
   sort[sortBy] = sortOrder;
   const regex = new RegExp(searchQuery, 'i');
   const query = searchQuery
-  ? {
-      $or: [
-        { name: { $regex: regex } },
-        {
-          leader: {
-            $in: (
-              await Character.find({
-                name: { $regex: searchQuery, $options: 'i' },
-              })
-            ).map((guild) => guild._id.toString()),
+    ? {
+        $or: [
+          { name: { $regex: regex } },
+          {
+            leader: {
+              $in: (
+                await Character.find({
+                  name: { $regex: searchQuery, $options: 'i' },
+                })
+              ).map((guild) => guild._id.toString()),
+            },
           },
-        },
-      ],
-    }
-  : {};
+        ],
+      }
+    : {};
 
   const rawGuilds = await Guild.find(query)
     .sort(sort)
@@ -106,6 +104,14 @@ export const getAll = async (
     totalGuilds,
     guilds,
   };
+};
+
+export const findById = async (id: string): Promise<IGuild | null> => {
+  return (
+    (
+      await Guild.findById(id).populate('leader members', 'name _id')
+    )?.toObject() || null
+  );
 };
 
 const mapGuild = (

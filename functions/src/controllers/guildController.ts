@@ -81,7 +81,7 @@ export const getGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    
+
     const guild = await GuildModel.findById(id);
     return res.json(guild);
   } catch (error) {
@@ -100,10 +100,12 @@ export const searchGuildsByName = async (
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
-    const guild = await Guild.find({
-      name: { $regex: searchQuery, $options: 'i' },
-    }).limit(10);
+    const limit = 10;
 
+    const guild = await GuildModel.findMultipleByName(
+      searchQuery,
+      limit
+    );
     return res.json(guild);
   } catch (error) {
     if (error instanceof Error) {

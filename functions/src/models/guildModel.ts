@@ -122,6 +122,19 @@ export const findByName = async (name: string): Promise<IGuild | null> => {
   );
 };
 
+export const findMultipleByName = async (
+  query: string,
+  limit: number
+): Promise<IGuild[] | null> => {
+  const guilds = await Guild.find({
+    name: { $regex: query, $options: 'i' },
+  })
+    .populate('leader members', 'name _id')
+    .limit(limit);
+
+  return guilds.map(mapGuild) || null;
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import * as CharacterModel from '../models/characterModel';
-import * as GuildModel from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
 import { IGuild } from '../models/guildModel';
 import {
   isDifferentGuild,
@@ -31,8 +31,8 @@ export const createGuild = async (
       maxMembers: 50,
     };
 
-    const guild = await GuildModel.create(guildData);
-    await CharacterModel.updateById(character._id, { guild: guild._id });
+    const guild = await Guild.create(guildData);
+    await Character.updateById(character._id, { guild: guild._id });
     return res
       .status(201)
       .json({ message: 'Guild created successfully', guild });
@@ -57,7 +57,7 @@ export const getAllGuilds = async (
       (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const guilds = await GuildModel.getAll(
+    const guilds = await Guild.getAll(
       page,
       pageSize,
       sortBy,
@@ -81,7 +81,7 @@ export const getGuildById = async (
   try {
     const { id } = req.params;
 
-    const guild = await GuildModel.findById(id);
+    const guild = await Guild.findById(id);
     return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
@@ -101,7 +101,7 @@ export const searchGuildsByName = async (
     const searchQuery = req.query.name as string;
     const limit = 10;
 
-    const guild = await GuildModel.findMultipleByName(searchQuery, limit);
+    const guild = await Guild.findMultipleByName(searchQuery, limit);
     return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
@@ -121,7 +121,7 @@ export const searchGuildMemberById = async (
     const limit = 10;
     const { guild } = req.body;
 
-    const members = await GuildModel.findMembersByGuild(
+    const members = await Guild.findMembersByGuild(
       guild._id,
       searchQuery,
       limit
@@ -145,7 +145,7 @@ export const updateGuildNameById = async (
     const { id } = req.params;
     const { name } = req.body;
 
-    const guild = await GuildModel.updateById(id, { name });
+    const guild = await Guild.updateById(id, { name });
     return res.status(200).json({
       message: 'Guild name updated successfully',
       guild,
@@ -179,16 +179,16 @@ export const updateGuildLeaderById = async (
           .json({ error: 'New leader must be a member of the guild' });
       }
 
-      const previousLeader = await CharacterModel.findById(guild.leader._id);
+      const previousLeader = await Character.findById(guild.leader._id);
       if (previousLeader && previousLeader.guild) {
         await joinGuild(previousLeader, guild);
       }
 
       await leaveGuild(character._id);
-      await CharacterModel.updateById(character._id, { guild: guild._id });
+      await Character.updateById(character._id, { guild: guild._id });
     }
 
-    const updatedGuild = await GuildModel.updateById(id, { leader: character });
+    const updatedGuild = await Guild.updateById(id, { leader: character });
     return res.status(200).json({
       message: 'Guild leader updated successfully',
       guild: updatedGuild,
@@ -218,7 +218,7 @@ export const addMemberToGuildById = async (
     }
 
     if (character.guild && isDifferentGuild(character.guild, id)) {
-      const previousGuild = await GuildModel.findById(character.guild._id);
+      const previousGuild = await Guild.findById(character.guild._id);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Guild not found' });
       }
@@ -228,7 +228,7 @@ export const addMemberToGuildById = async (
 
     await joinGuild(character, guild);
 
-    const updatedGuild = await GuildModel.findById(id);
+    const updatedGuild = await Guild.findById(id);
     return res.status(200).json({
       message: 'Member added to guild successfully',
       guild: updatedGuild,
@@ -268,7 +268,7 @@ export const removeMemberFromGuildById = async (
 
     await leaveGuild(character._id);
 
-    const updatedGuild = await GuildModel.findById(id);
+    const updatedGuild = await Guild.findById(id);
     return res.status(200).json({
       message: 'Member removed from guild successfully',
       guild: updatedGuild,
@@ -309,8 +309,8 @@ export const deleteAllGuilds = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const result = await GuildModel.deleteAll();
-    await CharacterModel.leaveAllGuild();
+    const result = await Guild.deleteAll();
+    await Character.leaveAllGuild();
 
     return res.status(200).json({
       message: `${result.deletedCount} guilds deleted successfully.`,

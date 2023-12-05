@@ -128,5 +128,7 @@ export const findById = async (id: string): Promise<ICharacter | null> => {
 };
 
 export const findByName = async (name: string): Promise<ICharacter | null> => {
-  return (await Character.findOne({ name }).populate('guild'))?.toObject() || null;
+  return (
+    (await Character.findOne({ name }).populate('guild'))?.toObject() || null
+  );
 };

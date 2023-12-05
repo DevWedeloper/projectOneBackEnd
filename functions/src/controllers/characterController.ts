@@ -16,10 +16,10 @@ export const createCharacter = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const savedCharacter = CharacterModel.create(req.body);
+    const character = CharacterModel.create(req.body);
     return res.status(201).json({
       message: 'Character created successfully',
-      character: savedCharacter,
+      character,
     });
   } catch (error) {
     if (error instanceof Error) {

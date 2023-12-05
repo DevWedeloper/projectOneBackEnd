@@ -41,9 +41,8 @@ export const getAllCharacters = async (
     const sortBy: string = (req.query.sortBy as string) || 'name';
     const sortOrder: 'asc' | 'desc' = (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
-
+    
     const characters = await CharacterModel.getAll(page, pageSize, sortBy, sortOrder, searchQuery);
-
     return res.json(characters);
   } catch (error) {
     if (error instanceof Error) {

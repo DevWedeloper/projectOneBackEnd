@@ -212,35 +212,27 @@ export const addMemberToGuildById = async (
     const { id } = req.params;
     const { guild, character } = req.body;
 
-    const newMember = character;
-
-    if (newMember.guild && !isDifferentGuild(newMember.guild, id)) {
+    if (character.guild && !isDifferentGuild(character.guild, id)) {
       return res
         .status(400)
         .json({ error: 'Member is already a member or leader of the guild' });
     }
 
-    if (newMember.guild && isDifferentGuild(newMember.guild, id)) {
-      const previousGuild = await Guild.findById(newMember.guild);
+    if (character.guild && isDifferentGuild(character.guild, id)) {
+      const previousGuild = await GuildModel.findById(id);
       if (!previousGuild) {
         return res.status(404).json({ error: 'Guild not found' });
       }
 
       await updateLeaderOrMembersGuild(
-        previousGuild.toObject(),
-        newMember._id.toString()
+        previousGuild,
+        character._id
       );
     }
 
-    await joinGuild(newMember, guild);
-    const updatedGuild = await Guild.findById(id).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
+    await joinGuild(character, guild);
 
+    const updatedGuild = await GuildModel.findById(id);
     return res.status(200).json({
       message: 'Member added to guild successfully',
       guild: updatedGuild,

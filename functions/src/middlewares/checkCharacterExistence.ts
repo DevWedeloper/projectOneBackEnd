@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Character } from '../models/characterModel';
+import * as Character from '../models/characterModel';
 
 export const checkCharacterExistence = async (
   req: Request,

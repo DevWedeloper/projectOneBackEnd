@@ -81,14 +81,8 @@ export const getGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const guild = await Guild.findById(id).populate(
-      'leader members',
-      'name _id'
-    );
-    if (!guild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
-
+    
+    const guild = await GuildModel.findById(id);
     return res.json(guild);
   } catch (error) {
     if (error instanceof Error) {

@@ -65,7 +65,7 @@ export const getAllGuilds = async (
       sortOrder,
       searchQuery
     );
-    return res.json(guilds);
+    return res.status(200).json(guilds);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -83,7 +83,7 @@ export const getGuildById = async (
     const { id } = req.params;
 
     const guild = await GuildModel.findById(id);
-    return res.json(guild);
+    return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -106,7 +106,7 @@ export const searchGuildsByName = async (
       searchQuery,
       limit
     );
-    return res.json(guild);
+    return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -162,7 +162,7 @@ export const updateGuildNameById = async (
       return res.status(404).json({ error: 'Failed to update the guild' });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: 'Guild name updated successfully',
       guild: updatedGuild,
     });
@@ -222,7 +222,7 @@ export const updateGuildLeaderById = async (
       return res.status(404).json({ error: 'Failed to update the guild' });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: 'Guild leader updated successfully',
       guild: updatedGuild,
     });
@@ -273,7 +273,7 @@ export const addMemberToGuildById = async (
       return res.status(404).json({ error: 'Guild not found' });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: 'Member added to guild successfully',
       guild: updatedGuild,
     });
@@ -321,7 +321,7 @@ export const removeMemberFromGuildById = async (
       return res.status(404).json({ error: 'Guild not found' });
     }
 
-    return res.json({
+    return res.status(200).json({
       message: 'Member removed from guild successfully',
       guild: updatedGuild,
     });
@@ -347,7 +347,7 @@ export const deleteGuildById = async (
     }
 
     await updateLeaderAndDeleteGuild(guild);
-    return res.json({ message: 'Guild deleted successfully', guild: guild });
+    return res.status(200).json({ message: 'Guild deleted successfully', guild: guild });
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -367,7 +367,7 @@ export const deleteAllGuilds = async (
       updateLeaderAndDeleteGuild(guild.toObject())
     );
     await Promise.all(deletePromises);
-    return res.json({
+    return res.status(200).json({
       message: `${guilds.length} guilds deleted successfully.`,
     });
   } catch (error) {

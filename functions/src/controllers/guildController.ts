@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as CharacterModel from '../models/characterModel';
 import * as GuildModel from '../models/guildModel';
-import { Guild, IGuild } from '../models/guildModel';
+import { IGuild } from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -309,17 +309,17 @@ export const deleteAllGuilds = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const guilds = await Guild.find({});
-    const deletePromises = guilds.map((guild) =>
-      updateLeaderAndDeleteGuild(guild.toObject())
-    );
-    await Promise.all(deletePromises);
+    const result = await GuildModel.deleteAll();
+    await CharacterModel.leaveAllGuild();
+
     return res.status(200).json({
-      message: `${guilds.length} guilds deleted successfully.`,
+      message: `${result.deletedCount} guilds deleted successfully.`,
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json({ error: 'Failed to delete guilds' });
+      return res
+        .status(500)
+        .json({ error: 'Failed to delete guilds', message: error.message });
     }
   }
 };

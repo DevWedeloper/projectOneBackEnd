@@ -1,4 +1,9 @@
-import { Schema, model, Document as MongooseDocument } from 'mongoose';
+import {
+  Schema,
+  model,
+  Document as MongooseDocument,
+  UpdateWriteOpResult,
+} from 'mongoose';
 import { Guild, IGuild } from './guildModel';
 
 export interface ICharacter {
@@ -196,6 +201,10 @@ export const deleteAll = async (): Promise<{
   deletedCount: number;
 }> => {
   return await Character.deleteMany();
+};
+
+export const leaveAllGuild = async (): Promise<UpdateWriteOpResult> => {
+  return await Character.updateMany({ $set: { guild: null } });
 };
 
 const mapCharacter = (

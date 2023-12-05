@@ -102,21 +102,10 @@ export const updateCharacterAttributeById = async (
     const { id } = req.params;
     const { [attribute]: attributeValue } = req.body;
 
-    const updateQuery = { [attribute]: attributeValue };
-
-    const updatedCharacter =
-      await Character.findByIdAndUpdate(id, updateQuery, {
-        new: true,
-        runValidators: true,
-      });
-
-    if (!updatedCharacter) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
+    const character = await CharacterModel.updateById(id, { [attribute]: attributeValue });
     return res.json({
       message: `Character's ${attribute} updated successfully.`,
-      character: updatedCharacter,
+      character,
     });
   } catch (error) {
     if (error instanceof Error) {

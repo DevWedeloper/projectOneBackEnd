@@ -151,6 +151,20 @@ export const findMultipleByName = async (
   return characters.map(mapCharacter) || null;
 };
 
+export const updateById = async (
+  id: string,
+  query: Record<string, string | number>
+): Promise<ICharacter | null> => {
+  return (
+    (
+      await Character.findByIdAndUpdate(id, query, {
+        new: true,
+        runValidators: true,
+      })
+    )?.toObject() || null
+  );
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

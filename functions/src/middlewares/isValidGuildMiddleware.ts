@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { Guild } from '../models/guildModel';
+import * as Guild from '../models/guildModel';
 
 export const isValidGuild = async (
   req: Request,
@@ -17,7 +17,7 @@ export const isValidGuild = async (
       ? { _id: guild }
       : { name: guild };
 
-    const foundGuild = await Guild.findOne(guildQuery);
+    const foundGuild = await Guild.findOneByQuery(guildQuery);
 
     req.body.guild = foundGuild;
     next();

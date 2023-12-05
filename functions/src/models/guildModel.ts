@@ -55,6 +55,12 @@ export const getAll = async (): Promise<IGuild[]> => {
   return await Guild.find();
 };
 
+export const findOne = async (
+  attribute: string
+): Promise<IGuild | null> => {
+  return await Guild.findOne({ attribute }) || null;
+};
+
 export const getPaginated = async (
   page: number,
   pageSize: number,

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import * as CharacterModel from '../models/characterModel';
 import { Character } from '../models/characterModel';
 import * as GuildModel from '../models/guildModel';
 import { Guild, IGuild } from '../models/guildModel';
@@ -10,7 +11,6 @@ import {
   updateLeaderAndDeleteGuild,
   updateLeaderOrMembersGuild,
 } from '../utils/guildCharacterUtils';
-import * as CharacterModel from '../models/characterModel';
 
 export const createGuild = async (
   req: Request,
@@ -54,50 +54,18 @@ export const getAllGuilds = async (
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
     const sortBy: string = (req.query.sortBy as string) || 'name';
-    const sortOrder: string = (req.query.sortOrder as string) || 'asc';
+    const sortOrder: 'asc' | 'desc' =
+      (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const sortCriteria: { [key: string]: 'asc' | 'desc' } = {};
-    sortCriteria[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
-
-    const query: {
-      $or: Array<{
-        name?: { $regex: string; $options: string };
-        leader?: { $in: string[] };
-        totalMembers?: number;
-      }>;
-    } = {
-      $or: [
-        { name: { $regex: searchQuery, $options: 'i' } },
-        { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
-      ],
-    };
-
-    if (searchQuery && !isNaN(parseInt(searchQuery))) {
-      query.$or.push({ totalMembers: parseInt(searchQuery) });
-    }
-
-    const totalGuilds: number = await Guild.countDocuments(query);
-    const totalPages: number = Math.ceil(totalGuilds / pageSize);
-
-    const guildsQuery = Guild.find(query)
-      .sort(sortCriteria)
-      .populate({
-        path: 'leader members',
-        select: 'name _id',
-      })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-
-    const guilds = await guildsQuery;
-
-    return res.json({
+    const guilds = await GuildModel.getAll(
       page,
       pageSize,
-      totalPages,
-      totalGuilds,
-      guilds,
-    });
+      sortBy,
+      sortOrder,
+      searchQuery
+    );
+    return res.json(guilds);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -411,14 +379,4 @@ export const deleteAllGuilds = async (
       return res.status(500).json({ error: 'Failed to delete guilds' });
     }
   }
-};
-
-const getLeaderIdsByCharacterName = async (
-  leaderName: string
-): Promise<string[]> => {
-  const leaderSearchResults = await Character.find({
-    name: { $regex: leaderName, $options: 'i' },
-  }).distinct('_id');
-
-  return leaderSearchResults.map((leader) => leader._id);
 };

@@ -1,5 +1,5 @@
-import { Schema, model } from 'mongoose';
-import { ICharacter } from './characterModel';
+import { Schema, model, Document as MongooseDocument } from 'mongoose';
+import { Character, ICharacter } from './characterModel';
 
 export interface IGuild {
   _id: string;
@@ -51,4 +51,66 @@ export const create = async (
   guild: IGuildWithoutId
 ): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
+};
+
+export const getAll = async (
+  page: number,
+  pageSize: number,
+  sortBy: string,
+  sortOrder: 'asc' | 'desc',
+  searchQuery: string
+): Promise<{
+  page: number;
+  pageSize: number;
+  totalPages: number;
+  totalGuilds: number;
+  guilds: IGuild[];
+}> => {
+  const skip = (page - 1) * pageSize;
+  const sort: { [key: string]: 'asc' | 'desc' } = {};
+  sort[sortBy] = sortOrder;
+  const regex = new RegExp(searchQuery, 'i');
+  const query = searchQuery
+  ? {
+      $or: [
+        { name: { $regex: regex } },
+        {
+          leader: {
+            $in: (
+              await Character.find({
+                name: { $regex: searchQuery, $options: 'i' },
+              })
+            ).map((guild) => guild._id.toString()),
+          },
+        },
+      ],
+    }
+  : {};
+
+  const rawGuilds = await Guild.find(query)
+    .sort(sort)
+    .skip(skip)
+    .limit(pageSize)
+    .populate({
+      path: 'leader members',
+      select: 'name _id',
+    });
+
+  const guilds = rawGuilds.map(mapGuild);
+  const totalGuilds = await Guild.countDocuments(query);
+  const totalPages = Math.ceil(totalGuilds / pageSize);
+  return {
+    page,
+    pageSize,
+    totalPages,
+    totalGuilds,
+    guilds,
+  };
+};
+
+const mapGuild = (
+  rawCharacter: MongooseDocument<unknown, unknown, IGuild>
+): IGuild => {
+  const { _id, ...guildWithoutId } = rawCharacter.toObject();
+  return { _id: _id.toString(), ...guildWithoutId } as IGuild;
 };

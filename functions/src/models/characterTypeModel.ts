@@ -1,6 +1,6 @@
 import { Schema, model, Document as MongooseDocument } from 'mongoose';
 
-export interface ICharacterType {
+export type ICharacterType = {
   _id: string;
   typeName: string;
 }

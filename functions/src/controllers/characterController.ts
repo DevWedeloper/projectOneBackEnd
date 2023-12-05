@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import * as CharacterModel from '../models/characterModel';
-import { Character } from '../models/characterModel';
 import { Guild } from '../models/guildModel';
 import {
   isDifferentGuild,
@@ -153,7 +152,7 @@ export const joinGuildById = async (
     }
 
     await joinGuild(character, guild);
-    
+
     const updatedCharacter = await CharacterModel.findById(id);
     return res.json({
       message: 'Joined guild successfully.',
@@ -185,12 +184,8 @@ export const leaveGuildById = async (
       return res.status(404).json({ error: 'Current guild not found' });
     }
     await updateLeaderOrMembersGuild(previousGuild.toObject(), id);
-
-    const updatedCharacter = await Character.findById(id);
-    if (!updatedCharacter) {
-      return res.status(404).json({ error: 'Character not found' });
-    }
-
+    
+    const updatedCharacter = await CharacterModel.findById(id);
     return res.json({
       message: 'Left guild successfully.',
       character: updatedCharacter,

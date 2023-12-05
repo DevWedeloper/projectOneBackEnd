@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Guild } from '../models/guildModel';
+import * as Guild from '../models/guildModel';
 
 export const checkGuildExistence = async (
   req: Request,

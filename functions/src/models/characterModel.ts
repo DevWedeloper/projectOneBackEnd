@@ -96,15 +96,7 @@ export const getPaginated = async (
     .sort(sort)
     .skip(skip)
     .limit(pageSize)
-    .populate({
-      path: 'guild',
-      select: '_id name leader',
-      populate: {
-        path: 'leader',
-        model: 'Character',
-        select: '_id name',
-      },
-    });
+    .populate(populateGuild());
 
   // Convert each Mongoose document to a plain JavaScript object
   const characters = rawCharacters.map(mapCharacter);
@@ -128,46 +120,19 @@ export const getPaginated = async (
 export const findOneByQuery = async (
   query: Record<string, string | number>
 ): Promise<ICharacter | null> => {
-  return await Character.findOne(query).populate({
-    path: 'guild',
-    select: '_id name leader',
-    populate: {
-      path: 'leader',
-      model: 'Character',
-      select: '_id name',
-    },
-  });
+  return await Character.findOne(query).populate(populateGuild());
 };
 
 export const findById = async (id: string): Promise<ICharacter | null> => {
   return (
-    (
-      await Character.findById(id).populate({
-        path: 'guild',
-        select: '_id name leader',
-        populate: {
-          path: 'leader',
-          model: 'Character',
-          select: '_id name',
-        },
-      })
-    )?.toObject() || null
+    (await Character.findById(id).populate(populateGuild()))?.toObject() || null
   );
 };
 
 export const findByName = async (name: string): Promise<ICharacter | null> => {
   return (
-    (
-      await Character.findOne({ name }).populate({
-        path: 'guild',
-        select: '_id name leader',
-        populate: {
-          path: 'leader',
-          model: 'Character',
-          select: '_id name',
-        },
-      })
-    )?.toObject() || null
+    (await Character.findOne({ name }).populate(populateGuild()))?.toObject() ||
+    null
   );
 };
 
@@ -178,15 +143,7 @@ export const findMultipleByName = async (
   const characters = await Character.find({
     name: { $regex: query, $options: 'i' },
   })
-    .populate({
-      path: 'guild',
-      select: '_id name leader',
-      populate: {
-        path: 'leader',
-        model: 'Character',
-        select: '_id name',
-      },
-    })
+    .populate(populateGuild())
     .limit(limit);
 
   return characters.map(mapCharacter) || null;
@@ -231,3 +188,13 @@ const mapCharacter = (
   const { _id, ...characterWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...characterWithoutId } as ICharacter;
 };
+
+const populateGuild = () => ({
+  path: 'guild',
+  select: '_id name leader',
+  populate: {
+    path: 'leader',
+    model: 'Character',
+    select: '_id name',
+  },
+});

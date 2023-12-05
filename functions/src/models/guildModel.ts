@@ -171,6 +171,10 @@ export const updateById = async (
   );
 };
 
+export const deleteById = async (id: string): Promise<IGuild | null> => {
+  return (await Guild.findByIdAndDelete(id))?.toObject() || null;
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

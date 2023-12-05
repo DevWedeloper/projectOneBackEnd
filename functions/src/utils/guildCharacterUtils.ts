@@ -115,5 +115,5 @@ export function isDifferentGuild(
   guild: IGuild,
   oldGuildId: string
 ): boolean {
-  return guild && guild._id.toString() !== oldGuildId;
+  return guild && guild._id.toString() !== oldGuildId.toString();
 }

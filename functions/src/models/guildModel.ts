@@ -49,6 +49,6 @@ export const Guild = model<IGuildWithoutId>('Guild', guildSchema);
 
 export const create = async (
   guild: IGuildWithoutId
-): Promise<ICharacter> => {
+): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
 };

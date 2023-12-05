@@ -175,6 +175,13 @@ export const deleteById = async (id: string): Promise<IGuild | null> => {
   return (await Guild.findByIdAndDelete(id))?.toObject() || null;
 };
 
+export const deleteAll = async (): Promise<{
+  acknowledged: boolean;
+  deletedCount: number;
+}> => {
+  return await Guild.deleteMany();
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

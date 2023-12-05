@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model, Document as MongooseDocument } from 'mongoose';
 import { Guild, IGuild } from './guildModel';
 
 export interface ICharacter {
@@ -131,4 +131,30 @@ export const findByName = async (name: string): Promise<ICharacter | null> => {
   return (
     (await Character.findOne({ name }).populate('guild'))?.toObject() || null
   );
+};
+
+export const findMultipleByName = async (
+  query: string,
+  limit: number
+): Promise<ICharacter[] | null> => {
+  const characters = await Character.find({
+    name: { $regex: query, $options: 'i' },
+  })
+    .populate({
+      path: 'guild',
+      select: '_id name leader',
+      populate: {
+        path: 'leader',
+        model: 'Character',
+        select: '_id name',
+      },
+    })
+    .limit(limit);
+
+  return characters.map(mapCharacter) || null;
+};
+
+const mapCharacter = (rawCharacter: MongooseDocument): ICharacter => {
+  const { _id, ...characterWithoutId } = rawCharacter.toObject();
+  return { _id: _id.toString(), ...characterWithoutId } as ICharacter;
 };

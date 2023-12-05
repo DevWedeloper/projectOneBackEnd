@@ -55,12 +55,6 @@ export const getAll = async (): Promise<IGuild[]> => {
   return await Guild.find();
 };
 
-export const findOneByQuery = async (
-  query: Record<string, string | number>
-): Promise<IGuild | null> => {
-  return await Guild.findOne(query);
-};
-
 export const getPaginated = async (
   page: number,
   pageSize: number,
@@ -114,6 +108,12 @@ export const getPaginated = async (
     totalGuilds,
     guilds,
   };
+};
+
+export const findOneByQuery = async (
+  query: Record<string, string | number>
+): Promise<IGuild | null> => {
+  return await Guild.findOne(query);
 };
 
 export const findById = async (id: string): Promise<IGuild | null> => {

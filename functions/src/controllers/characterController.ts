@@ -42,7 +42,7 @@ export const getAllCharacters = async (
       (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const characters = await Character.getAll(
+    const characters = await Character.getPaginated(
       page,
       pageSize,
       sortBy,

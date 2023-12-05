@@ -52,7 +52,7 @@ export const create = async (
   return (await Character.create(character)).toObject();
 };
 
-export const getAll = async (
+export const getPaginated = async (
   page: number,
   pageSize: number,
   sortBy: string,

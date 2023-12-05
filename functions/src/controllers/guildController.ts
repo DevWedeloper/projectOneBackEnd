@@ -56,7 +56,7 @@ export const getAllGuilds = async (
       (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const guilds = await Guild.getAll(
+    const guilds = await Guild.getPaginated(
       page,
       pageSize,
       sortBy,

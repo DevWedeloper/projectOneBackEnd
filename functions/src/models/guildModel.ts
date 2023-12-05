@@ -51,7 +51,7 @@ export const create = async (guild: IGuildWithoutId): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
 };
 
-export const getAll = async (
+export const getPaginated = async (
   page: number,
   pageSize: number,
   sortBy: string,

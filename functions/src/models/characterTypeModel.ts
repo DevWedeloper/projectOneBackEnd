@@ -1,19 +1,17 @@
-import { Document, Model, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
 
 export interface ICharacterType {
+  _id: string;
   typeName: string;
 }
 
-export interface ICharacterTypeDocument extends ICharacterType, Document {}
+export type ICharacterTypeWithoutId = Omit<ICharacterType, '_id'>;
 
-interface ICharacterTypeModel extends Model<ICharacterTypeDocument> {}
+const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
+  typeName: { type: String, required: true, unique: true },
+});
 
-const characterTypeSchema: Schema<ICharacterTypeDocument, ICharacterTypeModel> =
-  new Schema({
-    typeName: { type: String, required: true, unique: true },
-  });
-
-export const CharacterType: ICharacterTypeModel = model<
-  ICharacterTypeDocument,
-  ICharacterTypeModel
->('CharacterType', characterTypeSchema);
+export const CharacterType = model<ICharacterTypeWithoutId>(
+  'CharacterType',
+  characterTypeSchema
+);

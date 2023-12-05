@@ -255,32 +255,24 @@ export const removeMemberFromGuildById = async (
     const { id } = req.params;
     const { guild, character } = req.body;
 
-    const newMember = character;
-
     if (
-      !newMember.guild ||
-      (newMember.guild && isDifferentGuild(newMember.guild, id))
+      !character.guild ||
+      (character.guild && isDifferentGuild(character.guild, id))
     ) {
       return res
         .status(400)
         .json({ error: 'Member is not a part of the guild' });
     }
 
-    if (isLeader(guild, newMember._id.toString())) {
+    if (isLeader(guild, character._id)) {
       return res
         .status(403)
         .json({ error: 'Cannot kick the leader of the guild' });
     }
 
-    await leaveGuild(newMember._id);
-    const updatedGuild = await Guild.findById(id).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
+    await leaveGuild(character._id);
 
+    const updatedGuild =  await GuildModel.findById(id);
     return res.status(200).json({
       message: 'Member removed from guild successfully',
       guild: updatedGuild,

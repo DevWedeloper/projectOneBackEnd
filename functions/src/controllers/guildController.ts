@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
-import { IGuild } from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -19,7 +18,7 @@ export const createGuild = async (
     const { name, character } = req.body;
     if (character.guild) {
       await updateLeaderOrMembersGuild(
-        character.guild as IGuild,
+        character.guild,
         character._id.toString()
       );
     }

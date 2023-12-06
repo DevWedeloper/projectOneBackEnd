@@ -18,7 +18,7 @@ const guildSchema = new Schema<IGuildWithoutId>({
     unique: true,
   },
   members: [{ type: Schema.Types.ObjectId, ref: 'Character' }],
-  totalMembers: { type: Number, default: 1, min: 1, max: 50 },
+  totalMembers: { type: Number, default: 0, min: 0, max: 50 },
   maxMembers: { type: Number, default: 50 },
   totalHealth: { type: Number, default: 0 },
   totalStrength: { type: Number, default: 0 },

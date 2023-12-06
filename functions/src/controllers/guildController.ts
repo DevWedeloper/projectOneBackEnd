@@ -36,6 +36,7 @@ export const createGuild = async (
       .json({ message: 'Guild created successfully', guild });
   } catch (error) {
     if (error instanceof Error) {
+      console.log(error.message);
       return res
         .status(500)
         .json({ error: 'Failed to create the guild', message: error.message });

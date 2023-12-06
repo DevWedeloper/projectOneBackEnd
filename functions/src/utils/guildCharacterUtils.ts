@@ -13,9 +13,11 @@ export const joinGuild = async (
       throw new Error('Guild is full. Cannot add more members.');
     }
 
+    const test = await Guild.addCharacterToGuild(character, guild);
+    test;
+    console.log(test);
     await Promise.all([
       Character.updateById(character._id, { guild }),
-      Guild.addCharacterToGuild(character, guild)
     ]);
   } catch (error) {
     if (error instanceof Error) {

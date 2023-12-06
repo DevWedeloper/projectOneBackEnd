@@ -47,7 +47,7 @@ const generateRandomGuild = async () => {
     guildCtr++;
   } catch (error) {
     if (error instanceof Error) {
-      console.error('Failed to create the guild:', error.message);
+      // console.error('Failed to create the guild:', error.message);
     }
   }
 };

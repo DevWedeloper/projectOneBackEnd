@@ -165,23 +165,22 @@ export const addCharacterToGuild = async (
   character: ICharacter,
   guild: IGuild
 ): Promise<IGuild> => {
-  return (
-    (await Guild.findByIdAndUpdate(
-      (guild._id.toString(),
-      {
-        $push: { members: character },
-        $inc: {
-          totalMembers: 1,
-          totalHealth: character.health || 0,
-          totalStrength: character.strength || 0,
-          totalAgility: character.agility || 0,
-          totalIntelligence: character.intelligence || 0,
-          totalArmor: character.armor || 0,
-          totalCritChance: character.critChance || 0,
-        },
-      })
-    )) || throwGuildNotFoundError()
-  );
+  const updatedGuild = await Guild.findByIdAndUpdate(guild._id.toString(), {
+    $push: { members: character },
+    $inc: {
+      totalMembers: 1,
+      totalHealth: character.health || 0,
+      totalStrength: character.strength || 0,
+      totalAgility: character.agility || 0,
+      totalIntelligence: character.intelligence || 0,
+      totalArmor: character.armor || 0,
+      totalCritChance: character.critChance || 0,
+    },
+  });
+
+  console.log(updatedGuild);
+
+  return updatedGuild?.toObject() || throwGuildNotFoundError();
 };
 
 export const removeCharacterFromGuild = async (

@@ -1,4 +1,4 @@
-import { ICharacter, Character } from '../models/characterModel';
+import { Character, ICharacter } from '../models/characterModel';
 import { Guild, IGuild } from '../models/guildModel';
 
 export const joinGuild = async (
@@ -18,7 +18,7 @@ export const joinGuild = async (
     await Promise.all([
       Character.findByIdAndUpdate(character._id, { guild: guild._id }),
       Guild.findByIdAndUpdate(guild, {
-        $push: { members: character as unknown as IGuild },
+        $push: { members: character },
         $inc: {
           totalMembers: 1,
           totalHealth: character.health || 0,
@@ -39,7 +39,7 @@ export const joinGuild = async (
 
 export const leaveGuild = async (characterId: string) => {
   try {
-    const character: ICharacter | null = await Character.findById(
+    const character = await Character.findById(
       characterId
     );
     const guildId = character!.guild as IGuild;

@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import { Guild } from '../models/guildModel';
 import * as GuildModel from '../models/guildModel';
 
 export const getTopGuildsByAttribute = async (
@@ -59,8 +58,8 @@ export const getTopGuildsByAverageAttribute = async (
 ): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
-    const { limit = 5 } = req.query;
 
+    const limit = 5;
     const actualAttribute = attributeMapping[attribute];
     if (!actualAttribute) {
       return res.status(400).json({
@@ -69,22 +68,7 @@ export const getTopGuildsByAverageAttribute = async (
       });
     }
 
-    const topGuilds = await Guild.aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          averageAttribute: { $divide: [`$${actualAttribute}`, '$totalMembers'] },
-        },
-      },
-      {
-        $sort: { averageAttribute: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
-
+    const topGuilds = await GuildModel.getTopGuildsByAverageAttribute(attribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {

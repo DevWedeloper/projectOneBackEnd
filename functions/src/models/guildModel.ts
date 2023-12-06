@@ -239,6 +239,31 @@ export const getTopWellRoundedGuilds = async (
   ]);
 };
 
+type TopByAverageAttributeGuild = IGuild & {
+  averageAttribute: number;
+};
+
+export const getTopGuildsByAverageAttribute = async (
+  attribute: string,
+  limit: number
+): Promise<TopByAverageAttributeGuild[]> => {
+  return await Guild.aggregate([
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        averageAttribute: { $divide: [`$${attribute}`, '$totalMembers'] },
+      },
+    },
+    {
+      $sort: { averageAttribute: -1 },
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

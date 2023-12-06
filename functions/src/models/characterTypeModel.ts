@@ -1,5 +1,8 @@
 import { Schema, model, Document as MongooseDocument } from 'mongoose';
-import { ICharacterTypeWithoutId, ICharacterType } from '../types/characterTypeTypes';
+import {
+  ICharacterTypeWithoutId,
+  ICharacterType,
+} from '../types/characterTypeTypes';
 
 const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
   typeName: { type: String, required: true, unique: true },
@@ -24,10 +27,10 @@ export const populate = async (
 
 export const findOne = async (
   characterType: string
-): Promise<ICharacterType | null> => {
+): Promise<ICharacterType> => {
   return (
-    (await CharacterType.findOne({ typeName: characterType }))?.toObject() ||
-    null
+    (await CharacterType.findOne({ typeName: characterType })) ||
+    throwCharacterTypeNotFoundError()
   );
 };
 
@@ -36,4 +39,8 @@ const mapCharacterType = (
 ): ICharacterType => {
   const { _id, ...characterWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...characterWithoutId } as ICharacterType;
+};
+
+const throwCharacterTypeNotFoundError = () => {
+  throw new Error('Character Type not found.');
 };

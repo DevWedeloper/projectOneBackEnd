@@ -47,25 +47,8 @@ export const getAverageCharacterStats = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const averageStats = await Character.aggregate([
-      {
-        $group: {
-          _id: null,
-          avgHealth: { $avg: '$health' },
-          avgStrength: { $avg: '$strength' },
-          avgAgility: { $avg: '$agility' },
-          avgIntelligence: { $avg: '$intelligence' },
-          avgArmor: { $avg: '$armor' },
-          avgCritChance: { $avg: '$critChance' },
-        },
-      },
-    ]);
-
-    if (averageStats.length === 0) {
-      throw new Error('No characters found');
-    }
-
-    return res.json(averageStats[0]);
+    const averageStats = await CharacterModel.getAverageCharacterStats();
+    return res.json(averageStats);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({

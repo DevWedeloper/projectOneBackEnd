@@ -250,6 +250,42 @@ export const getTopWellRoundedCharacters = async (
   ]);
 };
 
+export const getAverageCharacterStats = async (): Promise<{
+  avgHealth: number;
+  avgStrength: number;
+  avgAgility: number;
+  avgIntelligence: number;
+  avgArmor: number;
+  avgCritChance: number;
+}> => {
+  const [averageStats] = await Character.aggregate([
+    {
+      $group: {
+        _id: null,
+        avgHealth: { $avg: '$health' },
+        avgStrength: { $avg: '$strength' },
+        avgAgility: { $avg: '$agility' },
+        avgIntelligence: { $avg: '$intelligence' },
+        avgArmor: { $avg: '$armor' },
+        avgCritChance: { $avg: '$critChance' },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+      },
+    },
+  ]);
+  return averageStats as {
+    avgHealth: number;
+    avgStrength: number;
+    avgAgility: number;
+    avgIntelligence: number;
+    avgArmor: number;
+    avgCritChance: number;
+  };
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

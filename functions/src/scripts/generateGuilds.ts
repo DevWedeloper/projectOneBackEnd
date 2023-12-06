@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import { generateUsername } from 'unique-username-generator';
 import * as Character from '../models/characterModel';
-import { ICharacter } from '../models/characterModel';
 import * as Guild from '../models/guildModel';
+import { ICharacter } from '../types/characterTypes';
 dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;

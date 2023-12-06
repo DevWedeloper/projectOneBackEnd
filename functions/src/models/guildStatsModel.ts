@@ -1,6 +1,14 @@
 import { IGuild } from '../types/guildTypes';
 import { Guild } from './schemas/guildSchema';
 
+type WellRoundedGuild = IGuild & {
+  membersAverage: number;
+};
+
+type TopByAverageAttributeGuild = IGuild & {
+  averageAttribute: number;
+};
+
 export const getTopGuildsByAttribute = async (
   attribute: string,
   limit: number
@@ -9,10 +17,6 @@ export const getTopGuildsByAttribute = async (
     .sort({ [attribute]: -1 })
     .limit(Number(limit))
     .select(`_id name ${attribute}`);
-};
-
-type WellRoundedGuild = IGuild & {
-  membersAverage: number;
 };
 
 export const getTopWellRoundedGuilds = async (
@@ -53,10 +57,6 @@ export const getTopWellRoundedGuilds = async (
       $limit: Number(limit),
     },
   ]);
-};
-
-type TopByAverageAttributeGuild = IGuild & {
-  averageAttribute: number;
 };
 
 export const getTopGuildsByAverageAttribute = async (

@@ -15,18 +15,7 @@ export const joinGuild = async (
 
     await Promise.all([
       Character.updateById(character._id, { guild: guild._id }),
-      Guild.updateById(guild._id, {
-        $push: { members: character },
-        $inc: {
-          totalMembers: 1,
-          totalHealth: character.health || 0,
-          totalStrength: character.strength || 0,
-          totalAgility: character.agility || 0,
-          totalIntelligence: character.intelligence || 0,
-          totalArmor: character.armor || 0,
-          totalCritChance: character.critChance || 0,
-        },
-      }),
+      Guild.addCharacterToGuild(character, guild)
     ]);
   } catch (error) {
     if (error instanceof Error) {

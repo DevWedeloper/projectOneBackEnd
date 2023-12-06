@@ -95,6 +95,14 @@ export const findMultipleByName = async (
   return characters.map(mapCharacter);
 };
 
+export const isUnique = async ({
+  name,
+}: {
+  name: string;
+}): Promise<ICharacter | null> => {
+  return await Character.findOne({ name });
+};
+
 export const updateById = async (
   id: string,
   query: Partial<ICharacterWithoutId>

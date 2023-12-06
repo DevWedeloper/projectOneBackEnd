@@ -8,7 +8,7 @@ export const isCharacterNameUnique = async (
 ): Promise<void | Response> => {
   try {
     const { name } = req.body;
-    const existingCharacter = await Character.findOneByQuery({ name });
+    const existingCharacter = await Character.isUnique({ name });
     if (existingCharacter) {
       return res.status(422).json({ error: 'Character name is not unique' });
     }
@@ -31,7 +31,7 @@ export const isGuildNameUnique = async (
 ): Promise<void | Response> => {
   try {
     const { name } = req.body;
-    const existingGuild = await Guild.findOneByQuery({ name });
+    const existingGuild = await Guild.isUnique({ name });
     if (existingGuild) {
       return res.status(422).json({ error: 'Guild name is not unique' });
     }

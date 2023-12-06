@@ -130,6 +130,14 @@ export const findMembersByGuild = async (
   );
 };
 
+export const isUnique = async ({
+  name,
+}: {
+  name: string;
+}): Promise<IGuild | null> => {
+  return await Guild.findOne({ name });
+};
+
 export const updateById = async (
   id: string,
   query: Partial<IGuildWithoutId>

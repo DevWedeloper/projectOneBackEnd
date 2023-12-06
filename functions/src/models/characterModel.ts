@@ -191,6 +191,28 @@ export const membersLeaveGuild = async (
   );
 };
 
+export const getTopCharactersByAttribute = async (
+  attribute: string,
+  limit: number
+): Promise<ICharacter[]> => {
+  return await Character.aggregate([
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        characterType: 1,
+        [attribute]: { $sum: [`$${attribute}`] },
+      },
+    },
+    {
+      $sort: { [attribute]: -1 },
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

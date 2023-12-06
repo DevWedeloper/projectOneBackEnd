@@ -4,7 +4,20 @@ import { IGuild, IGuildWithoutId } from '../types/guildTypes';
 import * as Character from './characterModel';
 import { Guild } from './schemas/guildSchema';
 
-export const create = async (guild: IGuildWithoutId): Promise<IGuild> => {
+type GuildOnCreate = Omit<
+  IGuild,
+  | '_id'
+  | 'members'
+  | 'totalMembers'
+  | 'totalHealth'
+  | 'totalStrength'
+  | 'totalAgility'
+  | 'totalIntelligence'
+  | 'totalArmor'
+  | 'totalCritChance'
+>;
+
+export const create = async (guild: GuildOnCreate): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
 };
 

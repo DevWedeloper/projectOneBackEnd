@@ -26,12 +26,11 @@ export const createGuild = async (
     const guildData = {
       name,
       leader: character,
-      totalMembers: 1,
       maxMembers: 50,
     };
 
     const guild = await Guild.create(guildData);
-    await Character.updateById(character._id, { guild });
+    await joinGuild(character._id, guild);
     return res
       .status(201)
       .json({ message: 'Guild created successfully', guild });
@@ -177,14 +176,6 @@ export const updateGuildLeaderById = async (
           .status(400)
           .json({ error: 'New leader must be a member of the guild' });
       }
-
-      const previousLeader = await Character.findById(guild.leader._id.toString());
-      if (previousLeader.guild) {
-        await joinGuild(previousLeader, guild);
-      }
-
-      await leaveGuild(character._id);
-      await Character.updateById(character._id, { guild });
     }
 
     const updatedGuild = await Guild.updateById(id, { leader: character });

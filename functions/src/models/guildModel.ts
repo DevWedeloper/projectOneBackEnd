@@ -64,22 +64,24 @@ export const getPaginated = async (
 
 export const findOneByQuery = async (
   query: Partial<IGuild>
-): Promise<IGuild | null> => {
-  return await Guild.findOne(query).populate(populateCharacters());
-};
-
-export const findById = async (id: string): Promise<IGuild | null> => {
+): Promise<IGuild> => {
   return (
-    (await Guild.findById(id).populate(populateCharacters()))?.toObject() ||
-    null
+    (await Guild.findOne(query).populate(populateCharacters())) ||
+    throwGuildNotFoundError()
   );
 };
 
-export const findByName = async (name: string): Promise<IGuild | null> => {
+export const findById = async (id: string): Promise<IGuild> => {
   return (
-    (
-      await Guild.findOne({ name }).populate(populateCharacters())
-    )?.toObject() || null
+    (await Guild.findById(id).populate(populateCharacters()))?.toObject() ||
+    throwGuildNotFoundError()
+  );
+};
+
+export const findByName = async (name: string): Promise<IGuild> => {
+  return (
+    (await Guild.findOne({ name }).populate(populateCharacters())) ||
+    throwGuildNotFoundError()
   );
 };
 
@@ -118,14 +120,12 @@ export const findMembersByGuild = async (
 export const updateById = async (
   id: string,
   query: Partial<IGuildWithoutId>
-): Promise<IGuild | null> => {
+): Promise<IGuild> => {
   return (
-    (
-      await Guild.findByIdAndUpdate(id, query, {
-        new: true,
-        runValidators: true,
-      }).populate(populateCharacters())
-    )?.toObject() || null
+    (await Guild.findByIdAndUpdate(id, query, {
+      new: true,
+      runValidators: true,
+    }).populate(populateCharacters())) || throwGuildNotFoundError()
   );
 };
 
@@ -143,43 +143,47 @@ export const deleteAll = async (): Promise<{
 export const addCharacterToGuild = async (
   character: ICharacter,
   guild: IGuild
-): Promise<IGuild | null> => {
-  return await Guild.findByIdAndUpdate(
-    (guild._id.toString(),
-    {
-      $push: { members: character },
-      $inc: {
-        totalMembers: 1,
-        totalHealth: character.health || 0,
-        totalStrength: character.strength || 0,
-        totalAgility: character.agility || 0,
-        totalIntelligence: character.intelligence || 0,
-        totalArmor: character.armor || 0,
-        totalCritChance: character.critChance || 0,
-      },
-    })
+): Promise<IGuild> => {
+  return (
+    (await Guild.findByIdAndUpdate(
+      (guild._id.toString(),
+      {
+        $push: { members: character },
+        $inc: {
+          totalMembers: 1,
+          totalHealth: character.health || 0,
+          totalStrength: character.strength || 0,
+          totalAgility: character.agility || 0,
+          totalIntelligence: character.intelligence || 0,
+          totalArmor: character.armor || 0,
+          totalCritChance: character.critChance || 0,
+        },
+      })
+    )) || throwGuildNotFoundError()
   );
 };
 
 export const removeCharacterFromGuild = async (
   character: ICharacter
-): Promise<IGuild | null> => {
+): Promise<IGuild> => {
   if (!character.guild) {
     throw new Error('Character guild doesn\'t exist');
   }
 
-  return await Guild.findByIdAndUpdate(character.guild._id.toString(), {
-    $pull: { members: character._id.toString() },
-    $inc: {
-      totalMembers: -1,
-      totalHealth: -(character?.health || 0),
-      totalStrength: -(character?.strength || 0),
-      totalAgility: -(character?.agility || 0),
-      totalIntelligence: -(character?.intelligence || 0),
-      totalArmor: -(character?.armor || 0),
-      totalCritChance: -(character?.critChance || 0),
-    },
-  });
+  return (
+    (await Guild.findByIdAndUpdate(character.guild._id.toString(), {
+      $pull: { members: character._id.toString() },
+      $inc: {
+        totalMembers: -1,
+        totalHealth: -(character?.health || 0),
+        totalStrength: -(character?.strength || 0),
+        totalAgility: -(character?.agility || 0),
+        totalIntelligence: -(character?.intelligence || 0),
+        totalArmor: -(character?.armor || 0),
+        totalCritChance: -(character?.critChance || 0),
+      },
+    })) || throwGuildNotFoundError()
+  );
 };
 
 const mapGuild = (
@@ -193,3 +197,7 @@ const populateCharacters = () => ({
   path: 'leader members',
   select: '_id name',
 });
+
+const throwGuildNotFoundError = () => {
+  throw new Error('Guild not found.');
+};

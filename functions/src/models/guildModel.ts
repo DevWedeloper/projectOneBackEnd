@@ -130,14 +130,14 @@ export const findByName = async (name: string): Promise<IGuild | null> => {
 export const findMultipleByName = async (
   query: string,
   limit: number
-): Promise<IGuild[] | null> => {
+): Promise<IGuild[]> => {
   const guilds = await Guild.find({
     name: { $regex: query, $options: 'i' },
   })
     .populate(populateCharacters())
     .limit(limit);
 
-  return guilds.map(mapGuild) || null;
+  return guilds.map(mapGuild);
 };
 
 export const findMembersByGuild = async (

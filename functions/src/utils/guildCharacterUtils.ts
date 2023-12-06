@@ -45,24 +45,9 @@ export const leaveGuild = async (characterId: string) => {
       throw new Error('Character doesn\'t exist');
     }
 
-    if (!character.guild) {
-      throw new Error('Character guild doesn\'t exist');
-    }
-
     await Promise.all([
       Character.updateById(characterId, { guild: null }),
-      Guild.updateById(character.guild._id, {
-        $pull: { members: characterId },
-        $inc: {
-          totalMembers: -1,
-          totalHealth: -(character?.health || 0),
-          totalStrength: -(character?.strength || 0),
-          totalAgility: -(character?.agility || 0),
-          totalIntelligence: -(character?.intelligence || 0),
-          totalArmor: -(character?.armor || 0),
-          totalCritChance: -(character?.critChance || 0),
-        },
-      }),
+      Guild.removeCharacterFromGuild(character),
     ]);
   } catch (error) {
     if (error instanceof Error) {

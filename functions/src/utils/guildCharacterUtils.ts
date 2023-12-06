@@ -98,8 +98,10 @@ export const updateLeaderOrMembersGuild = async (
   try {
     if (isLeader(guild, memberId)) {
       await updateLeaderAndDeleteGuild(guild);
-    } else {
+    } else if (!isLeader(guild, memberId)) {
       await leaveGuild(memberId);
+    } else {
+      throw new Error('Is leader condition was not satisfied');
     }
   } catch (error) {
     if (error instanceof Error) {

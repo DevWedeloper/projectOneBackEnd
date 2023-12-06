@@ -1,6 +1,6 @@
 import { ICharacter } from './characterTypes';
 
-export interface IGuild {
+export type IGuild = {
   _id: string;
   name: string;
   leader: ICharacter;

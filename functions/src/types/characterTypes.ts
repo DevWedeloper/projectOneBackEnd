@@ -1,6 +1,6 @@
 import { IGuild } from './guildTypes';
 
-export interface ICharacter {
+export type ICharacter = {
   _id: string;
   name: string;
   characterType: string;

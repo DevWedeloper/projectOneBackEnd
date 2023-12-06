@@ -168,20 +168,18 @@ export const removeCharacterFromGuild = async (
     throw new Error('Character guild doesn\'t exist');
   }
 
-  return (
-    (await Guild.findByIdAndUpdate(character.guild._id.toString(), {
-      $pull: { members: character._id.toString() },
-      $inc: {
-        totalMembers: -1,
-        totalHealth: -(character?.health || 0),
-        totalStrength: -(character?.strength || 0),
-        totalAgility: -(character?.agility || 0),
-        totalIntelligence: -(character?.intelligence || 0),
-        totalArmor: -(character?.armor || 0),
-        totalCritChance: -(character?.critChance || 0),
-      },
-    })) || null
-  );
+  return await Guild.findByIdAndUpdate(character.guild._id.toString(), {
+    $pull: { members: character._id.toString() },
+    $inc: {
+      totalMembers: -1,
+      totalHealth: -(character?.health || 0),
+      totalStrength: -(character?.strength || 0),
+      totalAgility: -(character?.agility || 0),
+      totalIntelligence: -(character?.intelligence || 0),
+      totalArmor: -(character?.armor || 0),
+      totalCritChance: -(character?.critChance || 0),
+    },
+  });
 };
 
 const mapGuild = (

@@ -117,7 +117,7 @@ export const findMembersByGuild = async (
 
 export const updateById = async (
   id: string,
-  query: Record<string, unknown>
+  query: Partial<IGuildWithoutId>
 ): Promise<IGuild | null> => {
   return (
     (

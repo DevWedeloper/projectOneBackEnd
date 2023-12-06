@@ -138,10 +138,6 @@ export const joinGuildById = async (
 
     if (character.guild) {
       const previousGuild = await Guild.findById(character.guild._id);
-      if (!previousGuild) {
-        return res.status(404).json({ error: 'Current guild not found' });
-      }
-
       if (isDifferentGuild(previousGuild, guild._id.toString())) {
         await updateLeaderOrMembersGuild(previousGuild, id);
       } else {
@@ -175,14 +171,12 @@ export const leaveGuildById = async (
     const { id } = req.params;
     const { character } = req.body;
 
-    if (character.guild === null) {
+    if (!character.guild) {
       return res.status(404).json({ error: 'Character doesn\'t have a guild' });
     }
 
     const previousGuild = await Guild.findById(character.guild._id);
-    if (!previousGuild) {
-      return res.status(404).json({ error: 'Current guild not found' });
-    }
+
     await updateLeaderOrMembersGuild(previousGuild, id);
     
     const updatedCharacter = await Character.findById(id);

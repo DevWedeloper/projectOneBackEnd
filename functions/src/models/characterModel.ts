@@ -126,14 +126,14 @@ export const findByName = async (name: string): Promise<ICharacter | null> => {
 export const findMultipleByName = async (
   query: string,
   limit: number
-): Promise<ICharacter[] | null> => {
+): Promise<ICharacter[]> => {
   const characters = await Character.find({
     name: { $regex: query, $options: 'i' },
   })
     .populate(populateGuild())
     .limit(limit);
 
-  return characters.map(mapCharacter) || null;
+  return characters.map(mapCharacter);
 };
 
 export const updateById = async (

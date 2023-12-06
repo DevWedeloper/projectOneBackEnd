@@ -1,7 +1,4 @@
-import {
-  Document as MongooseDocument,
-  UpdateWriteOpResult
-} from 'mongoose';
+import { Document as MongooseDocument, UpdateWriteOpResult } from 'mongoose';
 import { ICharacter, ICharacterWithoutId } from '../types/characterTypes';
 import * as Guild from './guildModel';
 import { Character } from './schemas/characterSchema';
@@ -64,20 +61,24 @@ export const getPaginated = async (
 
 export const findOneByQuery = async (
   query: Partial<ICharacter>
-): Promise<ICharacter | null> => {
-  return await Character.findOne(query).populate(populateGuild());
-};
-
-export const findById = async (id: string): Promise<ICharacter | null> => {
+): Promise<ICharacter> => {
   return (
-    (await Character.findById(id).populate(populateGuild()))?.toObject() || null
+    (await Character.findOne(query).populate(populateGuild()))?.toObject() ||
+    throwCharacterNotFoundError()
   );
 };
 
-export const findByName = async (name: string): Promise<ICharacter | null> => {
+export const findById = async (id: string): Promise<ICharacter> => {
+  return (
+    (await Character.findById(id).populate(populateGuild()))?.toObject() ||
+    throwCharacterNotFoundError()
+  );
+};
+
+export const findByName = async (name: string): Promise<ICharacter> => {
   return (
     (await Character.findOne({ name }).populate(populateGuild()))?.toObject() ||
-    null
+    throwCharacterNotFoundError()
   );
 };
 
@@ -97,19 +98,22 @@ export const findMultipleByName = async (
 export const updateById = async (
   id: string,
   query: Partial<ICharacterWithoutId>
-): Promise<ICharacter | null> => {
+): Promise<ICharacter> => {
   return (
     (
       await Character.findByIdAndUpdate(id, query, {
         new: true,
         runValidators: true,
       })
-    )?.toObject() || null
+    )?.toObject() || throwCharacterNotFoundError()
   );
 };
 
-export const deleteById = async (id: string): Promise<ICharacter | null> => {
-  return (await Character.findByIdAndDelete(id))?.toObject() || null;
+export const deleteById = async (id: string): Promise<ICharacter> => {
+  return (
+    (await Character.findByIdAndDelete(id))?.toObject() ||
+    throwCharacterNotFoundError()
+  );
 };
 
 export const deleteAll = async (): Promise<{
@@ -152,3 +156,7 @@ const populateGuild = () => ({
     select: '_id name',
   },
 });
+
+const throwCharacterNotFoundError = () => {
+  throw new Error('Character not found.');
+};

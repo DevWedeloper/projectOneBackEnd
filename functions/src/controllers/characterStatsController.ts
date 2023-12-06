@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as Character from '../models/characterModel';
+import * as Character from '../models/characterStatsModel';
 
 export const getTopCharactersByAttribute = async (
   req: Request,

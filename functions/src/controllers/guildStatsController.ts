@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as Guild from '../models/guildModel';
+import * as Guild from '../models/guildStatsModel';
 
 export const getTopGuildsByAttribute = async (
   req: Request,

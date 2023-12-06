@@ -17,7 +17,7 @@ export const getTopGuildsByAttribute = async (
       });
     }
 
-    const topGuilds = await Guild.getTopGuildsByAttribute(attribute, limit);
+    const topGuilds = await Guild.getTopGuildsByAttribute(actualAttribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {
@@ -68,7 +68,7 @@ export const getTopGuildsByAverageAttribute = async (
       });
     }
 
-    const topGuilds = await Guild.getTopGuildsByAverageAttribute(attribute, limit);
+    const topGuilds = await Guild.getTopGuildsByAverageAttribute(actualAttribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {

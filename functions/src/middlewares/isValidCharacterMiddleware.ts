@@ -18,11 +18,6 @@ export const isValidCharacter = async (
       : { name: character };
 
     const foundCharacter = await Character.findOneByQuery(characterQuery);
-
-    if (!foundCharacter) {
-      return res.status(500).json({ error: `Character '${character}' does not exist.` });
-    }
-
     req.body.character = foundCharacter;
     next();
   } catch (error) {

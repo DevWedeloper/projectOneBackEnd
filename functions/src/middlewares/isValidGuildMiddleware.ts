@@ -18,7 +18,6 @@ export const isValidGuild = async (
       : { name: guild };
 
     const foundGuild = await Guild.findOneByQuery(guildQuery);
-
     req.body.guild = foundGuild;
     next();
   } catch (error) {

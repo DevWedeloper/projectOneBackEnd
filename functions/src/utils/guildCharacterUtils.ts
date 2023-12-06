@@ -53,7 +53,7 @@ export const updateLeaderAndDeleteGuild = async (guild: IGuild) => {
 
     await Promise.all([
       Character.membersLeaveGuild(guild.members),
-      Character.updateById(guild.leader._id.toString(), { $unset: { guild: 1 } }),
+      Character.updateById(guild.leader._id.toString(), { guild: null }),
       Guild.deleteById(guild._id.toString()),
     ]);
   } catch (error) {

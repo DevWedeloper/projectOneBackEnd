@@ -151,7 +151,7 @@ export const findMultipleByName = async (
 
 export const updateById = async (
   id: string,
-  query: Record<string, string | number>
+  query: Record<string, unknown>
 ): Promise<ICharacter | null> => {
   return (
     (

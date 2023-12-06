@@ -286,6 +286,22 @@ export const getAverageCharacterStats = async (): Promise<{
   };
 };
 
+export const getCharacterDistributionByType = async (): Promise<
+  ICharacter[]
+> => {
+  return await Character.aggregate([
+    {
+      $group: {
+        _id: '$characterType',
+        count: { $sum: 1 },
+      },
+    },
+    {
+      $sort: { count: -1 },
+    },
+  ]);
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

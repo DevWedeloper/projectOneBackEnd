@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as GuildModel from '../models/guildModel';
+import * as Guild from '../models/guildModel';
 
 export const getTopGuildsByAttribute = async (
   req: Request,
@@ -17,7 +17,7 @@ export const getTopGuildsByAttribute = async (
       });
     }
 
-    const topGuilds = await GuildModel.getTopGuildsByAttribute(attribute, limit);
+    const topGuilds = await Guild.getTopGuildsByAttribute(attribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {
@@ -38,7 +38,7 @@ export const getTopWellRoundedGuilds = async (
   try {
     const limit = 5;
 
-    const guilds = await GuildModel.getTopWellRoundedGuilds(limit);
+    const guilds = await Guild.getTopWellRoundedGuilds(limit);
     return res.json(guilds);
   } catch (error) {
     if (error instanceof Error) {
@@ -68,7 +68,7 @@ export const getTopGuildsByAverageAttribute = async (
       });
     }
 
-    const topGuilds = await GuildModel.getTopGuildsByAverageAttribute(attribute, limit);
+    const topGuilds = await Guild.getTopGuildsByAverageAttribute(attribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {

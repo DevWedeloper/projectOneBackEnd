@@ -9,7 +9,7 @@ export const joinGuild = async (
 ) => {
   try {
     const checkGuild = await Guild.findById(guild._id);
-    if (checkGuild && checkGuild.totalMembers >= checkGuild.maxMembers) {
+    if (checkGuild.totalMembers >= checkGuild.maxMembers) {
       throw new Error('Guild is full. Cannot add more members.');
     }
 
@@ -29,10 +29,6 @@ export const leaveGuild = async (characterId: string) => {
     const character = await Character.findById(
       characterId
     );
-
-    if (!character) {
-      throw new Error('Character doesn\'t exist');
-    }
 
     await Promise.all([
       Character.updateById(characterId, { guild: null }),

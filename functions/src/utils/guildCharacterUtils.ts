@@ -1,23 +1,21 @@
-import { Character, ICharacter } from '../models/characterModel';
-import { Guild, IGuild } from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import { ICharacter } from '../models/characterModel';
+import * as Guild from '../models/guildModel';
+import { IGuild } from '../models/guildModel';
 
 export const joinGuild = async (
   character: ICharacter,
   guild: IGuild
 ) => {
   try {
-    const checkGuild = await Guild.findById(guild._id).
-      populate({
-        path: 'leader members',
-        select: 'name _id critChance',
-      });
+    const checkGuild = await Guild.findById(guild._id);
     if (checkGuild && checkGuild.totalMembers >= checkGuild.maxMembers) {
       throw new Error('Guild is full. Cannot add more members.');
     }
 
     await Promise.all([
-      Character.findByIdAndUpdate(character._id, { guild: guild._id }),
-      Guild.findByIdAndUpdate(guild, {
+      Character.updateById(character._id, { guild: guild._id }),
+      Guild.updateById(guild._id, {
         $push: { members: character },
         $inc: {
           totalMembers: 1,
@@ -42,12 +40,19 @@ export const leaveGuild = async (characterId: string) => {
     const character = await Character.findById(
       characterId
     );
-    const guildId = character!.guild as IGuild;
+
+    if (!character) {
+      throw new Error('Character doesn\'t exist');
+    }
+
+    if (!character.guild) {
+      throw new Error('Character guild doesn\'t exist');
+    }
 
     await Promise.all([
-      Character.findByIdAndUpdate(characterId, { guild: null }),
-      Guild.findByIdAndUpdate(guildId, {
-        $pull: { members: characterId as unknown as IGuild },
+      Character.updateById(characterId, { guild: null }),
+      Guild.updateById(character.guild._id, {
+        $pull: { members: characterId },
         $inc: {
           totalMembers: -1,
           totalHealth: -(character?.health || 0),
@@ -68,16 +73,14 @@ export const leaveGuild = async (characterId: string) => {
 
 export const updateLeaderAndDeleteGuild = async (guild: IGuild) => {
   try {
-    const guildId = guild._id;
-    const leaderId = guild.leader._id.toString();
+    if (!guild.members) {
+      throw new Error('No guild members found');
+    }
 
     await Promise.all([
-      Character.updateMany(
-        { _id: { $in: guild.members } },
-        { $unset: { guild: 1 } }
-      ),
-      Character.findByIdAndUpdate(leaderId, { $unset: { guild: 1 } }),
-      Guild.findByIdAndDelete(guildId),
+      Character.membersLeaveGuild(guild.members),
+      Character.updateById(guild.leader._id.toString(), { $unset: { guild: 1 } }),
+      Guild.deleteById(guild._id.toString()),
     ]);
   } catch (error) {
     if (error instanceof Error) {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as CharacterModel from '../models/characterModel';
+import * as Character from '../models/characterModel';
 
 export const getTopCharactersByAttribute = async (
   req: Request,
@@ -8,7 +8,7 @@ export const getTopCharactersByAttribute = async (
   const { attribute } = req.params;
   try {
     const limit = 5;
-    const characters = await CharacterModel.getTopCharactersByAttribute(
+    const characters = await Character.getTopCharactersByAttribute(
       attribute,
       limit
     );
@@ -29,7 +29,7 @@ export const getTopWellRoundedCharacters = async (
 ): Promise<void | Response> => {
   try {
     const limit = 5;
-    const characters = await CharacterModel.getTopWellRoundedCharacters(limit);
+    const characters = await Character.getTopWellRoundedCharacters(limit);
     return res.status(200).json(characters);
   } catch (error) {
     if (error instanceof Error) {
@@ -46,7 +46,7 @@ export const getAverageCharacterStats = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const averageStats = await CharacterModel.getAverageCharacterStats();
+    const averageStats = await Character.getAverageCharacterStats();
     return res.status(200).json(averageStats);
   } catch (error) {
     if (error instanceof Error) {
@@ -63,7 +63,7 @@ export const getCharacterDistributionByType = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const characterDistribution = await CharacterModel.getCharacterDistributionByType();
+    const characterDistribution = await Character.getCharacterDistributionByType();
     return res.status(200).json(characterDistribution);
   } catch (error) {
     if (error instanceof Error) {

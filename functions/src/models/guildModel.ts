@@ -63,7 +63,7 @@ export const getPaginated = async (
 };
 
 export const findOneByQuery = async (
-  query: Record<string, unknown>
+  query: Partial<IGuild>
 ): Promise<IGuild | null> => {
   return await Guild.findOne(query).populate(populateCharacters());
 };

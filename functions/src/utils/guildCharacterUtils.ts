@@ -1,7 +1,7 @@
 import * as Character from '../models/characterModel';
-import { ICharacter } from '../models/characterModel';
 import * as Guild from '../models/guildModel';
-import { IGuild } from '../models/guildModel';
+import { ICharacter } from '../types/characterTypes';
+import { IGuild } from '../types/guildTypes';
 
 export const joinGuild = async (
   character: ICharacter,

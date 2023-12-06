@@ -1,26 +1,11 @@
 import {
-  Schema,
-  model,
   Document as MongooseDocument,
+  Schema,
   UpdateWriteOpResult,
+  model,
 } from 'mongoose';
-import { IGuild } from './guildModel';
+import { ICharacter, ICharacterWithoutId } from '../types/characterTypes';
 import * as Guild from './guildModel';
-
-export interface ICharacter {
-  _id: string;
-  name: string;
-  characterType: string;
-  health: number;
-  strength: number;
-  agility: number;
-  intelligence: number;
-  armor: number;
-  critChance: number;
-  guild?: IGuild | null;
-}
-
-export type ICharacterWithoutId = Omit<ICharacter, '_id'>;
 
 const characterSchema = new Schema<ICharacterWithoutId>({
   name: {

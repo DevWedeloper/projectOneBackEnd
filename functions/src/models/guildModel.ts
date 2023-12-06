@@ -195,6 +195,50 @@ export const getTopGuildsByAttribute = async (
     .select(`_id name ${attribute}`);
 };
 
+type WellRoundedGuild = IGuild & {
+  membersAverage: number;
+};
+
+export const getTopWellRoundedGuilds = async (
+  limit: number
+): Promise<WellRoundedGuild[]> => {
+  return await Guild.aggregate([
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        membersAverage: {
+          $cond: {
+            if: { $ne: ['$totalMembers', 0] },
+            then: {
+              $divide: [
+                {
+                  $sum: [
+                    { $divide: ['$totalHealth', 100] },
+                    '$totalStrength',
+                    '$totalAgility',
+                    '$totalIntelligence',
+                    '$totalArmor',
+                    { $multiply: ['$totalCritChance', 100] },
+                  ],
+                },
+                '$totalMembers',
+              ],
+            },
+            else: 0,
+          },
+        },
+      },
+    },
+    {
+      $sort: { membersAverage: -1 },
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+};
+
 const mapGuild = (
   rawCharacter: MongooseDocument<unknown, unknown, IGuild>
 ): IGuild => {

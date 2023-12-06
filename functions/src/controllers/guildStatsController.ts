@@ -8,7 +8,7 @@ export const getTopGuildsByAttribute = async (
 ): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
-    
+
     const limit = 5;
     const actualAttribute = attributeMapping[attribute];
     if (!actualAttribute) {
@@ -37,44 +37,9 @@ export const getTopWellRoundedGuilds = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { limit = 5 } = req.query;
+    const limit = 5;
 
-    const guilds = await Guild.aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          membersAverage: {
-            $cond: {
-              if: { $ne: ['$totalMembers', 0] },
-              then: {
-                $divide: [
-                  {
-                    $sum: [
-                      { $divide: ['$totalHealth', 100] }, 
-                      '$totalStrength',
-                      '$totalAgility',
-                      '$totalIntelligence',
-                      '$totalArmor',
-                      { $multiply: ['$totalCritChance', 100] },
-                    ],
-                  },
-                  '$totalMembers',
-                ],
-              },
-              else: 0,
-            },
-          },
-        },
-      },
-      {
-        $sort: { membersAverage: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
-
+    const guilds = await GuildModel.getTopWellRoundedGuilds(limit);
     return res.json(guilds);
   } catch (error) {
     if (error instanceof Error) {

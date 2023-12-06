@@ -4,6 +4,7 @@ import { generateUsername } from 'unique-username-generator';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 import { ICharacter } from '../types/characterTypes';
+import { joinGuild } from '../utils/guildCharacterUtils';
 dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;
@@ -37,13 +38,12 @@ const generateRandomGuild = async () => {
       name: generateUsername('', 0, 20),
       leader: leader,
       maxMembers: 50,
-      totalMembers: 1,
     };
 
-    const savedGuild = await Guild.create(guildData);
-    await Character.updateById(leader._id, { guild: savedGuild._id });
+    const guild = await Guild.create(guildData);
+    await joinGuild(leader, guild);
     availableCharacters = availableCharacters.filter(character => character._id !== leader._id);
-    console.log(guildCtr + 1, ' Guild created successfully:', savedGuild.name);
+    console.log(guildCtr + 1, ' Guild created successfully:', guild.name);
     guildCtr++;
   } catch (error) {
     if (error instanceof Error) {

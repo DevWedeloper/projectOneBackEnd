@@ -31,7 +31,7 @@ export const getTopWellRoundedCharacters = async (
   try {
     const limit = 5;
     const characters = await CharacterModel.getTopWellRoundedCharacters(limit);
-    return res.json(characters);
+    return res.status(200).json(characters);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -48,7 +48,7 @@ export const getAverageCharacterStats = async (
 ): Promise<void | Response> => {
   try {
     const averageStats = await CharacterModel.getAverageCharacterStats();
-    return res.json(averageStats);
+    return res.status(200).json(averageStats);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -76,7 +76,7 @@ export const getCharacterDistributionByType = async (
       },
     ]);
 
-    return res.json(characterDistribution);
+    return res.status(200).json(characterDistribution);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({

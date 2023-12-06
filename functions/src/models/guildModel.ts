@@ -79,9 +79,9 @@ export const getPaginated = async (
           { name: { $regex: regex } },
           {
             leader: {
-              $in: (
-                await Character.findMultipleByName(searchQuery, 0)
-              ).map((guild) => guild._id.toString()),
+              $in: (await Character.findMultipleByName(searchQuery, 0)).map(
+                (guild) => guild._id.toString()
+              ),
             },
           },
         ],

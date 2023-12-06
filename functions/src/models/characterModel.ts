@@ -42,7 +42,7 @@ const characterSchema = new Schema<ICharacterWithoutId>({
   guild: { type: Schema.Types.ObjectId, ref: 'Guild', default: null },
 });
 
-export const Character = model<ICharacterWithoutId>(
+const Character = model<ICharacterWithoutId>(
   'Character',
   characterSchema
 );

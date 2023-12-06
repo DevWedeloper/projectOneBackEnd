@@ -46,7 +46,7 @@ const guildSchema = new Schema<IGuildWithoutId>({
   totalCritChance: { type: Number, default: 0 },
 });
 
-export const Guild = model<IGuildWithoutId>('Guild', guildSchema);
+const Guild = model<IGuildWithoutId>('Guild', guildSchema);
 
 export const create = async (guild: IGuildWithoutId): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();

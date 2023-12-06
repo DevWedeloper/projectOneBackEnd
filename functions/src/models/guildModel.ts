@@ -115,9 +115,8 @@ export const findOneByQuery = async (
 
 export const findById = async (id: string): Promise<IGuild | null> => {
   return (
-    (
-      await Guild.findById(id).populate(populateCharacters())
-    )?.toObject() || null
+    (await Guild.findById(id).populate(populateCharacters()))?.toObject() ||
+    null
   );
 };
 
@@ -184,6 +183,16 @@ export const deleteAll = async (): Promise<{
   deletedCount: number;
 }> => {
   return await Guild.deleteMany();
+};
+
+export const getTopGuildsByAttribute = async (
+  attribute: string,
+  limit: number
+): Promise<IGuild[]> => {
+  return await Guild.find()
+    .sort({ [attribute]: -1 })
+    .limit(Number(limit))
+    .select(`_id name ${attribute}`);
 };
 
 const mapGuild = (

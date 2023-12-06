@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { Guild } from '../models/guildModel';
+import * as GuildModel from '../models/guildModel';
 
 export const getTopGuildsByAttribute = async (
   req: Request,
@@ -7,8 +8,8 @@ export const getTopGuildsByAttribute = async (
 ): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
-    const { limit = 5 } = req.query;
-
+    
+    const limit = 5;
     const actualAttribute = attributeMapping[attribute];
     if (!actualAttribute) {
       return res.status(400).json({
@@ -17,11 +18,7 @@ export const getTopGuildsByAttribute = async (
       });
     }
 
-    const topGuilds = await Guild.find()
-      .sort({ [actualAttribute]: -1 })
-      .limit(Number(limit))
-      .select(`_id name ${actualAttribute}`);
-
+    const topGuilds = await GuildModel.getTopGuildsByAttribute(attribute, limit);
     return res.json(topGuilds);
   } catch (error) {
     if (error instanceof Error) {

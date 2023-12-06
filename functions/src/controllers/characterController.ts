@@ -85,7 +85,7 @@ export const searchCharactersByName = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const searchQuery: string = (req.query.search as string) || '';
+    const searchQuery = req.query.name as string;
     const limit = 10;
 
     const character = await Character.findMultipleByName(

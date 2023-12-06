@@ -4,7 +4,8 @@ import {
   Document as MongooseDocument,
   UpdateWriteOpResult,
 } from 'mongoose';
-import { Guild, IGuild } from './guildModel';
+import { IGuild } from './guildModel';
+import * as Guild from './guildModel';
 
 export interface ICharacter {
   _id: string;
@@ -75,11 +76,9 @@ export const getPaginated = async (
           { name: { $regex: regex } },
           {
             guild: {
-              $in: (
-                await Guild.find({
-                  name: { $regex: searchQuery, $options: 'i' },
-                })
-              ).map((guild) => guild._id.toString()),
+              $in: (await Guild.findMultipleByName(searchQuery, 0)).map(
+                (guild) => guild._id.toString()
+              ),
             },
           },
         ],

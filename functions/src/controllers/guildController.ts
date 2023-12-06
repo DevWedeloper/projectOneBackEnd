@@ -178,8 +178,8 @@ export const updateGuildLeaderById = async (
           .json({ error: 'New leader must be a member of the guild' });
       }
 
-      const previousLeader = await Character.findById(guild.leader._id);
-      if (previousLeader && previousLeader.guild) {
+      const previousLeader = await Character.findById(guild.leader._id.toString());
+      if (previousLeader.guild) {
         await joinGuild(previousLeader, guild);
       }
 
@@ -218,10 +218,6 @@ export const addMemberToGuildById = async (
 
     if (character.guild && isDifferentGuild(character.guild, id)) {
       const previousGuild = await Guild.findById(character.guild._id);
-      if (!previousGuild) {
-        return res.status(404).json({ error: 'Guild not found' });
-      }
-
       await updateLeaderOrMembersGuild(previousGuild, character._id);
     }
 

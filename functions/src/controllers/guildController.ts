@@ -31,7 +31,7 @@ export const createGuild = async (
     };
 
     const guild = await Guild.create(guildData);
-    await Character.updateById(character._id, { guild: guild._id });
+    await Character.updateById(character._id, { guild });
     return res
       .status(201)
       .json({ message: 'Guild created successfully', guild });
@@ -184,7 +184,7 @@ export const updateGuildLeaderById = async (
       }
 
       await leaveGuild(character._id);
-      await Character.updateById(character._id, { guild: guild._id });
+      await Character.updateById(character._id, { guild });
     }
 
     const updatedGuild = await Guild.updateById(id, { leader: character });

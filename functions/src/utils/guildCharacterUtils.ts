@@ -14,7 +14,7 @@ export const joinGuild = async (
     }
 
     await Promise.all([
-      Character.updateById(character._id, { guild: guild._id }),
+      Character.updateById(character._id, { guild }),
       Guild.addCharacterToGuild(character, guild)
     ]);
   } catch (error) {

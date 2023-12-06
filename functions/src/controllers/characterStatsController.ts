@@ -29,41 +29,8 @@ export const getTopWellRoundedCharacters = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { limit = 5 } = req.query;
-
-    const characters = await Character.aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          characterType: 1,
-          health: 1,
-          strength: 1,
-          agility: 1,
-          intelligence: 1,
-          armor: 1,
-          critChance: 1,
-          guild: 1,
-          totalAttribute: {
-            $sum: [
-              { $divide: ['$health', 100] },
-              '$strength',
-              '$agility',
-              '$intelligence',
-              '$armor',
-              { $multiply: ['$critChance', 100] },
-            ],
-          },
-        },
-      },
-      {
-        $sort: { totalAttribute: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
-
+    const limit = 5;
+    const characters = await CharacterModel.getTopWellRoundedCharacters(limit);
     return res.json(characters);
   } catch (error) {
     if (error instanceof Error) {

@@ -213,6 +213,43 @@ export const getTopCharactersByAttribute = async (
   ]);
 };
 
+export const getTopWellRoundedCharacters = async (
+  limit: number
+): Promise<ICharacter[]> => {
+  return await Character.aggregate([
+    {
+      $project: {
+        _id: 1,
+        name: 1,
+        characterType: 1,
+        health: 1,
+        strength: 1,
+        agility: 1,
+        intelligence: 1,
+        armor: 1,
+        critChance: 1,
+        guild: 1,
+        totalAttribute: {
+          $sum: [
+            { $divide: ['$health', 100] },
+            '$strength',
+            '$agility',
+            '$intelligence',
+            '$armor',
+            { $multiply: ['$critChance', 100] },
+          ],
+        },
+      },
+    },
+    {
+      $sort: { totalAttribute: -1 },
+    },
+    {
+      $limit: Number(limit),
+    },
+  ]);
+};
+
 const mapCharacter = (
   rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
 ): ICharacter => {

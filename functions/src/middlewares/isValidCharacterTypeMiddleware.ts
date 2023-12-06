@@ -6,14 +6,10 @@ export const isValidCharacterType = async (
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
-  const { characterType } = req.body;
   try {
-    const foundCharacterType = await CharacterType.findOne(characterType);
-    if (!foundCharacterType) {
-      return res
-        .status(500)
-        .json({ error: `Character type '${characterType}' does not exist.` });
-    }
+    const { characterType } = req.body;
+    
+    await CharacterType.findOne(characterType);
     next();
   } catch (error) {
     if (error instanceof Error) {

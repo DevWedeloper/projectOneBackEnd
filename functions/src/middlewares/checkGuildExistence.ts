@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Guild } from '../models/guildModel';
+import * as Guild from '../models/guildModel';
 
 export const checkGuildExistence = async (
   req: Request,
@@ -8,11 +8,8 @@ export const checkGuildExistence = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
+    
     const guild = await Guild.findById(id);
-    if (!guild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
-
     req.body.guild = guild;
     next();
   } catch (error) {

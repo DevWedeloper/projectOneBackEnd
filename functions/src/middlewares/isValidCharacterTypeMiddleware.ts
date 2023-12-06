@@ -1,25 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
-import { CharacterType } from '../models/characterTypeModel';
+import * as CharacterType from '../models/characterTypeModel';
 
 export const isValidCharacterType = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
-  const { characterType } = req.body;
-  if (!characterType) {
-    return next();
-  }
-
   try {
-    const foundCharacterType = await CharacterType.findOne({
-      typeName: characterType,
-    });
-    if (!foundCharacterType) {
-      return res
-        .status(500)
-        .json({ error: `Character type '${characterType}' does not exist.` });
-    }
+    const { characterType } = req.body;
+    
+    await CharacterType.findOne(characterType);
     next();
   } catch (error) {
     if (error instanceof Error) {

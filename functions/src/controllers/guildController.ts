@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
-import { Character as ICharacter } from '../interface/characterInterface';
-import { Character } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
 import {
   isDifferentGuild,
   isLeader,
@@ -16,34 +15,28 @@ export const createGuild = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { name, character }: { name: string; character: ICharacter } =
-      req.body;
+    const { name, character } = req.body;
     if (character.guild) {
       await updateLeaderOrMembersGuild(
-        character.guild as unknown as IGuildDocument,
+        character.guild,
         character._id.toString()
       );
     }
 
-    const totalMembers = 1;
     const guildData = {
       name,
       leader: character,
-      totalMembers,
+      maxMembers: 50,
     };
 
-    const savedGuild = await Guild.create(guildData);
-
-    await Character.findOneAndUpdate(
-      { _id: character._id },
-      { $set: { guild: savedGuild._id } }
-    );
-
+    const guild = await Guild.create(guildData);
+    await joinGuild(character._id, guild);
     return res
       .status(201)
-      .json({ message: 'Guild created successfully', guild: savedGuild });
+      .json({ message: 'Guild created successfully', guild });
   } catch (error) {
     if (error instanceof Error) {
+      console.log(error.message);
       return res
         .status(500)
         .json({ error: 'Failed to create the guild', message: error.message });
@@ -59,50 +52,18 @@ export const getAllGuilds = async (
     const page: number = parseInt(req.query.page as string) || 1;
     const pageSize: number = parseInt(req.query.pageSize as string) || 10;
     const sortBy: string = (req.query.sortBy as string) || 'name';
-    const sortOrder: string = (req.query.sortOrder as string) || 'asc';
+    const sortOrder: 'asc' | 'desc' =
+      (req.query.sortOrder as 'asc' | 'desc') || 'asc';
     const searchQuery: string = (req.query.search as string) || '';
 
-    const sortCriteria: { [key: string]: 'asc' | 'desc' } = {};
-    sortCriteria[sortBy] = sortOrder === 'asc' ? 'asc' : 'desc';
-
-    const query: {
-      $or: Array<{
-        name?: { $regex: string; $options: string };
-        leader?: { $in: string[] };
-        totalMembers?: number;
-      }>;
-    } = {
-      $or: [
-        { name: { $regex: searchQuery, $options: 'i' } },
-        { leader: { $in: await getLeaderIdsByCharacterName(searchQuery) } },
-      ],
-    };
-
-    if (searchQuery && !isNaN(parseInt(searchQuery))) {
-      query.$or.push({ totalMembers: parseInt(searchQuery) });
-    }
-
-    const totalGuilds: number = await Guild.countDocuments(query);
-    const totalPages: number = Math.ceil(totalGuilds / pageSize);
-
-    const guildsQuery = Guild.find(query)
-      .sort(sortCriteria)
-      .populate({
-        path: 'leader members',
-        select: 'name _id',
-      })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize);
-
-    const guilds: IGuildDocument[] = await guildsQuery;
-
-    return res.json({
+    const guilds = await Guild.getPaginated(
       page,
       pageSize,
-      totalPages,
-      totalGuilds,
-      guilds,
-    });
+      sortBy,
+      sortOrder,
+      searchQuery
+    );
+    return res.status(200).json(guilds);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -118,15 +79,9 @@ export const getGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const guild = await Guild.findById(id).populate(
-      'leader members',
-      'name _id'
-    );
-    if (!guild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
 
-    return res.json(guild);
+    const guild = await Guild.findById(id);
+    return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -143,11 +98,10 @@ export const searchGuildsByName = async (
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
-    const guild = await Guild.find({
-      name: { $regex: searchQuery, $options: 'i' },
-    }).limit(10);
+    const limit = 10;
 
-    return res.json(guild);
+    const guild = await Guild.findMultipleByName(searchQuery, limit);
+    return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -163,15 +117,15 @@ export const searchGuildMemberById = async (
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
+    const limit = 10;
     const { guild } = req.body;
-    const memberObjects = await Character.find({
-      _id: { $in: guild.members },
-    }).limit(10);
-    const searchResults = memberObjects.filter((member) =>
-      member.name.includes(searchQuery)
-    );
 
-    return res.status(200).json(searchResults);
+    const members = await Guild.findMembersByGuild(
+      guild._id,
+      searchQuery,
+      limit
+    );
+    return res.status(200).json(members);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
@@ -188,24 +142,12 @@ export const updateGuildNameById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { name, ...guildDataToUpdate }: Partial<IGuildDocument> = req.body;
+    const { name } = req.body;
 
-    const updatedGuild = await Guild.findByIdAndUpdate(
-      id,
-      { ...guildDataToUpdate, name: name },
-      { new: true, runValidators: true }
-    ).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Failed to update the guild' });
-    }
-
-    return res.json({
+    const guild = await Guild.updateById(id, { name });
+    return res.status(200).json({
       message: 'Guild name updated successfully',
-      guild: updatedGuild,
+      guild,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -223,48 +165,22 @@ export const updateGuildLeaderById = async (
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
-    const { guild, character, ...guildDataToUpdate } = req.body;
-
-    const newLeader = character;
+    const { guild, character } = req.body;
 
     const isChangingLeader: boolean =
-      newLeader && newLeader.toString() !== guild.leader.toString();
+      character && character.toString() !== guild.leader.toString();
     if (isChangingLeader) {
       const isLeaderNotMemberOfGuild: boolean =
-        !newLeader.guild ||
-        isDifferentGuild(newLeader.guild as IGuildDocument, id);
+        !character.guild || isDifferentGuild(character.guild, id);
       if (isLeaderNotMemberOfGuild) {
         return res
           .status(400)
           .json({ error: 'New leader must be a member of the guild' });
       }
-
-      const previousLeader = await Character.findById(guild.leader);
-      if (previousLeader && previousLeader.guild) {
-        await joinGuild(previousLeader._id, guild._id);
-      }
-
-      await leaveGuild(newLeader._id);
-      await Character.findOneAndUpdate(
-        { _id: newLeader._id },
-        { $set: { guild: guild._id } }
-      );
     }
 
-    const updatedGuild = await Guild.findByIdAndUpdate(
-      id,
-      { ...guildDataToUpdate, leader: newLeader },
-      { new: true }
-    ).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Failed to update the guild' });
-    }
-
-    return res.json({
+    const updatedGuild = await Guild.updateById(id, { leader: character });
+    return res.status(200).json({
       message: 'Guild leader updated successfully',
       guild: updatedGuild,
     });
@@ -286,39 +202,21 @@ export const addMemberToGuildById = async (
     const { id } = req.params;
     const { guild, character } = req.body;
 
-    const newMember = character;
-
-    if (
-      newMember.guild &&
-      !isDifferentGuild(newMember.guild as IGuildDocument, id)
-    ) {
+    if (character.guild && !isDifferentGuild(character.guild, id)) {
       return res
         .status(400)
         .json({ error: 'Member is already a member or leader of the guild' });
     }
 
-    if (
-      newMember.guild &&
-      isDifferentGuild(newMember.guild as IGuildDocument, id)
-    ) {
-      const previousGuild = await Guild.findById(newMember.guild);
-      if (!previousGuild) {
-        return res.status(404).json({ error: 'Guild not found' });
-      }
-
-      await updateLeaderOrMembersGuild(previousGuild, newMember._id.toString());
+    if (character.guild && isDifferentGuild(character.guild, id)) {
+      const previousGuild = await Guild.findById(character.guild._id);
+      await updateLeaderOrMembersGuild(previousGuild, character._id);
     }
 
-    await joinGuild(newMember._id, guild);
-    const updatedGuild = await Guild.findById(id).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
+    await joinGuild(character, guild);
 
-    return res.json({
+    const updatedGuild = await Guild.findById(id);
+    return res.status(200).json({
       message: 'Member added to guild successfully',
       guild: updatedGuild,
     });
@@ -340,34 +238,25 @@ export const removeMemberFromGuildById = async (
     const { id } = req.params;
     const { guild, character } = req.body;
 
-    const newMember = character;
-
     if (
-      !newMember.guild ||
-      (newMember.guild &&
-        isDifferentGuild(newMember.guild as IGuildDocument, id))
+      !character.guild ||
+      (character.guild && isDifferentGuild(character.guild, id))
     ) {
       return res
         .status(400)
         .json({ error: 'Member is not a part of the guild' });
     }
 
-    if (isLeader(guild, newMember._id.toString())) {
+    if (isLeader(guild, character._id)) {
       return res
         .status(403)
         .json({ error: 'Cannot kick the leader of the guild' });
     }
 
-    await leaveGuild(newMember._id);
-    const updatedGuild = await Guild.findById(id).populate({
-      path: 'leader members',
-      select: '_id name',
-    });
-    if (!updatedGuild) {
-      return res.status(404).json({ error: 'Guild not found' });
-    }
+    await leaveGuild(character._id);
 
-    return res.json({
+    const updatedGuild = await Guild.findById(id);
+    return res.status(200).json({
       message: 'Member removed from guild successfully',
       guild: updatedGuild,
     });
@@ -387,13 +276,12 @@ export const deleteGuildById = async (
 ): Promise<void | Response> => {
   try {
     const { guild } = req.body;
-    const leaderCharacter = await Character.findById(guild.leader);
-    if (!leaderCharacter) {
-      return res.status(404).json({ error: 'Leader not found' });
-    }
 
     await updateLeaderAndDeleteGuild(guild);
-    return res.json({ message: 'Guild deleted successfully', guild: guild });
+
+    return res
+      .status(200)
+      .json({ message: 'Guild deleted successfully', guild: guild });
   } catch (error) {
     if (error instanceof Error) {
       return res
@@ -408,27 +296,17 @@ export const deleteAllGuilds = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const guilds = await Guild.find({});
-    const deletePromises = guilds.map((guild) =>
-      updateLeaderAndDeleteGuild(guild)
-    );
-    await Promise.all(deletePromises);
-    return res.json({
-      message: `${guilds.length} guilds deleted successfully.`,
+    const result = await Guild.deleteAll();
+    await Character.leaveAllGuild();
+
+    return res.status(200).json({
+      message: `${result.deletedCount} guilds deleted successfully.`,
     });
   } catch (error) {
     if (error instanceof Error) {
-      return res.status(500).json({ error: 'Failed to delete guilds' });
+      return res
+        .status(500)
+        .json({ error: 'Failed to delete guilds', message: error.message });
     }
   }
-};
-
-const getLeaderIdsByCharacterName = async (
-  leaderName: string
-): Promise<string[]> => {
-  const leaderSearchResults = await Character.find({
-    name: { $regex: leaderName, $options: 'i' },
-  }).distinct('_id');
-
-  return leaderSearchResults.map((leader) => leader._id);
 };

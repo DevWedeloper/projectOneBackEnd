@@ -1,12 +1,12 @@
 import { Request, Response } from 'express';
-import { CharacterType } from '../models/characterTypeModel';
+import * as CharacterType from '../models/characterTypeModel';
 
 export const getCharacterTypes = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
   try {
-    const characterTypes = await CharacterType.find().sort({ typeName: 1 });
+    const characterTypes = await CharacterType.getAll();
     return res.json(characterTypes);
   } catch (error) {
     if (error instanceof Error) {

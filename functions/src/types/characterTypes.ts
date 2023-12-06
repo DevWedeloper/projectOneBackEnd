@@ -1,6 +1,6 @@
-import { Guild } from './guildInterface';
+import { IGuild } from './guildTypes';
 
-export interface Character {
+export type ICharacter = {
   _id: string;
   name: string;
   characterType: string;
@@ -10,7 +10,7 @@ export interface Character {
   intelligence: number;
   armor: number;
   critChance: number;
-  guild: Guild | null;
+  guild?: IGuild | null;
 }
 
-export interface CharacterWithoutId extends Omit<Character, '_id'> {}
+export type ICharacterWithoutId = Omit<ICharacter, '_id'>;

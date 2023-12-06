@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { Types } from 'mongoose';
-import { Character } from '../models/characterModel';
+import * as Character from '../models/characterModel';
 
 export const isValidCharacter = async (
   req: Request,
@@ -17,21 +17,7 @@ export const isValidCharacter = async (
       ? { _id: character }
       : { name: character };
 
-    const foundCharacter = await Character.findOne(characterQuery)
-      .populate({
-        path: 'guild',
-        select: '_id name leader',
-        populate: {
-          path: 'leader',
-          model: 'Character',
-          select: '_id name',
-        },
-      });
-
-    if (!foundCharacter) {
-      return res.status(500).json({ error: `Character '${character}' does not exist.` });
-    }
-
+    const foundCharacter = await Character.findOneByQuery(characterQuery);
     req.body.character = foundCharacter;
     next();
   } catch (error) {

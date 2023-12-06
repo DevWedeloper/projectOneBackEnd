@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Character } from '../models/characterModel';
+import * as Character from '../models/characterStatsModel';
 
 export const getTopCharactersByAttribute = async (
   req: Request,
@@ -7,34 +7,18 @@ export const getTopCharactersByAttribute = async (
 ): Promise<void | Response> => {
   const { attribute } = req.params;
   try {
-    const { limit = 5 } = req.query;
-
-    const characters = await Character.aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          characterType: 1,
-          [attribute]: { $sum: [`$${attribute}`] },
-        },
-      },
-      {
-        $sort: { [attribute]: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
-
-    return res.json(characters);
+    const limit = 5;
+    const characters = await Character.getTopCharactersByAttribute(
+      attribute,
+      limit
+    );
+    return res.status(200).json(characters);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: `Failed to retrieve characters with highest ${attribute}`,
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: `Failed to retrieve characters with highest ${attribute}`,
+        message: error.message,
+      });
     }
   }
 };
@@ -44,50 +28,15 @@ export const getTopWellRoundedCharacters = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { limit = 5 } = req.query;
-
-    const characters = await Character.aggregate([
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          characterType: 1,
-          health: 1,
-          strength: 1,
-          agility: 1,
-          intelligence: 1,
-          armor: 1,
-          critChance: 1,
-          guild: 1,
-          totalAttribute: {
-            $sum: [
-              { $divide: ['$health', 100] },
-              '$strength',
-              '$agility',
-              '$intelligence',
-              '$armor',
-              { $multiply: ['$critChance', 100] },
-            ],
-          },
-        },
-      },
-      {
-        $sort: { totalAttribute: -1 },
-      },
-      {
-        $limit: Number(limit),
-      },
-    ]);
-
-    return res.json(characters);
+    const limit = 5;
+    const characters = await Character.getTopWellRoundedCharacters(limit);
+    return res.status(200).json(characters);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve well-rounded characters',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve well-rounded characters',
+        message: error.message,
+      });
     }
   }
 };
@@ -97,33 +46,14 @@ export const getAverageCharacterStats = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const averageStats = await Character.aggregate([
-      {
-        $group: {
-          _id: null,
-          avgHealth: { $avg: '$health' },
-          avgStrength: { $avg: '$strength' },
-          avgAgility: { $avg: '$agility' },
-          avgIntelligence: { $avg: '$intelligence' },
-          avgArmor: { $avg: '$armor' },
-          avgCritChance: { $avg: '$critChance' },
-        },
-      },
-    ]);
-
-    if (averageStats.length === 0) {
-      throw new Error('No characters found');
-    }
-
-    return res.json(averageStats[0]);
+    const averageStats = await Character.getAverageCharacterStats();
+    return res.status(200).json(averageStats);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve average character stats',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve average character stats',
+        message: error.message,
+      });
     }
   }
 };
@@ -133,27 +63,14 @@ export const getCharacterDistributionByType = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const characterDistribution = await Character.aggregate([
-      {
-        $group: {
-          _id: '$characterType',
-          count: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { count: -1 },
-      },
-    ]);
-
-    return res.json(characterDistribution);
+    const characterDistribution = await Character.getCharacterDistributionByType();
+    return res.status(200).json(characterDistribution);
   } catch (error) {
     if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve character distribution by type',
-          message: error.message,
-        });
+      return res.status(500).json({
+        error: 'Failed to retrieve character distribution by type',
+        message: error.message,
+      });
     }
   }
 };

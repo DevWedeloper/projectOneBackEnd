@@ -1,12 +1,11 @@
 import { Request, Response } from 'express';
-import { Character as ICharacter } from '../interface/characterInterface';
 
 export const checkGuildRelationStatus = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { character }: { character: ICharacter } = req.body;
+    const { character } = req.body;
     if (character?.guild === null) {
       return res.status(200).json({ hasNoGuild: true });
     }

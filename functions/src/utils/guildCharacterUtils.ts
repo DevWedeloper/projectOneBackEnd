@@ -1,17 +1,21 @@
-import { ICharacterDocument, Character } from '../models/characterModel';
-import { Guild, IGuildDocument } from '../models/guildModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
+import { ICharacter } from '../types/characterTypes';
+import { IGuild } from '../types/guildTypes';
 
 export const joinGuild = async (
-  characterId: string,
-  guildId: IGuildDocument
+  character: ICharacter,
+  guild: IGuild
 ) => {
   try {
+    const checkGuild = await Guild.findById(guild._id);
+    if (checkGuild.totalMembers >= checkGuild.maxMembers) {
+      throw new Error('Guild is full. Cannot add more members.');
+    }
+
     await Promise.all([
-      Character.findByIdAndUpdate(characterId, { guild: guildId }),
-      Guild.findByIdAndUpdate(guildId, {
-        $push: { members: characterId as unknown as IGuildDocument },
-        $inc: { totalMembers: 1 },
-      }),
+      Character.updateById(character._id, { guild }),
+      Guild.addCharacterToGuild(character, guild)
     ]);
   } catch (error) {
     if (error instanceof Error) {
@@ -22,17 +26,13 @@ export const joinGuild = async (
 
 export const leaveGuild = async (characterId: string) => {
   try {
-    const character: ICharacterDocument | null = await Character.findById(
+    const character = await Character.findById(
       characterId
     );
-    const guildId = character!.guild as IGuildDocument;
 
     await Promise.all([
-      Character.findByIdAndUpdate(characterId, { guild: null }),
-      Guild.findByIdAndUpdate(guildId, {
-        $pull: { members: characterId as unknown as IGuildDocument },
-        $inc: { totalMembers: -1 },
-      }),
+      Character.updateById(characterId, { guild: null }),
+      Guild.removeCharacterFromGuild(character),
     ]);
   } catch (error) {
     if (error instanceof Error) {
@@ -41,18 +41,16 @@ export const leaveGuild = async (characterId: string) => {
   }
 };
 
-export const updateLeaderAndDeleteGuild = async (guild: IGuildDocument) => {
+export const updateLeaderAndDeleteGuild = async (guild: IGuild) => {
   try {
-    const guildId = guild._id;
-    const leaderId = guild.leader.toString();
+    if (!guild.members) {
+      throw new Error('No guild members found');
+    }
 
     await Promise.all([
-      Character.updateMany(
-        { _id: { $in: guild.members } },
-        { $unset: { guild: 1 } }
-      ),
-      Character.findByIdAndUpdate(leaderId, { $unset: { guild: 1 } }),
-      Guild.findByIdAndDelete(guildId),
+      Character.membersLeaveGuild(guild.members),
+      Character.updateById(guild.leader._id.toString(), { guild: null }),
+      Guild.deleteById(guild._id.toString()),
     ]);
   } catch (error) {
     if (error instanceof Error) {
@@ -64,14 +62,16 @@ export const updateLeaderAndDeleteGuild = async (guild: IGuildDocument) => {
 };
 
 export const updateLeaderOrMembersGuild = async (
-  guild: IGuildDocument,
+  guild: IGuild,
   memberId: string
 ) => {
   try {
     if (isLeader(guild, memberId)) {
       await updateLeaderAndDeleteGuild(guild);
-    } else {
+    } else if (!isLeader(guild, memberId)) {
       await leaveGuild(memberId);
+    } else {
+      throw new Error('Is leader condition was not satisfied');
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -82,13 +82,13 @@ export const updateLeaderOrMembersGuild = async (
   }
 };
 
-export function isLeader(guild: IGuildDocument, memberId: string): boolean {
-  return guild && guild.leader.toString() === memberId;
+export function isLeader(guild: IGuild, memberId: string): boolean {
+  return guild && guild.leader._id.toString() === memberId.toString();
 }
 
 export function isDifferentGuild(
-  guild: IGuildDocument,
+  guild: IGuild,
   oldGuildId: string
 ): boolean {
-  return guild && guild._id.toString() !== oldGuildId;
+  return guild && guild._id.toString() !== oldGuildId.toString();
 }

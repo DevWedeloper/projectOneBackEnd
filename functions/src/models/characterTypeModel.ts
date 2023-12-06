@@ -1,19 +1,46 @@
-import { Document, Model, Schema, model } from 'mongoose';
+import { Schema, model, Document as MongooseDocument } from 'mongoose';
+import {
+  ICharacterTypeWithoutId,
+  ICharacterType,
+} from '../types/characterTypeTypes';
 
-export interface ICharacterType {
-  typeName: string;
-}
+const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
+  typeName: { type: String, required: true, unique: true },
+});
 
-export interface ICharacterTypeDocument extends ICharacterType, Document {}
+const CharacterType = model<ICharacterTypeWithoutId>(
+  'CharacterType',
+  characterTypeSchema
+);
 
-interface ICharacterTypeModel extends Model<ICharacterTypeDocument> {}
+export const getAll = async (): Promise<ICharacterType[]> => {
+  const result = await CharacterType.find().sort({ typeName: 1 });
+  return result.map(mapCharacterType);
+};
 
-const characterTypeSchema: Schema<ICharacterTypeDocument, ICharacterTypeModel> =
-  new Schema({
-    typeName: { type: String, required: true, unique: true },
-  });
+export const populate = async (
+  data: ICharacterTypeWithoutId[]
+): Promise<ICharacterType[]> => {
+  const result = await CharacterType.insertMany(data);
+  return result.map(mapCharacterType);
+};
 
-export const CharacterType: ICharacterTypeModel = model<
-  ICharacterTypeDocument,
-  ICharacterTypeModel
->('CharacterType', characterTypeSchema);
+export const findOne = async (
+  characterType: string
+): Promise<ICharacterType> => {
+  return (
+    (await CharacterType.findOne({ typeName: characterType })) ||
+    throwCharacterTypeNotFoundError()
+  );
+};
+
+const mapCharacterType = (
+  rawCharacter: MongooseDocument<unknown, unknown, ICharacterType>
+): ICharacterType => {
+  const { _id, ...characterWithoutId } = rawCharacter.toObject();
+  return { _id: _id.toString(), ...characterWithoutId } as ICharacterType;
+};
+
+const throwCharacterTypeNotFoundError = () => {
+  throw new Error('Character Type not found.');
+};

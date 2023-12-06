@@ -1,5 +1,6 @@
-import { Schema, model, Document as MongooseDocument } from 'mongoose';
-import { Character, ICharacter } from './characterModel';
+import { Document as MongooseDocument, Schema, model } from 'mongoose';
+import * as Character from './characterModel';
+import { ICharacter } from './characterModel';
 
 export interface IGuild {
   _id: string;
@@ -79,9 +80,7 @@ export const getPaginated = async (
           {
             leader: {
               $in: (
-                await Character.find({
-                  name: { $regex: searchQuery, $options: 'i' },
-                })
+                await Character.findMultipleByName(searchQuery, 0)
               ).map((guild) => guild._id.toString()),
             },
           },

@@ -1,10 +1,10 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
-import { generateUsername } from 'unique-username-generator';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 import { ICharacter } from '../types/characterTypes';
 import { joinGuild } from '../utils/guildCharacterUtils';
+import { generateUsername } from '../utils/usernameGenerator';
 dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;
@@ -35,7 +35,7 @@ const generateRandomGuild = async () => {
   try {
     const leader = await randomLeader();
     const guildData = {
-      name: generateUsername('', 0, 20),
+      name: generateUsername(),
       leader: leader,
       maxMembers: 50,
     };

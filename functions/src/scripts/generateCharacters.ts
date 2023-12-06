@@ -1,9 +1,9 @@
 import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
-import { generateUsername } from 'unique-username-generator';
 import * as Character from '../models/characterModel';
 import * as CharacterType from '../models/characterTypeModel';
 import { ICharacterType } from '../types/characterTypeTypes';
+import { generateUsername } from '../utils/usernameGenerator';
 dotenv.config({ path: '../../.env' });
 
 const numCharactersToGenerate = 100;
@@ -33,7 +33,7 @@ const generateRandomCharacters = async () => {
 const generateRandomCharacter = async () => {
   try {
     const character = {
-      name: generateUsername('', 0, 20),
+      name: generateUsername(),
       characterType: randomCharacterType(),
       health: Math.min(
         10000,

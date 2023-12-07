@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose';
+import { NextFunction, Request, Response } from 'express';
 import * as Guild from '../models/guildModel';
+import { isValidObject } from '../models/isValidObjectModel';
 
 export const isValidGuild = async (
   req: Request,
@@ -13,7 +13,7 @@ export const isValidGuild = async (
       return next();
     }
 
-    const guildQuery = Types.ObjectId.isValid(guild)
+    const guildQuery = isValidObject(guild)
       ? { _id: guild }
       : { name: guild };
 

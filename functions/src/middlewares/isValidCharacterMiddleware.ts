@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from 'express';
-import { Types } from 'mongoose';
+import { NextFunction, Request, Response } from 'express';
 import * as Character from '../models/characterModel';
+import { isValidObject } from '../models/isValidObjectModel';
 
 export const isValidCharacter = async (
   req: Request,
@@ -13,7 +13,7 @@ export const isValidCharacter = async (
       return next();
     }
 
-    const characterQuery = Types.ObjectId.isValid(character)
+    const characterQuery = isValidObject(character)
       ? { _id: character }
       : { name: character };
 

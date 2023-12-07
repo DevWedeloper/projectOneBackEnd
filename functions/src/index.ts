@@ -16,7 +16,7 @@ import guildStatsRoute from './routes/guildStatsRoute';
 import characterTypeRoute from './routes/characterTypeRoute';
 import checkNameUniquenessRoute from './routes/checkNameUniquenessRoute';
 import checkGuildRelationStatusRoute from './routes/checkGuildRelationStatusRoute';
-import checkIfMemberRoute from './routes/checkIfMemberRoute';
+import checkIfMemberRoute from './routes/isMemberRoute';
 
 const app: Application = express();
 

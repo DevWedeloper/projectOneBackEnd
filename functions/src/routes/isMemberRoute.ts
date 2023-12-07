@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkIfMember } from '../controllers/checkIfMemberController';
+import { checkIfMember } from '../controllers/isMemberController';
 import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
 import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
 

@@ -12,6 +12,7 @@ export const checkIfMember = async (
     if (character?.guild?._id.toString() !== guild._id.toString()) {
       return res.status(200).json({ message: 'Not member' });
     }
+    return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({

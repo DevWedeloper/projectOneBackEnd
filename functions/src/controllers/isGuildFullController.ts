@@ -5,9 +5,9 @@ export const isGuildFull = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { guild } = req.body.guild;
+    const { guild } = req.body;
     if (guild.totalMembers === guild.maxMembers) {
-      return res.status(200).json({ full: true });
+      return res.status(200).json({ isFull: true });
     }
   } catch (error) {
     if (error instanceof Error) {

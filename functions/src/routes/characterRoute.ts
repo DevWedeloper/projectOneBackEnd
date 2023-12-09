@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   getAllCharacters,
   getCharacterById,
+  getCharacterByName,
   searchCharactersByName,
   createCharacter,
   updateCharacterAttributeById,
@@ -22,6 +23,7 @@ router.post('/', isAdminMiddleware, isValidCharacterType, createCharacter);
 router.get('/', getAllCharacters);
 router.get('/search', searchCharactersByName);
 router.get('/:id', getCharacterById);
+router.get('/:id', getCharacterByName);
 router.put(
   '/join/:id',
   isAdminMiddleware,

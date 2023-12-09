@@ -80,6 +80,25 @@ export const getCharacterById = async (
   }
 };
 
+export const getCharacterByName = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
+  try {
+    const { id } = req.params;
+
+    const character = await Character.findByName(id);
+    return res.status(200).json(character);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        error: 'Failed to retrieve the character',
+        message: error.message,
+      });
+    }
+  }
+};
+
 export const searchCharactersByName = async (
   req: Request,
   res: Response

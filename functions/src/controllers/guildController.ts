@@ -92,6 +92,25 @@ export const getGuildById = async (
   }
 };
 
+export const getGuildByName = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
+  try {
+    const { id } = req.params;
+
+    const guild = await Guild.findByName(id);
+    return res.status(200).json(guild);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).json({
+        error: 'Failed to retrieve the guild',
+        message: error.message,
+      });
+    }
+  }
+};
+
 export const searchGuildsByName = async (
   req: Request,
   res: Response

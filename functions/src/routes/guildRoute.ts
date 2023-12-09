@@ -24,7 +24,7 @@ router.get('/', getAllGuilds);
 router.get('/search', searchGuildsByName);
 router.get('/:id/searchMember', checkGuildExistence, searchGuildMemberById);
 router.get('/:id', getGuildById);
-router.get('/:id', getGuildByName);
+router.get('/:name', getGuildByName);
 router.put(
   '/name/:id',
   isAdminMiddleware,

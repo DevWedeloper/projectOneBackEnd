@@ -97,9 +97,9 @@ export const getGuildByName = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { id } = req.params;
+    const { name } = req.params;
 
-    const guild = await Guild.findByName(id);
+    const guild = await Guild.findByName(name);
     return res.status(200).json(guild);
   } catch (error) {
     if (error instanceof Error) {

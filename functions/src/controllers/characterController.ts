@@ -85,9 +85,9 @@ export const getCharacterByName = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const { id } = req.params;
+    const { name } = req.params;
 
-    const character = await Character.findByName(id);
+    const character = await Character.findByName(name);
     return res.status(200).json(character);
   } catch (error) {
     if (error instanceof Error) {

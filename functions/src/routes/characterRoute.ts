@@ -23,7 +23,7 @@ router.post('/', isAdminMiddleware, isValidCharacterType, createCharacter);
 router.get('/', getAllCharacters);
 router.get('/search', searchCharactersByName);
 router.get('/:id', getCharacterById);
-router.get('/:name', getCharacterByName);
+router.get('/name/:name', getCharacterByName);
 router.put(
   '/join/:id',
   isAdminMiddleware,

@@ -31,8 +31,7 @@ export const refreshAccessToken = async (
       accessTokenSecret,
       { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
     );
-
-    return res.json({ accessToken });
+    return res.status(201).json({ accessToken });
   } catch (error) {
     if (error instanceof Error) {
       return res

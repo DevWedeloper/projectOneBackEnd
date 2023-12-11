@@ -1,6 +1,6 @@
 import { Document as MongooseDocument } from 'mongoose';
-import { ICharacter } from '../types/characterTypes';
-import { IGuild, IGuildWithoutId } from '../types/guildTypes';
+import { ICharacter } from '../types/characterType';
+import { IGuild, IGuildWithoutId } from '../types/guildType';
 import * as Character from './characterModel';
 import { Guild } from './schemas/guildSchema';
 
@@ -86,7 +86,7 @@ export const findOneByQuery = async (
 
 export const findById = async (id: string): Promise<IGuild> => {
   return (
-    (await Guild.findById(id).populate(populateCharacters()))?.toObject() ||
+    (await Guild.findById(id).populate(populateCharacters())) ||
     throwGuildNotFoundError()
   );
 };
@@ -150,8 +150,8 @@ export const updateById = async (
   );
 };
 
-export const deleteById = async (id: string): Promise<IGuild | null> => {
-  return (await Guild.findByIdAndDelete(id))?.toObject() || null;
+export const deleteById = async (id: string): Promise<IGuild> => {
+  return (await Guild.findByIdAndDelete(id)) || throwGuildNotFoundError();
 };
 
 export const deleteAll = async (): Promise<{

@@ -1,7 +1,7 @@
 import {
   RefreshToken,
   IRefreshAccessTokenDocument,
-} from '../models/refreshAccessTokenModel';
+} from '../auth/models/refreshAccessTokenModel';
 
 export async function refreshTokenCleanup() {
   try {

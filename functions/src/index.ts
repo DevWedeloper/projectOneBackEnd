@@ -7,8 +7,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 // import { refreshTokenCleanup } from "./cron/refreshTokenCleanup";
-import userRouter from './routes/userRoute';
-import loginRoute from './routes/loginRoute';
+import userRouter from './auth/routes/userRoute';
+import loginRoute from './auth/routes/loginRoute';
 import characterRoute from './routes/characterRoute';
 import guildRoute from './routes/guildRoute';
 import characterStatsRoute from './routes/characterStatsRoute';

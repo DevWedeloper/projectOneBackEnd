@@ -1,11 +1,8 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import { User, IUserDocument } from '../models/userModel';
-import {
-  RefreshToken,
-  IRefreshAccessTokenDocument,
-} from '../models/refreshAccessTokenModel';
+import * as RefreshToken from '../models/refreshAccessTokenModel';
+import * as User from '../models/userModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
@@ -16,7 +13,7 @@ export const login = async (
 ): Promise<void | Response> => {
   const { username, password } = req.body;
   try {
-    const user: IUserDocument | null = await User.findOne({ username });
+    const user = await User.findOneByQuery({ username });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({
         error: 'Authentication error',
@@ -24,8 +21,9 @@ export const login = async (
       });
     }
 
-    let refreshTokenEntry: IRefreshAccessTokenDocument | null =
-      await RefreshToken.findOne({ userId: user._id });
+    let refreshTokenEntry = await RefreshToken.isUnique({
+      userId: user._id.toString(),
+    });
     if (!refreshTokenEntry) {
       const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION!;
       const expiresAt = new Date(
@@ -40,14 +38,12 @@ export const login = async (
         }
       );
 
-      refreshTokenEntry = new RefreshToken({
-        userId: user._id,
+      refreshTokenEntry = await RefreshToken.create({
+        userId: user._id.toString(),
         username: user.username,
         token: refreshToken,
         expiresAt: expiresAt,
       });
-
-      await refreshTokenEntry.save();
     }
 
     const refreshTokenData = jwt.decode(refreshTokenEntry.token) as JwtPayload;
@@ -67,9 +63,10 @@ export const login = async (
         }
       );
 
-      refreshTokenEntry.token = newRefreshToken;
-      refreshTokenEntry.expiresAt = expiresAt;
-      await refreshTokenEntry.save();
+      await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
+        token: newRefreshToken,
+        expiresAt: expiresAt,
+      });
     }
 
     const accessToken = jwt.sign(
@@ -78,7 +75,7 @@ export const login = async (
       { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
     );
 
-    return res.json({
+    return res.status(201).json({
       userId: user._id,
       accessToken,
       refreshToken: refreshTokenEntry.token,

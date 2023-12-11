@@ -1,4 +1,4 @@
-import { IGuild } from '../types/guildTypes';
+import { IGuild } from '../types/guildType';
 import { Guild } from './schemas/guildSchema';
 
 type WellRoundedGuild = IGuild & {

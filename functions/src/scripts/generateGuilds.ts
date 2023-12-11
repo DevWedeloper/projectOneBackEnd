@@ -2,7 +2,7 @@ import dotenv from 'dotenv';
 import mongoose, { connect } from 'mongoose';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
-import { ICharacter } from '../types/characterTypes';
+import { ICharacter } from '../types/characterType';
 import { joinGuild } from '../utils/guildCharacterUtils';
 import { generateUsername } from '../utils/usernameGenerator';
 dotenv.config({ path: '../../.env' });

@@ -1,16 +1,7 @@
-import { Document, Model, Schema, model } from 'mongoose';
+import { Schema, model } from 'mongoose';
+import { IUserWithoutId } from '../../types/userType';
 
-interface IUser {
-  username: string;
-  password: string;
-  role: 'admin' | 'standard';
-}
-
-export interface IUserDocument extends IUser, Document {}
-
-interface IUserModel extends Model<IUserDocument> {}
-
-const userSchema: Schema<IUserDocument, IUserModel> = new Schema({
+const userSchema: Schema<IUserWithoutId> = new Schema({
   username: {
     type: String,
     required: true,
@@ -34,7 +25,4 @@ const userSchema: Schema<IUserDocument, IUserModel> = new Schema({
   role: { type: String, enum: ['admin', 'standard'], default: 'standard' },
 });
 
-export const User: IUserModel = model<IUserDocument, IUserModel>(
-  'User',
-  userSchema
-);
+export const User = model<IUserWithoutId>('User', userSchema);

@@ -1,5 +1,5 @@
 import { Document as MongooseDocument, UpdateWriteOpResult } from 'mongoose';
-import { ICharacter, ICharacterWithoutId } from '../types/characterTypes';
+import { ICharacter, ICharacterWithoutId } from '../types/characterType';
 import * as Guild from './guildModel';
 import { Character } from './schemas/characterSchema';
 
@@ -63,21 +63,21 @@ export const findOneByQuery = async (
   query: Partial<ICharacter>
 ): Promise<ICharacter> => {
   return (
-    (await Character.findOne(query).populate(populateGuild()))?.toObject() ||
+    (await Character.findOne(query).populate(populateGuild())) ||
     throwCharacterNotFoundError()
   );
 };
 
 export const findById = async (id: string): Promise<ICharacter> => {
   return (
-    (await Character.findById(id).populate(populateGuild()))?.toObject() ||
+    (await Character.findById(id).populate(populateGuild())) ||
     throwCharacterNotFoundError()
   );
 };
 
 export const findByName = async (name: string): Promise<ICharacter> => {
   return (
-    (await Character.findOne({ name }).populate(populateGuild()))?.toObject() ||
+    (await Character.findOne({ name }).populate(populateGuild())) ||
     throwCharacterNotFoundError()
   );
 };
@@ -108,19 +108,16 @@ export const updateById = async (
   query: Partial<ICharacterWithoutId>
 ): Promise<ICharacter> => {
   return (
-    (
-      await Character.findByIdAndUpdate(id, query, {
-        new: true,
-        runValidators: true,
-      })
-    )?.toObject() || throwCharacterNotFoundError()
+    (await Character.findByIdAndUpdate(id, query, {
+      new: true,
+      runValidators: true,
+    })) || throwCharacterNotFoundError()
   );
 };
 
 export const deleteById = async (id: string): Promise<ICharacter> => {
   return (
-    (await Character.findByIdAndDelete(id))?.toObject() ||
-    throwCharacterNotFoundError()
+    (await Character.findByIdAndDelete(id)) || throwCharacterNotFoundError()
   );
 };
 

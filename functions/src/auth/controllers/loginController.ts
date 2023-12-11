@@ -1,11 +1,11 @@
+import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import { User, IUserDocument } from '../models/userModel';
 import {
-  RefreshToken,
   IRefreshAccessTokenDocument,
+  RefreshToken,
 } from '../models/refreshAccessTokenModel';
+import { User } from '../models/userModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
@@ -16,7 +16,7 @@ export const login = async (
 ): Promise<void | Response> => {
   const { username, password } = req.body;
   try {
-    const user: IUserDocument | null = await User.findOne({ username });
+    const user = await User.findOne({ username });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({
         error: 'Authentication error',

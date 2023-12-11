@@ -1,10 +1,9 @@
-import { Request, Response } from 'express';
-import { Schema } from 'mongoose';
-import { User } from '../models/userModel';
 import bcrypt from 'bcrypt';
+import { Request, Response } from 'express';
+import { User } from '../models/userModel';
 
 interface AuthRequest extends Request {
-  authUserId: Schema.Types.ObjectId;
+  authUserId: string;
   authRole: 'admin' | 'standard';
 }
 

@@ -9,17 +9,16 @@ export const refreshAccessToken = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
-  const { refreshToken } = req.body;
-
-  if (!refreshToken) {
-    return res
-      .status(401)
-      .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
-  }
 
   try {
-    const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      return res
+        .status(401)
+        .json({ error: 'Unauthorized', message: 'Refresh token is missing.' });
+    }
 
+    const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
     const existingRefreshToken = await RefreshToken.findOne({
       userId: decoded.userId,
     });

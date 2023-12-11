@@ -22,7 +22,6 @@ export const refreshAccessToken = async (
 
     const existingRefreshToken = await RefreshToken.findOne({
       userId: decoded.userId,
-      token: refreshToken,
     });
 
     if (!existingRefreshToken) {

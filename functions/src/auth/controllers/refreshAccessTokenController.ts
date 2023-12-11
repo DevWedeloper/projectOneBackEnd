@@ -9,7 +9,6 @@ export const refreshAccessToken = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
-
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {

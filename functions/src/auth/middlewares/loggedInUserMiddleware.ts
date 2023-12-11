@@ -27,6 +27,6 @@ export const loggedInUserMiddleware = async (
 
     next();
   } catch (error) {
-    return res.status(403).json({ error: 'Invalid token' });
+    return res.status(500).json({ error });
   }
 };

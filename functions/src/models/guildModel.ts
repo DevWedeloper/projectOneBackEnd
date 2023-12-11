@@ -86,7 +86,7 @@ export const findOneByQuery = async (
 
 export const findById = async (id: string): Promise<IGuild> => {
   return (
-    (await Guild.findById(id).populate(populateCharacters()))?.toObject() ||
+    (await Guild.findById(id).populate(populateCharacters())) ||
     throwGuildNotFoundError()
   );
 };
@@ -150,8 +150,8 @@ export const updateById = async (
   );
 };
 
-export const deleteById = async (id: string): Promise<IGuild | null> => {
-  return (await Guild.findByIdAndDelete(id))?.toObject() || null;
+export const deleteById = async (id: string): Promise<IGuild> => {
+  return (await Guild.findByIdAndDelete(id)) || throwGuildNotFoundError();
 };
 
 export const deleteAll = async (): Promise<{

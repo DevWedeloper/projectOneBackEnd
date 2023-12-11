@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { ICharacterWithoutId } from '../../types/characterTypes';
+import { ICharacterWithoutId } from '../../types/characterType';
 
 const characterSchema = new Schema<ICharacterWithoutId>({
   name: {

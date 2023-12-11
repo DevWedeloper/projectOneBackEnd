@@ -1,6 +1,6 @@
 import { Document as MongooseDocument } from 'mongoose';
-import { ICharacter } from '../types/characterTypes';
-import { IGuild, IGuildWithoutId } from '../types/guildTypes';
+import { ICharacter } from '../types/characterType';
+import { IGuild, IGuildWithoutId } from '../types/guildType';
 import * as Character from './characterModel';
 import { Guild } from './schemas/guildSchema';
 

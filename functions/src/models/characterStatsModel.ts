@@ -1,4 +1,4 @@
-import { ICharacter } from '../types/characterTypes';
+import { ICharacter } from '../types/characterType';
 import { Character } from './schemas/characterSchema';
 
 export const getTopCharactersByAttribute = async (

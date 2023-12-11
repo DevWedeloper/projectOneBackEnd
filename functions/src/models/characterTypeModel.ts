@@ -2,7 +2,7 @@ import { Schema, model, Document as MongooseDocument } from 'mongoose';
 import {
   ICharacterTypeWithoutId,
   ICharacterType,
-} from '../types/characterTypeTypes';
+} from '../types/characterTypeType';
 
 const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
   typeName: { type: String, required: true, unique: true },

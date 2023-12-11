@@ -1,5 +1,5 @@
 import { Document as MongooseDocument, UpdateWriteOpResult } from 'mongoose';
-import { ICharacter, ICharacterWithoutId } from '../types/characterTypes';
+import { ICharacter, ICharacterWithoutId } from '../types/characterType';
 import * as Guild from './guildModel';
 import { Character } from './schemas/characterSchema';
 

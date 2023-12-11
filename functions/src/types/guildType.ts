@@ -1,4 +1,4 @@
-import { ICharacter } from './characterTypes';
+import { ICharacter } from './characterType';
 
 export type IGuild = {
   _id: string;

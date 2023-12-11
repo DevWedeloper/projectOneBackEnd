@@ -39,6 +39,20 @@ export const isUnique = async ({
   return await RefreshToken.findOne({ userId });
 };
 
+export const updateById = async (
+  id: string,
+  query: Partial<IRefreshAccessTokenWithoutId>
+): Promise<IRefreshAccessToken> => {
+  return (
+    (
+      await RefreshToken.findByIdAndUpdate(id, query, {
+        new: true,
+        runValidators: true,
+      })
+    )?.toObject() || throwRefreshAccessTokenNotFoundError()
+  );
+};
+
 const throwRefreshAccessTokenNotFoundError = () => {
   throw new Error('Refresh token not found.');
 };

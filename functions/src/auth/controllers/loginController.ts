@@ -1,7 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { RefreshToken } from '../models/refreshAccessTokenModel';
+import * as RefreshToken from '../models/refreshAccessTokenModel';
 import { User } from '../models/userModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
@@ -21,7 +21,9 @@ export const login = async (
       });
     }
 
-    let refreshTokenEntry = await RefreshToken.findOne({ userId: user._id });
+    let refreshTokenEntry = await RefreshToken.isUnique({
+      userId: user._id.toString(),
+    });
     if (!refreshTokenEntry) {
       const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION!;
       const expiresAt = new Date(
@@ -36,14 +38,12 @@ export const login = async (
         }
       );
 
-      refreshTokenEntry = new RefreshToken({
-        userId: user._id,
+      refreshTokenEntry = await RefreshToken.create({
+        userId: user._id.toString(),
         username: user.username,
         token: refreshToken,
         expiresAt: expiresAt,
       });
-
-      await refreshTokenEntry.save();
     }
 
     const refreshTokenData = jwt.decode(refreshTokenEntry.token) as JwtPayload;
@@ -63,9 +63,10 @@ export const login = async (
         }
       );
 
-      refreshTokenEntry.token = newRefreshToken;
-      refreshTokenEntry.expiresAt = expiresAt;
-      await refreshTokenEntry.save();
+      await RefreshToken.updateById(refreshTokenEntry._id.toString(), {
+        token: newRefreshToken,
+        expiresAt: expiresAt,
+      });
     }
 
     const accessToken = jwt.sign(

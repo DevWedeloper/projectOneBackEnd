@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import * as RefreshToken from '../models/refreshAccessTokenModel';
-import { User } from '../models/userModel';
+import * as User from '../models/userModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
@@ -13,7 +13,7 @@ export const login = async (
 ): Promise<void | Response> => {
   const { username, password } = req.body;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOneByQuery({ username });
     if (!user || !bcrypt.compareSync(password, user.password)) {
       return res.status(401).json({
         error: 'Authentication error',

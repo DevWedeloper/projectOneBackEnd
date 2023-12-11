@@ -16,6 +16,12 @@ export const RefreshToken = model<IRefreshAccessTokenWithoutId>(
   RefreshTokenSchema
 );
 
+export const create = async (
+  token: IRefreshAccessTokenWithoutId
+): Promise<IRefreshAccessToken> => {
+  return (await RefreshToken.create(token)).toObject();
+};
+
 export const findOneByQuery = async (
   query: Partial<IRefreshAccessToken>
 ): Promise<IRefreshAccessToken> => {

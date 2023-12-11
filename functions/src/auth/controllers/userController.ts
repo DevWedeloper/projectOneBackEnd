@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-import { User } from '../models/userModel';
+import * as User from '../models/userModel';
 
 interface AuthRequest extends Request {
   authUserId: string;
@@ -13,18 +13,14 @@ export const createUser = async (
 ): Promise<void | Response> => {
   try {
     const { username, password, role } = req.body;
-    const existingUser = await User.findOne({ username });
-    if (existingUser) {
-      return res.status(400).json({ error: 'Username already exists' });
-    }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await User.create({
+    const user = await User.create({
       username,
       password: hashedPassword,
       role,
     });
-    return res.status(201).json(newUser);
+    return res.status(201).json(user);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to create the user' });
   }
@@ -35,7 +31,7 @@ export const getAllUsers = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const users = await User.find();
+    const users = await User.getAll();
     return res.status(200).json(users);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to retrieve users' });
@@ -48,11 +44,7 @@ export const getUserById = async (
 ): Promise<void | Response> => {
   try {
     const user = await User.findById(req.params.id);
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    } else {
-      return res.status(200).json(user);
-    }
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to retrieve the user' });
   }
@@ -65,27 +57,20 @@ export const updateUserById = async (
   try {
     const authReq = req as AuthRequest;
     const { authUserId, authRole } = authReq;
-
     const { id } = req.params;
-    const updatedData = req.body;
+    const { updatedData } = req.body;
 
     const userToUpdate = await User.findById(id);
-    if (!userToUpdate) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
     const isOwnerOrAdmin =
-      userToUpdate._id.equals(authUserId) || authRole === 'admin';
+      userToUpdate._id === authUserId || authRole === 'admin';
     if (!isOwnerOrAdmin) {
       return res.status(403).json({ error: 'Permission denied' });
     }
 
     if (authRole === 'standard' && updatedData.username) {
-      return res
-        .status(403)
-        .json({
-          error: 'Standard users are not allowed to change their username',
-        });
+      return res.status(403).json({
+        error: 'Standard users are not allowed to change their username',
+      });
     }
 
     if (updatedData.password) {
@@ -97,7 +82,7 @@ export const updateUserById = async (
       updatedData.username &&
       updatedData.username !== userToUpdate.username
     ) {
-      const existingUser = await User.findOne({
+      const existingUser = await User.findOneByQuery({
         username: updatedData.username,
       });
       if (existingUser) {
@@ -105,16 +90,8 @@ export const updateUserById = async (
       }
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      updatedData,
-      { new: true }
-    );
-    if (!updatedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    return res.status(200).json(updatedUser);
+    const user = await User.updateById(id, updatedData);
+    return res.status(200).json(user);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to update the user' });
   }
@@ -128,31 +105,19 @@ export const deleteUserById = async (
     const authReq = req as AuthRequest;
     const { authUserId, authRole } = authReq;
 
-    const userToDelete = await User.findById(
-      req.params.id
-    );
-    if (!userToDelete) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
+    const userToDelete = await User.findById(req.params.id);
     const isOwnerOrAdmin =
-      userToDelete._id.equals(authUserId) || authRole === 'admin';
+      userToDelete._id === authUserId || authRole === 'admin';
     if (!isOwnerOrAdmin) {
-      return res
-        .status(403)
-        .json({
-          error: 'Standard users are only allowed to delete their own account',
-        });
+      return res.status(403).json({
+        error: 'Standard users are only allowed to delete their own account',
+      });
     }
 
-    const deletedUser = await User.findByIdAndDelete(
-      req.params.id
-    );
-    if (!deletedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    return res.status(200).json({ message: 'User deleted successfully' });
+    const deletedUser = await User.deleteById(req.params.id);
+    return res
+      .status(200)
+      .json({ message: 'User deleted successfully', user: deletedUser });
   } catch (error) {
     return res.status(500).json({ error: 'Failed to delete the user' });
   }

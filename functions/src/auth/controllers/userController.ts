@@ -22,7 +22,7 @@ export const createUser = async (
     });
     return res.status(201).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to create the user' });
+    return res.status(500).json({ error });
   }
 };
 
@@ -34,7 +34,7 @@ export const getAllUsers = async (
     const users = await User.getAll();
     return res.status(200).json(users);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to retrieve users' });
+    return res.status(500).json({ error });
   }
 };
 
@@ -46,7 +46,7 @@ export const getUserById = async (
     const user = await User.findById(req.params.id);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to retrieve the user' });
+    return res.status(500).json({ error });
   }
 };
 
@@ -93,7 +93,7 @@ export const updateUserById = async (
     const user = await User.updateById(id, updatedData);
     return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to update the user' });
+    return res.status(500).json({ error });
   }
 };
 
@@ -119,6 +119,6 @@ export const deleteUserById = async (
       .status(200)
       .json({ message: 'User deleted successfully', user: deletedUser });
   } catch (error) {
-    return res.status(500).json({ error: 'Failed to delete the user' });
+    return res.status(500).json({ error });
   }
 };

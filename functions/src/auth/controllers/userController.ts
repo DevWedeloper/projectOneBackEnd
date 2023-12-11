@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Schema } from 'mongoose';
-import { User, IUserDocument } from '../models/userModel';
+import { User } from '../models/userModel';
 import bcrypt from 'bcrypt';
 
 interface AuthRequest extends Request {
@@ -14,13 +14,13 @@ export const createUser = async (
 ): Promise<void | Response> => {
   try {
     const { username, password, role } = req.body;
-    const existingUser: IUserDocument | null = await User.findOne({ username });
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: 'Username already exists' });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser: IUserDocument = await User.create({
+    const newUser = await User.create({
       username,
       password: hashedPassword,
       role,
@@ -36,7 +36,7 @@ export const getAllUsers = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const users: IUserDocument[] = await User.find();
+    const users = await User.find();
     return res.status(200).json(users);
   } catch (error) {
     return res.status(500).json({ error: 'Failed to retrieve users' });
@@ -48,7 +48,7 @@ export const getUserById = async (
   res: Response
 ): Promise<void | Response> => {
   try {
-    const user: IUserDocument | null = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     } else {
@@ -70,7 +70,7 @@ export const updateUserById = async (
     const { id } = req.params;
     const updatedData = req.body;
 
-    const userToUpdate: IUserDocument | null = await User.findById(id);
+    const userToUpdate = await User.findById(id);
     if (!userToUpdate) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -98,7 +98,7 @@ export const updateUserById = async (
       updatedData.username &&
       updatedData.username !== userToUpdate.username
     ) {
-      const existingUser: IUserDocument | null = await User.findOne({
+      const existingUser = await User.findOne({
         username: updatedData.username,
       });
       if (existingUser) {
@@ -106,7 +106,7 @@ export const updateUserById = async (
       }
     }
 
-    const updatedUser: IUserDocument | null = await User.findByIdAndUpdate(
+    const updatedUser = await User.findByIdAndUpdate(
       id,
       updatedData,
       { new: true }
@@ -129,7 +129,7 @@ export const deleteUserById = async (
     const authReq = req as AuthRequest;
     const { authUserId, authRole } = authReq;
 
-    const userToDelete: IUserDocument | null = await User.findById(
+    const userToDelete = await User.findById(
       req.params.id
     );
     if (!userToDelete) {
@@ -146,7 +146,7 @@ export const deleteUserById = async (
         });
     }
 
-    const deletedUser: IUserDocument | null = await User.findByIdAndDelete(
+    const deletedUser = await User.findByIdAndDelete(
       req.params.id
     );
     if (!deletedUser) {

@@ -75,7 +75,7 @@ export const login = async (
       { expiresIn: `${process.env.ACCESS_TOKEN_EXPIRATION}` }
     );
 
-    return res.json({
+    return res.status(201).json({
       userId: user._id,
       accessToken,
       refreshToken: refreshTokenEntry.token,

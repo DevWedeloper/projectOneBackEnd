@@ -35,6 +35,15 @@ export const getAll = async (): Promise<IUser[]> => {
   return await User.find();
 };
 
+export const findOneByQuery = async (
+  query: Partial<IUser>
+): Promise<IUser> => {
+  return (
+    (await User.findOne(query)) ||
+    throwUserNotFoundError()
+  );
+};
+
 export const findById = async (id: string): Promise<IUser> => {
   return (await User.findById(id)) || throwUserNotFoundError();
 };

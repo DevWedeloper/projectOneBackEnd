@@ -1,10 +1,7 @@
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import {
-  IRefreshAccessTokenDocument,
-  RefreshToken,
-} from '../models/refreshAccessTokenModel';
+import { RefreshToken } from '../models/refreshAccessTokenModel';
 import { User } from '../models/userModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
@@ -24,8 +21,7 @@ export const login = async (
       });
     }
 
-    let refreshTokenEntry: IRefreshAccessTokenDocument | null =
-      await RefreshToken.findOne({ userId: user._id });
+    let refreshTokenEntry = await RefreshToken.findOne({ userId: user._id });
     if (!refreshTokenEntry) {
       const expiresInDays = process.env.REFRESH_TOKEN_EXPIRATION!;
       const expiresAt = new Date(

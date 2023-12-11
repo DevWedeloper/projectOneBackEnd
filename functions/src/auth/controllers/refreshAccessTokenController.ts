@@ -1,9 +1,6 @@
 import { Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import {
-  RefreshToken,
-  IRefreshAccessTokenDocument,
-} from '../models/refreshAccessTokenModel';
+import { RefreshToken } from '../models/refreshAccessTokenModel';
 
 const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET as string;
 const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET as string;
@@ -23,19 +20,16 @@ export const refreshAccessToken = async (
   try {
     const decoded = jwt.verify(refreshToken, refreshTokenSecret) as JwtPayload;
 
-    const existingRefreshToken: IRefreshAccessTokenDocument | null =
-      await RefreshToken.findOne({
-        userId: decoded.userId,
-        token: refreshToken,
-      });
+    const existingRefreshToken = await RefreshToken.findOne({
+      userId: decoded.userId,
+      token: refreshToken,
+    });
 
     if (!existingRefreshToken) {
-      return res
-        .status(403)
-        .json({
-          error: 'Forbidden',
-          message: 'Invalid or expired refresh token.',
-        });
+      return res.status(403).json({
+        error: 'Forbidden',
+        message: 'Invalid or expired refresh token.',
+      });
     }
 
     const accessToken = jwt.sign(

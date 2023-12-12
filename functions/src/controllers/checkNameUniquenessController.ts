@@ -10,9 +10,10 @@ export const isCharacterNameUnique = async (
     const { name } = req.body;
     const existingCharacter = await Character.isUnique({ name });
     if (existingCharacter) {
-      return res.status(422).json({ error: 'Character name is not unique' });
+      return res.status(200).json({ error: 'Character name is not unique' });
+    } else {
+      return res.status(200).json({ message: 'Character name is unique' });
     }
-    return res.status(200).json({ message: 'Character name is unique' });
   } catch (error) {
     if (error instanceof Error) {
       return res

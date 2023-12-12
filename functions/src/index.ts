@@ -45,7 +45,7 @@ const connectToDatabase = async () => {
   }
 };
 
-connectToDatabase();
+// connectToDatabase();
 app.use(express.json());
 
 app.use('/character', characterRoute);
@@ -58,8 +58,8 @@ app.use('/', checkGuildRelationStatusRoute);
 app.use('/', checkIfMemberRoute);
 app.use('/', isGuildFull);
 
-app.listen(process.env.MY_PORT, () => {
-  console.log(`Server is running on PORT ${process.env.MY_PORT}`);
-});
+// app.listen(process.env.MY_PORT, () => {
+//   console.log(`Server is running on PORT ${process.env.MY_PORT}`);
+// });
 
 export const api = functions.https.onRequest((connectToDatabase(), app));

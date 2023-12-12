@@ -24,6 +24,11 @@ export const checkGuildRelationStatus = async (
       return res.status(200).json({ leaderOfGuild: true });
     }
 
+    return res
+      .status(400)
+      .json({
+        message: 'Invalid request. Guild relation status not determined.',
+      });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({

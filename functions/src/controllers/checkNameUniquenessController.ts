@@ -10,7 +10,7 @@ export const isCharacterNameUnique = async (
     const { name } = req.body;
     const existingCharacter = await Character.isUnique({ name });
     if (existingCharacter) {
-      return res.status(200).json({ error: 'Character name is not unique' });
+      return res.status(200).json({ message: 'Character name is not unique' });
     } else {
       return res.status(200).json({ message: 'Character name is unique' });
     }
@@ -34,9 +34,10 @@ export const isGuildNameUnique = async (
     const { name } = req.body;
     const existingGuild = await Guild.isUnique({ name });
     if (existingGuild) {
-      return res.status(422).json({ error: 'Guild name is not unique' });
+      return res.status(422).json({ message: 'Guild name is not unique' });
+    } else {
+      return res.status(200).json({ message: 'Guild name is unique' });
     }
-    return res.status(200).json({ message: 'Guild name is unique' });
   } catch (error) {
     if (error instanceof Error) {
       return res

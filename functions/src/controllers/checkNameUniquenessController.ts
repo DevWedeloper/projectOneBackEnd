@@ -34,7 +34,7 @@ export const isGuildNameUnique = async (
     const { name } = req.body;
     const existingGuild = await Guild.isUnique({ name });
     if (existingGuild) {
-      return res.status(422).json({ message: 'Guild name is not unique' });
+      return res.status(200).json({ message: 'Guild name is not unique' });
     } else {
       return res.status(200).json({ message: 'Guild name is unique' });
     }

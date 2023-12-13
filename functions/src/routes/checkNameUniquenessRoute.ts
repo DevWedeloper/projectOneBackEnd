@@ -4,7 +4,7 @@ import {
   isGuildNameUnique,
 } from '../controllers/checkNameUniquenessController';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/character/unique', isCharacterNameUnique);
 router.post('/guild/unique', isGuildNameUnique);

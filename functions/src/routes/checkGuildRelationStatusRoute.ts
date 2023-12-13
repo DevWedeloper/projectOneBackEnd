@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { checkGuildRelationStatus } from '../controllers/checkGuildRelationStatusController';
-import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
+import { isValidCharacter } from '../middlewares/isValidMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/character/checkGuildRelationStatus', isValidCharacter, checkGuildRelationStatus);
 

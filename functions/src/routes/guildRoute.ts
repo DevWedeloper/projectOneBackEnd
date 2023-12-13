@@ -14,10 +14,10 @@ import {
   deleteAllGuilds,
 } from '../controllers/guildController';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
-import { checkGuildExistence } from '../middlewares/checkGuildExistence';
-import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
+import { checkGuildExistence } from '../middlewares/isExistingMiddleware';
+import { isValidCharacter } from '../middlewares/isValidMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/', isAdminMiddleware, isValidCharacter, createGuild);
 router.get('/', getAllGuilds);

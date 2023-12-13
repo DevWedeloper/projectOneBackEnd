@@ -13,11 +13,11 @@ import {
 } from '../controllers/characterController';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
 import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
-import { checkCharacterExistence } from '../middlewares/checkCharacterExistence';
+import { checkCharacterExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacterType } from '../middlewares/isValidCharacterTypeMiddleware';
-import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
+import { isValidGuild } from '../middlewares/isValidMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/', isAdminMiddleware, isValidCharacterType, createCharacter);
 router.get('/', getAllCharacters);

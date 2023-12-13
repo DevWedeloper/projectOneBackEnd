@@ -1,38 +1,22 @@
-import express, { Application } from 'express';
-import { connect } from 'mongoose';
-import * as functions from 'firebase-functions';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import express, { Application } from 'express';
+import * as functions from 'firebase-functions';
+import { connect } from 'mongoose';
 dotenv.config();
 
+import { corsOptions } from './corsConfig';
 import characterRoute from './routes/characterRoute';
-import guildRoute from './routes/guildRoute';
 import characterStatsRoute from './routes/characterStatsRoute';
-import guildStatsRoute from './routes/guildStatsRoute';
 import characterTypeRoute from './routes/characterTypeRoute';
-import checkNameUniquenessRoute from './routes/checkNameUniquenessRoute';
 import checkGuildRelationStatusRoute from './routes/checkGuildRelationStatusRoute';
-import checkIfMemberRoute from './routes/isMemberRoute';
+import checkNameUniquenessRoute from './routes/checkNameUniquenessRoute';
+import guildRoute from './routes/guildRoute';
+import guildStatsRoute from './routes/guildStatsRoute';
 import isGuildFull from './routes/isGuildFullRoute';
+import checkIfMemberRoute from './routes/isMemberRoute';
 
 const app: Application = express();
-
-const allowedOrigins = [
-  process.env.ALLOWED_ORIGIN,
-  process.env.ALLOWED_ORIGIN_VERCEL,
-];
-const corsOptions = {
-  origin: (
-    origin: string | undefined,
-    callback: (arg0: Error | null, arg1: boolean | undefined) => void
-  ) => {
-    if (allowedOrigins.includes(origin) || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'), false);
-    }
-  },
-};
 
 app.use(cors(corsOptions));
 

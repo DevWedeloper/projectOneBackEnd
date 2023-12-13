@@ -17,7 +17,7 @@ import { checkCharacterExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacterType } from '../middlewares/isValidCharacterTypeMiddleware';
 import { isValidGuild } from '../middlewares/isValidMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/', isAdminMiddleware, isValidCharacterType, createCharacter);
 router.get('/', getAllCharacters);

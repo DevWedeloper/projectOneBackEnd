@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { isGuildFull } from '../controllers/isGuildFullController';
 import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.post('/guild/isFull', isValidGuild, isGuildFull);
 

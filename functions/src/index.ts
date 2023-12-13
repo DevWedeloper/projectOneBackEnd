@@ -1,6 +1,6 @@
 import cors from 'cors';
 import dotenv from 'dotenv';
-import express, { Application } from 'express';
+import express from 'express';
 import * as functions from 'firebase-functions';
 import { connect } from 'mongoose';
 dotenv.config();
@@ -16,7 +16,7 @@ import guildStatsRoute from './routes/guildStatsRoute';
 import isGuildFull from './routes/isGuildFullRoute';
 import checkIfMemberRoute from './routes/isMemberRoute';
 
-const app: Application = express();
+const app = express();
 
 app.use(cors(corsOptions));
 

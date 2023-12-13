@@ -7,7 +7,7 @@ import {
 } from '../controllers/characterStatsController';
 import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.get('/topStats/:attribute', isValidAttribute, getTopCharactersByAttribute);
 router.get('/topWellRounded', getTopWellRoundedCharacters);

@@ -6,7 +6,7 @@ import {
 } from '../controllers/guildStatsController';
 import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
 
-const router: Router = Router();
+const router = Router();
 
 router.get('/topAttribute/:attribute', isValidAttribute, getTopGuildsByAttribute);
 router.get('/topWellRounded', getTopWellRoundedGuilds);

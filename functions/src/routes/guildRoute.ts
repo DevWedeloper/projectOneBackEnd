@@ -14,7 +14,7 @@ import {
   deleteAllGuilds,
 } from '../controllers/guildController';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
-import { checkGuildExistence } from '../middlewares/checkGuildExistence';
+import { checkGuildExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
 
 const router: Router = Router();

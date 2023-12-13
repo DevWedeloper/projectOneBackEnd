@@ -15,7 +15,7 @@ import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
 import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
 import { checkCharacterExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacterType } from '../middlewares/isValidCharacterTypeMiddleware';
-import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
+import { isValidGuild } from '../middlewares/isValidMiddleware';
 
 const router: Router = Router();
 

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { checkIfMember } from '../controllers/isMemberController';
-import { isValidCharacter } from '../middlewares/isValidCharacterMiddleware';
+import { isValidCharacter } from '../middlewares/isValidMiddleware';
 import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
 
 const router: Router = Router();

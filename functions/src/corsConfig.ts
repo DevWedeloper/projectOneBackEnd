@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 const allowedOrigins = [
   process.env.ALLOWED_ORIGIN,
   process.env.ALLOWED_ORIGIN_VERCEL,

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { isGuildFull } from '../controllers/isGuildFullController';
-import { isValidGuild } from '../middlewares/isValidGuildMiddleware';
+import { isValidGuild } from '../middlewares/isValidMiddleware';
 
 const router = Router();
 

@@ -1,10 +1,8 @@
 import { Router } from 'express';
-import { checkIfMember } from '../controllers/isMemberController';
-import { isValidCharacter } from '../middlewares/isValidMiddleware';
-import { isValidGuild } from '../middlewares/isValidMiddleware';
-
+import { isMember, isNotMember } from '../controllers/isMemberController';
 const router = Router();
 
-router.post('/guild/checkIfMember', isValidCharacter, isValidGuild, checkIfMember);
+router.post('/guild/isMember', isMember);
+router.post('/guild/isNotMember', isNotMember);
 
 export default router;

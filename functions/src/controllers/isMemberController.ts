@@ -1,24 +1,56 @@
 import { Request, Response } from 'express';
+import { isValidObject } from '../models/isValidObjectModel';
+import * as Character from '../models/characterModel';
+import * as Guild from '../models/guildModel';
 
-export const checkIfMember = async (
+export const isMember = async (
   req: Request,
   res: Response
 ): Promise<void | Response> => {
   try {
     const { character, guild } = req.body;
-    if (character?.guild?._id.toString() === guild._id.toString()) {
+    const characterQuery = isValidObject(character)
+      ? { _id: character }
+      : { name: character };
+    const guildQuery = isValidObject(guild)
+      ? { _id: guild }
+      : { name: guild };
+    const foundCharacter = await Character.isExisting(characterQuery);
+    const foundGuild = await Guild.findOneByNameOrId(guildQuery);
+    if (!foundCharacter) {
       return res.status(200).json({ message: 'Member' });
     }
-    if (character?.guild?._id.toString() !== guild._id.toString()) {
+    if (foundCharacter?.guild?._id.toString() === foundGuild._id.toString()) {
+      return res.status(200).json({ message: 'Member' });
+    }
+    return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
+export const isNotMember = async (
+  req: Request,
+  res: Response
+): Promise<void | Response> => {
+  try {
+    const { character, guild } = req.body;
+    const characterQuery = isValidObject(character)
+      ? { _id: character }
+      : { name: character };
+    const guildQuery = isValidObject(guild)
+      ? { _id: guild }
+      : { name: guild };
+    const foundCharacter = await Character.isExisting(characterQuery);
+    const foundGuild = await Guild.findOneByNameOrId(guildQuery);
+    if (!foundCharacter) {
+      return res.status(200).json({ message: 'Not member' });
+    }
+    if (foundCharacter?.guild?._id.toString() !== foundGuild._id.toString()) {
       return res.status(200).json({ message: 'Not member' });
     }
     return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to validate character membership',
-        message: error.message,
-      });
-    }
+    return res.status(500).json({ error });
   }
 };

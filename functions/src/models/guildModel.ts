@@ -76,8 +76,8 @@ export const getPaginated = async (
   };
 };
 
-export const findOneByQuery = async (
-  query: Partial<IGuild>
+export const findOneByNameOrId = async (
+  query: Partial<UniqueIdentifier>
 ): Promise<IGuild> => {
   return (
     (await Guild.findOne(query).populate(populateCharacters())) ||

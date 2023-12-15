@@ -60,8 +60,8 @@ export const getPaginated = async (
   };
 };
 
-export const findOneByQuery = async (
-  query: Partial<ICharacter>
+export const findOneByNameOrId = async (
+  query: Partial<UniqueIdentifier>
 ): Promise<ICharacter> => {
   return (
     (await Character.findOne(query).populate(populateGuild())) ||

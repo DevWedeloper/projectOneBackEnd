@@ -1,5 +1,6 @@
 import { Document as MongooseDocument, UpdateWriteOpResult } from 'mongoose';
 import { ICharacter, ICharacterWithoutId } from '../types/characterType';
+import { UniqueIdentifier } from '../types/uniqueIdentifier';
 import * as Guild from './guildModel';
 import { Character } from './schemas/characterSchema';
 
@@ -59,8 +60,8 @@ export const getPaginated = async (
   };
 };
 
-export const findOneByQuery = async (
-  query: Partial<ICharacter>
+export const findOneByNameOrId = async (
+  query: Partial<UniqueIdentifier>
 ): Promise<ICharacter> => {
   return (
     (await Character.findOne(query).populate(populateGuild())) ||
@@ -101,6 +102,12 @@ export const isUnique = async ({
   name: string;
 }): Promise<ICharacter | null> => {
   return await Character.findOne({ name });
+};
+
+export const isExisting = async (
+  query: Partial<UniqueIdentifier>
+): Promise<ICharacter | null> => {
+  return await Character.findOne(query);
 };
 
 export const updateById = async (

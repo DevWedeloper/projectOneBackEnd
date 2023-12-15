@@ -18,7 +18,7 @@ export const isValidCharacter = async (
       ? { _id: character }
       : { name: character };
 
-    const foundCharacter = await Character.findOneByQuery(characterQuery);
+    const foundCharacter = await Character.findOneByNameOrId(characterQuery);
     req.body.character = foundCharacter;
     next();
   } catch (error) {
@@ -45,7 +45,7 @@ export const isValidGuild = async (
       ? { _id: guild }
       : { name: guild };
 
-    const foundGuild = await Guild.findOneByQuery(guildQuery);
+    const foundGuild = await Guild.findOneByNameOrId(guildQuery);
     req.body.guild = foundGuild;
     next();
   } catch (error) {

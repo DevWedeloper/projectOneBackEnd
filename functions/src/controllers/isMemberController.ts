@@ -28,7 +28,11 @@ export const isMember = async (
     }
     return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
-    return res.status(500).json({ error });
+    if (error instanceof Error) {
+      return res.status(500).json({
+        error: error.message
+      });
+    }
   }
 };
 
@@ -57,6 +61,10 @@ export const isNotMember = async (
     }
     return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
-    return res.status(500).json({ error });
+    if (error instanceof Error) {
+      return res.status(500).json({
+        error: error.message
+      });
+    }
   }
 };

@@ -23,6 +23,9 @@ export const isMember = async (
     if (foundCharacter?.guild?._id.toString() === foundGuild._id.toString()) {
       return res.status(200).json({ message: 'Member' });
     }
+    if (foundCharacter?.guild?._id.toString() !== foundGuild._id.toString()) {
+      return res.status(200).json({ message: 'Not member' });
+    }
     return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
     return res.status(500).json({ error });
@@ -48,6 +51,9 @@ export const isNotMember = async (
     }
     if (foundCharacter?.guild?._id.toString() !== foundGuild._id.toString()) {
       return res.status(200).json({ message: 'Not member' });
+    }
+    if (foundCharacter?.guild?._id.toString() === foundGuild._id.toString()) {
+      return res.status(200).json({ message: 'Member' });
     }
     return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {

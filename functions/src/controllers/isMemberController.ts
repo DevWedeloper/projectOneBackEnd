@@ -12,9 +12,7 @@ export const isMember = async (
     const characterQuery = isValidObject(character)
       ? { _id: character }
       : { name: character };
-    const guildQuery = isValidObject(guild)
-      ? { _id: guild }
-      : { name: guild };
+    const guildQuery = isValidObject(guild) ? { _id: guild } : { name: guild };
     const foundCharacter = await Character.isExisting(characterQuery);
     const foundGuild = await Guild.findOneByNameOrId(guildQuery);
     if (!foundCharacter) {
@@ -26,11 +24,13 @@ export const isMember = async (
     if (foundCharacter?.guild?._id.toString() !== foundGuild._id.toString()) {
       return res.status(200).json({ message: 'Not member' });
     }
-    return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
+    return res
+      .status(400)
+      .json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
-        error: error.message
+        error: error.message,
       });
     }
   }
@@ -45,9 +45,7 @@ export const isNotMember = async (
     const characterQuery = isValidObject(character)
       ? { _id: character }
       : { name: character };
-    const guildQuery = isValidObject(guild)
-      ? { _id: guild }
-      : { name: guild };
+    const guildQuery = isValidObject(guild) ? { _id: guild } : { name: guild };
     const foundCharacter = await Character.isExisting(characterQuery);
     const foundGuild = await Guild.findOneByNameOrId(guildQuery);
     if (!foundCharacter) {
@@ -59,11 +57,13 @@ export const isNotMember = async (
     if (foundCharacter?.guild?._id.toString() === foundGuild._id.toString()) {
       return res.status(200).json({ message: 'Member' });
     }
-    return res.status(400).json({ message: 'Invalid request. Member status not determined.' });
+    return res
+      .status(400)
+      .json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(500).json({
-        error: error.message
+        error: error.message,
       });
     }
   }

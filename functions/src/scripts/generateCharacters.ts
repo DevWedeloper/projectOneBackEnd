@@ -56,6 +56,7 @@ const generateRandomCharacter = async () => {
         Math.max(1, Math.round(generateNormalRandom(50, 20)))
       ),
       critChance: randomCritChance(),
+      guild: null
     };
 
     const savedCharacter = await Character.create(character);

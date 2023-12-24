@@ -91,10 +91,7 @@ export const searchCharactersByName = async (
     const searchQuery = req.query.name as string;
     const limit = 10;
 
-    const character = await Character.findMultipleByName(
-      searchQuery,
-      limit
-    );
+    const character = await Character.findMultipleByName(searchQuery, limit);
     return res.status(200).json(character);
   } catch (error) {
     next(error);
@@ -171,7 +168,7 @@ export const leaveGuildById = async (
     const previousGuild = await Guild.findById(character.guild._id);
 
     await updateLeaderOrMembersGuild(previousGuild, id);
-    
+
     const updatedCharacter = await Character.findById(id);
     return res.status(200).json({
       message: 'Left guild successfully.',

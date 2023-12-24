@@ -13,7 +13,9 @@ export const isGuildFull = async (
     if (guild.totalMembers < guild.maxMembers) {
       return res.status(200).json({ isNotFull: true });
     }
-    return res.status(400).json({ message: 'Invalid request. Guild status not determined.' });
+    return res
+      .status(400)
+      .json({ message: 'Invalid request. Guild status not determined.' });
   } catch (error) {
     next(error);
   }

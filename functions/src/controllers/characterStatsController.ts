@@ -52,7 +52,8 @@ export const getCharacterDistributionByType = async (
   next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const characterDistribution = await Character.getCharacterDistributionByType();
+    const characterDistribution =
+      await Character.getCharacterDistributionByType();
     return res.status(200).json(characterDistribution);
   } catch (error) {
     next(error);

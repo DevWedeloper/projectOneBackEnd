@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 
 export const isCharacterNameUnique = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { name } = req.body;
@@ -15,20 +16,14 @@ export const isCharacterNameUnique = async (
       return res.status(200).json({ message: 'Character name is unique' });
     }
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to validate character name uniqueness',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };
 
 export const isGuildNameUnique = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { name } = req.body;
@@ -39,13 +34,6 @@ export const isGuildNameUnique = async (
       return res.status(200).json({ message: 'Guild name is unique' });
     }
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to validate guild name uniqueness',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };

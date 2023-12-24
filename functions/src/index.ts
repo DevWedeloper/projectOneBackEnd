@@ -13,6 +13,7 @@ import guildRoute from './routes/guildRoute';
 import guildStatsRoute from './routes/guildStatsRoute';
 import isGuildFull from './routes/isGuildFullRoute';
 import checkIfMemberRoute from './routes/isMemberRoute';
+import { errorHandler } from './middlewares/errorHandlerMiddleware';
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use('/', checkNameUniquenessRoute);
 app.use('/', checkGuildRelationStatusRoute);
 app.use('/', checkIfMemberRoute);
 app.use('/', isGuildFull);
+app.use(errorHandler);
 
 // app.listen(process.env.MY_PORT, () => {
 //   console.log(`Server is running on PORT ${process.env.MY_PORT}`);

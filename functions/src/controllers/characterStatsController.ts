@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as Character from '../models/characterStatsModel';
 
 export const getTopCharactersByAttribute = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   const { attribute } = req.params;
   try {
@@ -14,63 +15,47 @@ export const getTopCharactersByAttribute = async (
     );
     return res.status(200).json(characters);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: `Failed to retrieve characters with highest ${attribute}`,
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getTopWellRoundedCharacters = async (
-  req: Request,
-  res: Response
+  _: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const limit = 5;
     const characters = await Character.getTopWellRoundedCharacters(limit);
     return res.status(200).json(characters);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve well-rounded characters',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getAverageCharacterStats = async (
-  req: Request,
-  res: Response
+  _: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const averageStats = await Character.getAverageCharacterStats();
     return res.status(200).json(averageStats);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve average character stats',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getCharacterDistributionByType = async (
-  req: Request,
-  res: Response
+  _: Request,
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
-    const characterDistribution = await Character.getCharacterDistributionByType();
+    const characterDistribution =
+      await Character.getCharacterDistributionByType();
     return res.status(200).json(characterDistribution);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve character distribution by type',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };

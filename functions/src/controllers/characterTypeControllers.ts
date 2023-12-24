@@ -1,21 +1,15 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as CharacterType from '../models/characterTypeModel';
 
 export const getCharacterTypes = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const characterTypes = await CharacterType.getAll();
     return res.json(characterTypes);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'An error occurred while fetching character types.',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };

@@ -1,9 +1,10 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as Guild from '../models/guildStatsModel';
 
 export const getTopGuildsByAttribute = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
@@ -20,20 +21,14 @@ export const getTopGuildsByAttribute = async (
     const topGuilds = await Guild.getTopGuildsByAttribute(actualAttribute, limit);
     return res.json(topGuilds);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve top guilds by attribute',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };
 
 export const getTopWellRoundedGuilds = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const limit = 5;
@@ -41,20 +36,14 @@ export const getTopWellRoundedGuilds = async (
     const guilds = await Guild.getTopWellRoundedGuilds(limit);
     return res.json(guilds);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve top well-rounded guilds',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };
 
 export const getTopGuildsByAverageAttribute = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { attribute } = req.params;
@@ -71,14 +60,7 @@ export const getTopGuildsByAverageAttribute = async (
     const topGuilds = await Guild.getTopGuildsByAverageAttribute(actualAttribute, limit);
     return res.json(topGuilds);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({
-          error: 'Failed to retrieve top guilds by average attribute',
-          message: error.message,
-        });
-    }
+    next(error);
   }
 };
 

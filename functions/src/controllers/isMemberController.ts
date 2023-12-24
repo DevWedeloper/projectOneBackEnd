@@ -1,11 +1,12 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { isValidObject } from '../models/isValidObjectModel';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 
 export const isMember = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { character, guild } = req.body;
@@ -28,17 +29,14 @@ export const isMember = async (
       .status(400)
       .json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const isNotMember = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { character, guild } = req.body;
@@ -61,10 +59,6 @@ export const isNotMember = async (
       .status(400)
       .json({ message: 'Invalid request. Member status not determined.' });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: error.message,
-      });
-    }
+    next(error);
   }
 };

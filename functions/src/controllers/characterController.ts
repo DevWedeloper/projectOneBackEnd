@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 import {
@@ -12,7 +12,8 @@ import {
 
 export const createCharacter = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const character = await Character.create(req.body);
@@ -21,18 +22,14 @@ export const createCharacter = async (
       character,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to create the character',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getAllCharacters = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const page: number = parseInt(req.query.page as string) || 1;
@@ -51,19 +48,14 @@ export const getAllCharacters = async (
     );
     return res.status(200).json(characters);
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-      return res.status(500).json({
-        error: 'Failed to retrieve characters',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getCharacterById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -71,18 +63,14 @@ export const getCharacterById = async (
     const character = await Character.findById(id);
     return res.status(200).json(character);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve the character',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getCharacterByName = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { name } = req.params;
@@ -90,18 +78,14 @@ export const getCharacterByName = async (
     const character = await Character.findByName(name);
     return res.status(200).json(character);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve the character',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const searchCharactersByName = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
@@ -113,17 +97,14 @@ export const searchCharactersByName = async (
     );
     return res.status(200).json(character);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Error searching characters', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const updateCharacterAttributeById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   const { attribute } = req.params;
   try {
@@ -138,18 +119,14 @@ export const updateCharacterAttributeById = async (
       character,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: `Failed to update character's ${attribute}`,
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const joinGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -174,17 +151,14 @@ export const joinGuildById = async (
       character: updatedCharacter,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to join guild', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const leaveGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -204,17 +178,14 @@ export const leaveGuildById = async (
       character: updatedCharacter,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to leave guild', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const deleteCharacterById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -233,18 +204,14 @@ export const deleteCharacterById = async (
       character: deletedCharacter,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to delete the character',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const deleteAllCharacters = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const [characterDeletionResult, guildDeletionResult] = await Promise.all([
@@ -256,11 +223,6 @@ export const deleteAllCharacters = async (
       message: `${characterDeletionResult.deletedCount} characters and ${guildDeletionResult.deletedCount} guilds deleted successfully.`,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to delete characters and guilds.',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };

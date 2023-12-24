@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import * as Character from '../models/characterModel';
 import * as Guild from '../models/guildModel';
 import {
@@ -12,7 +12,8 @@ import {
 
 export const createGuild = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { name, character } = req.body;
@@ -35,18 +36,14 @@ export const createGuild = async (
       .status(201)
       .json({ message: 'Guild created successfully', guild });
   } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-      return res
-        .status(500)
-        .json({ error: 'Failed to create the guild', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const getAllGuilds = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const page: number = parseInt(req.query.page as string) || 1;
@@ -65,17 +62,14 @@ export const getAllGuilds = async (
     );
     return res.status(200).json(guilds);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to retrieve guilds', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const getGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -83,18 +77,14 @@ export const getGuildById = async (
     const guild = await Guild.findById(id);
     return res.status(200).json(guild);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve the guild',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const getGuildByName = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { name } = req.params;
@@ -102,18 +92,14 @@ export const getGuildByName = async (
     const guild = await Guild.findByName(name);
     return res.status(200).json(guild);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to retrieve the guild',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const searchGuildsByName = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
@@ -122,17 +108,14 @@ export const searchGuildsByName = async (
     const guild = await Guild.findMultipleByName(searchQuery, limit);
     return res.status(200).json(guild);
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Error searching guilds', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const searchGuildMemberById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const searchQuery = req.query.name as string;
@@ -146,18 +129,14 @@ export const searchGuildMemberById = async (
     );
     return res.status(200).json(members);
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Error searching guild members',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const updateGuildNameById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -169,18 +148,14 @@ export const updateGuildNameById = async (
       guild,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to update the guild name',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const updateGuildLeaderById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -204,18 +179,14 @@ export const updateGuildLeaderById = async (
       guild: updatedGuild,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to update the guild leader',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const addMemberToGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -240,18 +211,14 @@ export const addMemberToGuildById = async (
       guild: updatedGuild,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to add member to the guild',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const removeMemberFromGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -280,18 +247,14 @@ export const removeMemberFromGuildById = async (
       guild: updatedGuild,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to add member to the guild',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };
 
 export const deleteGuildById = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { guild } = req.body;
@@ -302,17 +265,14 @@ export const deleteGuildById = async (
       .status(200)
       .json({ message: 'Guild deleted successfully', guild: guild });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to delete the guild', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const deleteAllGuilds = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const result = await Guild.deleteAll();
@@ -322,10 +282,6 @@ export const deleteAllGuilds = async (
       message: `${result.deletedCount} guilds deleted successfully.`,
     });
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to delete guilds', message: error.message });
-    }
+    next(error);
   }
 };

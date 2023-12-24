@@ -1,8 +1,9 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 
 export const checkGuildRelationStatus = async (
   req: Request,
-  res: Response
+  res: Response,
+  next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { character } = req.body;
@@ -30,11 +31,6 @@ export const checkGuildRelationStatus = async (
         message: 'Invalid request. Guild relation status not determined.',
       });
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to check guild relation status.',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };

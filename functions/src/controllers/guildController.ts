@@ -270,7 +270,7 @@ export const deleteGuildById = async (
 };
 
 export const deleteAllGuilds = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {

@@ -209,7 +209,7 @@ export const deleteCharacterById = async (
 };
 
 export const deleteAllCharacters = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {

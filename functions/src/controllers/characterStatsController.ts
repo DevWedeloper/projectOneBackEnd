@@ -20,7 +20,7 @@ export const getTopCharactersByAttribute = async (
 };
 
 export const getTopWellRoundedCharacters = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
@@ -34,7 +34,7 @@ export const getTopWellRoundedCharacters = async (
 };
 
 export const getAverageCharacterStats = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
@@ -47,7 +47,7 @@ export const getAverageCharacterStats = async (
 };
 
 export const getCharacterDistributionByType = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {

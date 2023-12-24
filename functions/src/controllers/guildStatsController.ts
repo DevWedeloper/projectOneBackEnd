@@ -26,7 +26,7 @@ export const getTopGuildsByAttribute = async (
 };
 
 export const getTopWellRoundedGuilds = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {

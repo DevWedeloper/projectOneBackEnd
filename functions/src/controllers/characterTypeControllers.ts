@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as CharacterType from '../models/characterTypeModel';
 
 export const getCharacterTypes = async (
-  req: Request,
+  _: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {

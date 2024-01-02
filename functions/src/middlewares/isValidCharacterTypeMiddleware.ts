@@ -8,6 +8,9 @@ export const isValidCharacterType = async (
 ): Promise<void | Response> => {
   try {
     const { characterType } = req.body;
+    if (!characterType) {
+      return next();
+    }
     
     await CharacterType.findOne(characterType);
     next();

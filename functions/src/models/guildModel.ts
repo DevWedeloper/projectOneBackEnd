@@ -5,17 +5,11 @@ import { UniqueIdentifier } from '../types/uniqueIdentifier';
 import * as Character from './characterModel';
 import { Guild } from './schemas/guildSchema';
 
-type GuildOnCreate = Omit<
-  IGuild,
-  | '_id'
-  | 'members'
-  | 'totalMembers'
-  | 'totalHealth'
-  | 'totalStrength'
-  | 'totalAgility'
-  | 'totalIntelligence'
-  | 'totalArmor'
-  | 'totalCritChance'
+type GuildOnCreate = Pick<
+  IGuildWithoutId,
+  | 'name'
+  | 'leader'
+  | 'maxMembers'
 >;
 
 export const create = async (guild: GuildOnCreate): Promise<IGuild> => {

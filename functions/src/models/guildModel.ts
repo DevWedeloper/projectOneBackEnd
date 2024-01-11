@@ -5,14 +5,14 @@ import { UniqueIdentifier } from '../types/uniqueIdentifier';
 import * as Character from './characterModel';
 import { Guild } from './schemas/guildSchema';
 
-type GuildOnCreate = Pick<
+type GuildCreate = Pick<
   IGuildWithoutId,
   | 'name'
   | 'leader'
   | 'maxMembers'
 >;
 
-export const create = async (guild: GuildOnCreate): Promise<IGuild> => {
+export const create = async (guild: GuildCreate): Promise<IGuild> => {
   return (await Guild.create(guild)).toObject();
 };
 

@@ -1,43 +1,34 @@
-import { Request, Response, NextFunction } from 'express';
-import * as Character from '../models/characterModel';
-import * as Guild from '../models/guildModel';
+import { NextFunction, Request, Response } from 'express';
+import { CharacterService, GuildService } from '../use-cases';
 
 export const checkCharacterExistence = async (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
 
-    const character = await Character.findById(id);
+    const character = await CharacterService.getCharacterById(id);
     req.body.character = character;
     next();
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'An error occurred', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const checkGuildExistence = async (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
 
-    const guild = await Guild.findById(id);
+    const guild = await GuildService.getGuildById(id);
     req.body.guild = guild;
     next();
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'An error occurred', message: error.message });
-    }
+    next(error);
   }
 };

@@ -1,12 +1,12 @@
 import { Router } from 'express';
 import {
-  isCharacterNameUnique,
-  isGuildNameUnique,
-} from '../controllers/checkNameUniquenessController';
+  isCharacterNameUniqueEndpoint,
+  isGuildNameUniqueEndpoint,
+} from '../controllers';
 
 const router = Router();
 
-router.post('/character/unique', isCharacterNameUnique);
-router.post('/guild/unique', isGuildNameUnique);
+router.post('/character/unique', isCharacterNameUniqueEndpoint);
+router.post('/guild/unique', isGuildNameUniqueEndpoint);
 
 export default router;

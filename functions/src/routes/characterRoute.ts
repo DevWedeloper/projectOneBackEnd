@@ -1,56 +1,59 @@
 import { Router } from 'express';
 import {
-  getAllCharacters,
-  getCharacterById,
-  getCharacterByName,
-  searchCharactersByName,
-  createCharacter,
-  updateCharacterAttributeById,
-  joinGuildById,
-  leaveGuildById,
-  deleteCharacterById,
-  deleteAllCharacters,
-} from '../controllers/characterController';
+  createCharacterEndpoint,
+  deleteAllCharactersEndpoint,
+  deleteCharacterByIdEndpoint,
+  getCharacterByIdEndpoint,
+  getCharacterByNameEndpoint,
+  getPaginatedCharactersEndpoint,
+  joinGuildByIdEndpoint,
+  leaveGuildByIdEndpoint,
+  searchCharactersByNameEndpoint,
+  updateCharacterAttributeByIdEndpoint,
+} from '../controllers';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
-import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
 import { checkCharacterExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacterType } from '../middlewares/isValidCharacterTypeMiddleware';
 import { isValidGuild } from '../middlewares/isValidMiddleware';
 
 const router = Router();
 
-router.post('/', isAdminMiddleware, isValidCharacterType, createCharacter);
-router.get('/', getAllCharacters);
-router.get('/search', searchCharactersByName);
-router.get('/:id', getCharacterById);
-router.get('/name/:name', getCharacterByName);
+router.post(
+  '/',
+  isAdminMiddleware,
+  isValidCharacterType,
+  createCharacterEndpoint
+);
+router.get('/', getPaginatedCharactersEndpoint);
+router.get('/search', searchCharactersByNameEndpoint);
+router.get('/:id', getCharacterByIdEndpoint);
+router.get('/name/:name', getCharacterByNameEndpoint);
 router.put(
   '/join/:id',
   isAdminMiddleware,
   checkCharacterExistence,
   isValidGuild,
-  joinGuildById
+  joinGuildByIdEndpoint
 );
 router.put(
   '/leave/:id',
   isAdminMiddleware,
   checkCharacterExistence,
-  leaveGuildById
+  leaveGuildByIdEndpoint
 );
 router.delete(
   '/:id',
   isAdminMiddleware,
   checkCharacterExistence,
-  deleteCharacterById
+  deleteCharacterByIdEndpoint
 );
-router.delete('/', isAdminMiddleware, deleteAllCharacters);
+router.delete('/', isAdminMiddleware, deleteAllCharactersEndpoint);
 router.put(
   '/:attribute/:id',
   isAdminMiddleware,
-  isValidAttribute,
   isValidCharacterType,
   checkCharacterExistence,
-  updateCharacterAttributeById
+  updateCharacterAttributeByIdEndpoint
 );
 
 export default router;

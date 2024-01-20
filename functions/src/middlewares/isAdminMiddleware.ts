@@ -1,34 +1,17 @@
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import { Request, Response, NextFunction } from 'express';
-
-interface AuthRequest extends Request {
-  user?: JwtPayload;
-}
+import { NextFunction, Request, Response } from 'express';
+import { isAdmin } from '../use-cases';
 
 export const isAdminMiddleware = async (
-  req: AuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
     const token = req.cookies.accessToken;
-    if (!token) {
-      return res.status(401).json({ message: 'Unauthorized - Missing token' });
-    }
 
-    const decodedToken = jwt.verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET!
-    ) as JwtPayload;
-    req.user = decodedToken;
-    if (req.user?.role === 'standard' && req.method !== 'GET') {
-      return res
-        .status(403)
-        .json({ message: 'Standard users cannot perform this action.' });
-    }
-
+    isAdmin(token, req.method);
     next();
   } catch (error) {
-    return res.status(401).json({ message: 'Unauthorized - Invalid token' });
+    return next(error);
   }
 };

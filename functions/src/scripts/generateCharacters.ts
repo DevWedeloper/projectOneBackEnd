@@ -1,28 +1,10 @@
-import dotenv from 'dotenv';
-import mongoose, { connect } from 'mongoose';
-import * as Character from '../models/characterModel';
-import * as CharacterType from '../models/characterTypeModel';
 import { ICharacterType } from '../types/characterTypeType';
+import { CharacterService, CharacterTypeService } from '../use-cases';
 import { generateUsername } from '../utils/usernameGenerator';
-dotenv.config({ path: '../../.env' });
 
 const numCharactersToGenerate = 100;
 let availableCharacterTypes: ICharacterType[] = [];
 let characterCtr = 0;
-
-const connectToDatabase = async () => {
-  try {
-    await connect(process.env.DB_URL!);
-    console.log('DB connected');
-    await fetchAvailableCharacterTypes();
-    await generateRandomCharacters();
-    mongoose.disconnect();
-  } catch (err) {
-    console.error('Error connecting to DB:', err);
-  }
-};
-
-connectToDatabase();
 
 const generateRandomCharacters = async () => {
   do {
@@ -56,11 +38,15 @@ const generateRandomCharacter = async () => {
         Math.max(1, Math.round(generateNormalRandom(50, 20)))
       ),
       critChance: randomCritChance(),
-      guild: null
+      guild: null,
     };
 
-    const savedCharacter = await Character.create(character);
-    console.log(characterCtr + 1, ' Character created successfully:', savedCharacter.name);
+    const savedCharacter = await CharacterService.createCharacter(character);
+    console.log(
+      characterCtr + 1,
+      ' Character created successfully:',
+      savedCharacter.name
+    );
     characterCtr++;
   } catch (error) {
     if (error instanceof Error) {
@@ -71,13 +57,15 @@ const generateRandomCharacter = async () => {
 
 const fetchAvailableCharacterTypes = async () => {
   try {
-    availableCharacterTypes = await CharacterType.getAll();
+    availableCharacterTypes = await CharacterTypeService.getAllCharacterTypes();
     if (availableCharacterTypes.length === 0) {
       throw new Error('No available character types found in the database.');
     }
   } catch (error) {
     if (error instanceof Error) {
-      throw new Error('Failed to fetch available character types: ' + error.message);
+      throw new Error(
+        'Failed to fetch available character types: ' + error.message
+      );
     }
   }
 };
@@ -102,3 +90,6 @@ const randomCharacterType = (): string => {
     Math.floor(Math.random() * availableCharacterTypes.length)
   ].typeName;
 };
+
+fetchAvailableCharacterTypes();
+generateRandomCharacters();

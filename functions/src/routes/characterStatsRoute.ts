@@ -1,17 +1,16 @@
 import { Router } from 'express';
 import {
-  getTopCharactersByAttribute,
-  getTopWellRoundedCharacters,
-  getAverageCharacterStats,
-  getCharacterDistributionByType,
-} from '../controllers/characterStatsController';
-import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
+  getAverageCharacterStatsEndpoint,
+  getCharacterDistributionByTypeEndpoint,
+  getTopCharactersByAttributeEndpoint,
+  getTopWellRoundedCharactersEndpoint,
+} from '../controllers';
 
 const router = Router();
 
-router.get('/topStats/:attribute', isValidAttribute, getTopCharactersByAttribute);
-router.get('/topWellRounded', getTopWellRoundedCharacters);
-router.get('/averageStats', getAverageCharacterStats);
-router.get('/characterDistribution', getCharacterDistributionByType);
+router.get('/topStats/:attribute', getTopCharactersByAttributeEndpoint);
+router.get('/topWellRounded', getTopWellRoundedCharactersEndpoint);
+router.get('/averageStats', getAverageCharacterStatsEndpoint);
+router.get('/characterDistribution', getCharacterDistributionByTypeEndpoint);
 
 export default router;

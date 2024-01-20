@@ -1,11 +1,9 @@
 import { NextFunction, Request, Response } from 'express';
-import * as Character from '../models/characterModel';
-import * as Guild from '../models/guildModel';
-import { isValidObject } from '../models/isValidObjectModel';
+import { CharacterService, GuildService } from '../use-cases';
 
 export const isValidCharacter = async (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
@@ -14,25 +12,19 @@ export const isValidCharacter = async (
       return next();
     }
 
-    const characterQuery = isValidObject(character)
-      ? { _id: character }
-      : { name: character };
-
-    const foundCharacter = await Character.findOneByNameOrId(characterQuery);
+    const foundCharacter = await CharacterService.getCharacterByNameOrId(
+      character
+    );
     req.body.character = foundCharacter;
     next();
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to validate character', message: error.message });
-    }
+    next(error);
   }
 };
 
 export const isValidGuild = async (
   req: Request,
-  res: Response,
+  _: Response,
   next: NextFunction
 ): Promise<void | Response> => {
   try {
@@ -41,18 +33,10 @@ export const isValidGuild = async (
       return next();
     }
 
-    const guildQuery = isValidObject(guild)
-      ? { _id: guild }
-      : { name: guild };
-
-    const foundGuild = await Guild.findOneByNameOrId(guildQuery);
+    const foundGuild = await GuildService.getGuildByNameOrId(guild);
     req.body.guild = foundGuild;
     next();
   } catch (error) {
-    if (error instanceof Error) {
-      return res
-        .status(500)
-        .json({ error: 'Failed to validate guild', message: error.message });
-    }
+    next(error);
   }
 };

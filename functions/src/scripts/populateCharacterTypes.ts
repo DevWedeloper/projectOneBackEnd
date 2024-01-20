@@ -1,5 +1,4 @@
-import mongoose, { connect } from 'mongoose';
-import * as CharacterType from '../models/characterTypeModel';
+import { CharacterTypeService } from '../use-cases';
 
 const characterTypesData = [
   {
@@ -94,25 +93,14 @@ const characterTypesData = [
   },
 ];
 
-const connectToDatabase = async () => {
-  try {
-    await connect(process.env.DB_URL!);
-    console.log('DB connected');
-    await populateCharacterTypes();
-    mongoose.disconnect();
-  } catch (err) {
-    console.error('Error connecting to DB:', err);
-  }
-};
-
-connectToDatabase();
-
 const populateCharacterTypes = async () => {
   try {
-    await CharacterType.populate(characterTypesData);
+    await CharacterTypeService.populate(characterTypesData);
   } catch (error) {
     if (error instanceof Error) {
       throw new Error('Failed to populate characterTypes: ' + error);
     }
   }
 };
+
+populateCharacterTypes();

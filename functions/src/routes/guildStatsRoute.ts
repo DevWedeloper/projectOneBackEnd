@@ -1,15 +1,17 @@
 import { Router } from 'express';
 import {
-  getTopGuildsByAttribute,
-  getTopWellRoundedGuilds,
-  getTopGuildsByAverageAttribute,
-} from '../controllers/guildStatsController';
-import { isValidAttribute } from '../middlewares/isValidAtributeMiddleware';
+  getTopGuildsByAttributeEndpoint,
+  getTopGuildsByAverageAttributeEndpoint,
+  getTopWellRoundedGuildsEndpoint,
+} from '../controllers';
 
 const router = Router();
 
-router.get('/topAttribute/:attribute', isValidAttribute, getTopGuildsByAttribute);
-router.get('/topWellRounded', getTopWellRoundedGuilds);
-router.get('/averageAttribute/:attribute', isValidAttribute, getTopGuildsByAverageAttribute);
+router.get('/topAttribute/:attribute', getTopGuildsByAttributeEndpoint);
+router.get('/topWellRounded', getTopWellRoundedGuildsEndpoint);
+router.get(
+  '/averageAttribute/:attribute',
+  getTopGuildsByAverageAttributeEndpoint
+);
 
 export default router;

@@ -1,29 +1,10 @@
-import dotenv from 'dotenv';
-import mongoose, { connect } from 'mongoose';
-import * as Character from '../models/characterModel';
-import * as Guild from '../models/guildModel';
 import { ICharacter } from '../types/characterType';
-import { joinGuild } from '../utils/guildCharacterUtils';
+import { CharacterService, GuildService } from '../use-cases';
 import { generateUsername } from '../utils/usernameGenerator';
-dotenv.config({ path: '../../.env' });
 
 const numGuildsToGenerate = 10;
 let availableCharacters: ICharacter[] = [];
 let guildCtr = 0;
-
-const connectToDatabase = async () => {
-  try {
-    await connect(process.env.DB_URL!);
-    console.log('DB connected');
-    await fetchAvailableCharacters();
-    await generateRandomGuilds();
-    mongoose.disconnect();
-  } catch (err) {
-    console.error('Error connecting to DB:', err);
-  }
-};
-
-connectToDatabase();
 
 const generateRandomGuilds = async () => {
   do {
@@ -34,15 +15,11 @@ const generateRandomGuilds = async () => {
 const generateRandomGuild = async () => {
   try {
     const leader = await randomLeader();
-    const guildData = {
-      name: generateUsername(),
-      leader: leader,
-      maxMembers: 50,
-    };
+    const guild = await GuildService.createGuild(generateUsername(), leader);
 
-    const guild = await Guild.create(guildData);
-    await joinGuild(leader, guild);
-    availableCharacters = availableCharacters.filter(character => character._id !== leader._id);
+    availableCharacters = availableCharacters.filter(
+      (character) => character._id !== leader._id
+    );
     console.log(guildCtr + 1, ' Guild created successfully:', guild.name);
     guildCtr++;
   } catch (error) {
@@ -54,9 +31,11 @@ const generateRandomGuild = async () => {
 
 const fetchAvailableCharacters = async () => {
   try {
-    availableCharacters = await Character.getAllWithoutGuild();
+    availableCharacters = await CharacterService.getAllWithoutGuild();
     if (availableCharacters.length === 0) {
-      throw new Error('No available characters found in the database to choose as guild leader.');
+      throw new Error(
+        'No available characters found in the database to choose as guild leader.'
+      );
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -66,5 +45,10 @@ const fetchAvailableCharacters = async () => {
 };
 
 const randomLeader = async (): Promise<ICharacter> => {
-  return availableCharacters[Math.floor(Math.random() * availableCharacters.length)];
+  return availableCharacters[
+    Math.floor(Math.random() * availableCharacters.length)
+  ];
 };
+
+fetchAvailableCharacters();
+generateRandomGuilds();

@@ -1,5 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
-import * as CharacterType from '../models/characterTypeModel';
+import { NextFunction, Request, Response } from 'express';
+import { CharacterTypeService } from '../use-cases';
 
 export const isValidCharacterType = async (
   req: Request,
@@ -8,18 +8,14 @@ export const isValidCharacterType = async (
 ): Promise<void | Response> => {
   try {
     const { characterType } = req.body;
+    
     if (!characterType) {
       return next();
     }
-    
-    await CharacterType.findOne(characterType);
+
+    await CharacterTypeService.getCharacterType(characterType);
     next();
   } catch (error) {
-    if (error instanceof Error) {
-      return res.status(500).json({
-        error: 'Failed to validate character type',
-        message: error.message,
-      });
-    }
+    next(error);
   }
 };

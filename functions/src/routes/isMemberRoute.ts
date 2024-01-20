@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { isMember, isNotMember } from '../controllers/isMemberController';
+import { isMemberEndpoint, isNotMemberEndpoint } from '../controllers';
 const router = Router();
 
-router.post('/guild/isMember', isMember);
-router.post('/guild/isNotMember', isNotMember);
+router.post('/guild/isMember', isMemberEndpoint);
+router.post('/guild/isNotMember', isNotMemberEndpoint);
 
 export default router;

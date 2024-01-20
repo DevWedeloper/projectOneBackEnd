@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { getCharacterTypes } from '../controllers/characterTypeControllers';
+import { getAllCharacterTypesEndpoint } from '../controllers';
 
 const router = Router();
 
-router.get('/', getCharacterTypes);
+router.get('/', getAllCharacterTypesEndpoint);
 
 export default router;

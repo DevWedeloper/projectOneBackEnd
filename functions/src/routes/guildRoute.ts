@@ -1,58 +1,67 @@
 import { Router } from 'express';
 import {
-  createGuild,
-  getAllGuilds,
-  getGuildById,
-  getGuildByName,
-  searchGuildsByName,
-  searchGuildMemberById,
-  updateGuildNameById,
-  updateGuildLeaderById,
-  addMemberToGuildById,
-  removeMemberFromGuildById,
-  deleteGuildById,
-  deleteAllGuilds,
-} from '../controllers/guildController';
+  addMemberToGuildByIdEndpoint,
+  createGuildEndpoint,
+  deleteAllGuildsEndpoint,
+  deleteGuildByIdEndpoint,
+  getGuildByIdEndpoint,
+  getGuildByNameEndpoint,
+  getPaginatedGuildsEndpoint,
+  removeMemberFromGuildByIdEndpoint,
+  searchGuildMemberByIdEndpoint,
+  searchGuildsByNameEndpoint,
+  updateGuildLeaderByIdEndpoint,
+  updateGuildNameByIdEndpoint,
+} from '../controllers';
 import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
 import { checkGuildExistence } from '../middlewares/isExistingMiddleware';
 import { isValidCharacter } from '../middlewares/isValidMiddleware';
 
 const router = Router();
 
-router.post('/', isAdminMiddleware, isValidCharacter, createGuild);
-router.get('/', getAllGuilds);
-router.get('/search', searchGuildsByName);
-router.get('/:id/searchMember', checkGuildExistence, searchGuildMemberById);
-router.get('/:id', getGuildById);
-router.get('/name/:name', getGuildByName);
+router.post('/', isAdminMiddleware, isValidCharacter, createGuildEndpoint);
+router.get('/', getPaginatedGuildsEndpoint);
+router.get('/search', searchGuildsByNameEndpoint);
+router.get(
+  '/:id/searchMember',
+  checkGuildExistence,
+  searchGuildMemberByIdEndpoint
+);
+router.get('/:id', getGuildByIdEndpoint);
+router.get('/name/:name', getGuildByNameEndpoint);
 router.put(
   '/name/:id',
   isAdminMiddleware,
   checkGuildExistence,
-  updateGuildNameById
+  updateGuildNameByIdEndpoint
 );
 router.put(
   '/leader/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  updateGuildLeaderById
+  updateGuildLeaderByIdEndpoint
 );
 router.put(
   '/addMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  addMemberToGuildById
+  addMemberToGuildByIdEndpoint
 );
 router.put(
   '/removeMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  removeMemberFromGuildById
+  removeMemberFromGuildByIdEndpoint
 );
-router.delete('/:id', isAdminMiddleware, checkGuildExistence, deleteGuildById);
-router.delete('/', isAdminMiddleware, deleteAllGuilds);
+router.delete(
+  '/:id',
+  isAdminMiddleware,
+  checkGuildExistence,
+  deleteGuildByIdEndpoint
+);
+router.delete('/', isAdminMiddleware, deleteAllGuildsEndpoint);
 
 export default router;

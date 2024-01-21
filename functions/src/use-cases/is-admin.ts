@@ -14,7 +14,7 @@ export const makeIsAdmin = ({ verify }: { verify: VerifyToken }) => {
         process.env.ACCESS_TOKEN_SECRET!
       ) as TokenPayload;
     } catch (error) {
-      throw new UnauthorizedError(`${error}`);
+      throw new UnauthorizedError(error);
     }
 
     const user = decodedToken;

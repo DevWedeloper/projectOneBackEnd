@@ -6,11 +6,16 @@ export const makeIsAdmin = ({ verify }: { verify: VerifyToken }) => {
     if (!token) {
       throw new UnauthorizedError('Missing token.');
     }
-    
-    const decodedToken = verify(
-      token,
-      process.env.ACCESS_TOKEN_SECRET!
-    ) as TokenPayload;
+
+    let decodedToken;
+    try {
+      decodedToken = verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET!
+      ) as TokenPayload;
+    } catch (error) {
+      throw new UnauthorizedError(`${error}`);
+    }
 
     const user = decodedToken;
     if (user?.role === 'standard' && method !== 'GET') {

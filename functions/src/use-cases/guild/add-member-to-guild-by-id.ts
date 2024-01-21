@@ -4,16 +4,14 @@ import { GuildDb } from '../../data-access/types/data-access.type';
 import { makeGuild } from '../../guild/guild';
 import { ICharacter } from '../../types/characterType';
 import { IGuild } from '../../types/guildType';
-import {
-  InvalidOperationError
-} from '../../utils/errors';
+import { InvalidOperationError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 
 export const makeAddMemberToGuildById = ({ guildDb }: { guildDb: GuildDb }) => {
   const addMemberToGuildById = async (
     id: string,
     guild: IGuild,
-    character: ICharacter
+    character: ICharacter,
   ) => {
     requiredParam(id, 'Id');
     requiredParam(guild, 'Guild');
@@ -27,7 +25,7 @@ export const makeAddMemberToGuildById = ({ guildDb }: { guildDb: GuildDb }) => {
       !guildCharacterUtils.isDifferentGuild(character.guild, id)
     ) {
       throw new InvalidOperationError(
-        'Member is already a member or leader of the guild'
+        'Member is already a member or leader of the guild',
       );
     }
 
@@ -38,7 +36,7 @@ export const makeAddMemberToGuildById = ({ guildDb }: { guildDb: GuildDb }) => {
       const previousGuild = await guildDb.findById(character.guild._id);
       await guildCharacterUtils.updateLeaderOrMembersGuild(
         previousGuild,
-        character._id
+        character._id,
       );
     }
 

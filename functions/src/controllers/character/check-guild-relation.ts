@@ -9,7 +9,7 @@ export const makeCheckGuildRelationStatusEndpoint = ({
   const checkGuildRelationStatusEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { character } = req.body;

@@ -9,7 +9,7 @@ export const makeUpdateCharacterAttributeByIdEndpoint = ({
   const updateCharacterAttributeByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     const { attribute } = req.params;
     try {

@@ -17,7 +17,7 @@ export const makeCharacterTypeDb = ({
   };
 
   const populate = async (
-    data: ICharacterTypeWithoutId[]
+    data: ICharacterTypeWithoutId[],
   ): Promise<ICharacterType[]> => {
     const result = await CharacterType.insertMany(data);
     return result.map(mapCharacterType);
@@ -38,7 +38,7 @@ export const makeCharacterTypeDb = ({
 };
 
 const mapCharacterType = (
-  rawCharacter: MongooseDocument<unknown, unknown, ICharacterType>
+  rawCharacter: MongooseDocument<unknown, unknown, ICharacterType>,
 ): ICharacterType => {
   const { _id, ...characterWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...characterWithoutId } as ICharacterType;

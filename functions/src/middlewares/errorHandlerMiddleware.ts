@@ -13,7 +13,7 @@ export const errorHandler = async (
   error: Error,
   _: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): Promise<Response> => {
   if (error instanceof RequiredParameterError) {
     return res.status(400).json({ error: error.message });

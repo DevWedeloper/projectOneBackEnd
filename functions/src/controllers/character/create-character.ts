@@ -9,7 +9,7 @@ export const makeCreateCharacterEndpoint = ({
   const createCharacterEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const character = await createCharacter(req.body);

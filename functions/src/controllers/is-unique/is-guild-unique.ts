@@ -9,7 +9,7 @@ export const makeIsGuildNameUniqueEndpoint = ({
   const isGuildNameUniqueEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { name } = req.body;

@@ -23,5 +23,5 @@ const characterSchema = new Schema<ICharacterWithoutId>({
 
 export const Character = model<ICharacterWithoutId>(
   'Character',
-  characterSchema
+  characterSchema,
 );

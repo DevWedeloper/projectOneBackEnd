@@ -7,5 +7,5 @@ const characterTypeSchema = new Schema<ICharacterTypeWithoutId>({
 
 export const CharacterType = model<ICharacterTypeWithoutId>(
   'CharacterType',
-  characterTypeSchema
+  characterTypeSchema,
 );

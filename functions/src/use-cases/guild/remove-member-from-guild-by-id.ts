@@ -15,7 +15,7 @@ export const makeRemoveMemberFromGuildById = ({
   const removeMemberFromGuildById = async (
     id: string,
     guild: IGuild,
-    character: ICharacter
+    character: ICharacter,
   ) => {
     requiredParam(id, 'Id');
     requiredParam(guild, 'Guild');

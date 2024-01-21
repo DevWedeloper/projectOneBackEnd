@@ -11,7 +11,7 @@ export const makeIsAdmin = ({ verify }: { verify: VerifyToken }) => {
     try {
       decodedToken = verify(
         token,
-        process.env.ACCESS_TOKEN_SECRET!
+        process.env.ACCESS_TOKEN_SECRET!,
       ) as TokenPayload;
     } catch (error) {
       throw new UnauthorizedError(error);
@@ -20,7 +20,7 @@ export const makeIsAdmin = ({ verify }: { verify: VerifyToken }) => {
     const user = decodedToken;
     if (user?.role === 'standard' && method !== 'GET') {
       throw new ForbiddenError(
-        `Standard users cannot perform the ${method.toLocaleUpperCase()} action.`
+        `Standard users cannot perform the ${method.toLocaleUpperCase()} action.`,
       );
     }
   };

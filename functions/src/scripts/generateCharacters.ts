@@ -19,23 +19,23 @@ const generateRandomCharacter = async () => {
       characterType: randomCharacterType(),
       health: Math.min(
         10000,
-        Math.max(1000, Math.round(generateNormalRandom(5000, 1500)))
+        Math.max(1000, Math.round(generateNormalRandom(5000, 1500))),
       ),
       strength: Math.min(
         100,
-        Math.max(1, Math.round(generateNormalRandom(50, 20)))
+        Math.max(1, Math.round(generateNormalRandom(50, 20))),
       ),
       agility: Math.min(
         100,
-        Math.max(1, Math.round(generateNormalRandom(50, 20)))
+        Math.max(1, Math.round(generateNormalRandom(50, 20))),
       ),
       intelligence: Math.min(
         100,
-        Math.max(1, Math.round(generateNormalRandom(50, 20)))
+        Math.max(1, Math.round(generateNormalRandom(50, 20))),
       ),
       armor: Math.min(
         100,
-        Math.max(1, Math.round(generateNormalRandom(50, 20)))
+        Math.max(1, Math.round(generateNormalRandom(50, 20))),
       ),
       critChance: randomCritChance(),
       guild: null,
@@ -45,7 +45,7 @@ const generateRandomCharacter = async () => {
     console.log(
       characterCtr + 1,
       ' Character created successfully:',
-      savedCharacter.name
+      savedCharacter.name,
     );
     characterCtr++;
   } catch (error) {
@@ -64,7 +64,7 @@ const fetchAvailableCharacterTypes = async () => {
   } catch (error) {
     if (error instanceof Error) {
       throw new Error(
-        'Failed to fetch available character types: ' + error.message
+        'Failed to fetch available character types: ' + error.message,
       );
     }
   }

@@ -10,14 +10,14 @@ export const makeGetTopCharactersByAttributeEndpoint = ({
   const getTopCharactersByAttributeEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     const { attribute } = req.params;
     try {
       const limit = 5;
       const characters = await getTopCharactersByAttribute(
         attribute as ValidStatsAttribute,
-        limit
+        limit,
       );
       return res.status(200).json(characters);
     } catch (error) {

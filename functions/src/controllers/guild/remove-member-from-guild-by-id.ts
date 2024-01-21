@@ -9,7 +9,7 @@ export const makeRemoveMemberFromGuildByIdEndpoint = ({
   const removeMemberFromGuildByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { id } = req.params;
@@ -18,7 +18,7 @@ export const makeRemoveMemberFromGuildByIdEndpoint = ({
       const updatedGuild = await removeMemberFromGuildById(
         id,
         guild,
-        character
+        character,
       );
       return res.status(200).json({
         message: 'Member removed from guild successfully',

@@ -9,7 +9,7 @@ export const makeIsNotMemberEndpoint = ({
   const isNotMemberEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { character, guild } = req.body;

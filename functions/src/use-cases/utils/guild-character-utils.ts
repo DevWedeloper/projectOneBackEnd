@@ -48,7 +48,7 @@ export const makeGuildCharacterUtils = ({
 
   const updateLeaderOrMembersGuild = async (
     guild: IGuild,
-    memberId: string
+    memberId: string,
   ) => {
     if (isLeader(guild, memberId)) {
       await updateLeaderAndDeleteGuild(guild);

@@ -20,7 +20,7 @@ export const makeCreateGuild = ({ guildDb }: { guildDb: GuildDb }) => {
     if (character.guild) {
       await guildCharacterUtils.updateLeaderOrMembersGuild(
         character.guild,
-        character._id.toString()
+        character._id.toString(),
       );
     }
 

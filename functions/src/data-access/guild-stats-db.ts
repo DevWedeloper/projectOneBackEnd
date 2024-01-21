@@ -12,7 +12,7 @@ type TopByAverageAttributeGuild = IGuild & {
 export const makeGuildStatsDb = ({ Guild }: { Guild: GuildModel }) => {
   const getTopGuildsByAttribute = async (
     attribute: string,
-    limit: number
+    limit: number,
   ): Promise<IGuild[]> => {
     return await Guild.find()
       .sort({ [attribute]: -1 })
@@ -21,7 +21,7 @@ export const makeGuildStatsDb = ({ Guild }: { Guild: GuildModel }) => {
   };
 
   const getTopWellRoundedGuilds = async (
-    limit: number
+    limit: number,
   ): Promise<WellRoundedGuild[]> => {
     return await Guild.aggregate([
       {
@@ -62,7 +62,7 @@ export const makeGuildStatsDb = ({ Guild }: { Guild: GuildModel }) => {
 
   const getTopGuildsByAverageAttribute = async (
     attribute: string,
-    limit: number
+    limit: number,
   ): Promise<TopByAverageAttributeGuild[]> => {
     return await Guild.aggregate([
       {

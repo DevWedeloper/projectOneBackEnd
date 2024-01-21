@@ -9,7 +9,7 @@ export const makeGetCharacterByIdEndpoint = ({
   const getCharacterByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { id } = req.params;

@@ -9,17 +9,13 @@ export const makeAddMemberToGuildByIdEndpoint = ({
   const addMemberToGuildByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { id } = req.params;
       const { guild, character } = req.body;
 
-      const updatedGuild = await addMemberToGuildById(
-        id,
-        guild,
-        character
-      );
+      const updatedGuild = await addMemberToGuildById(id, guild, character);
       return res.status(200).json({
         message: 'Member added to guild successfully',
         guild: updatedGuild,

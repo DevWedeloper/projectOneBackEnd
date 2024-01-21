@@ -9,7 +9,7 @@ export const makeGetGuildByIdEndpoint = ({
   const getGuildByIdEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { id } = req.params;

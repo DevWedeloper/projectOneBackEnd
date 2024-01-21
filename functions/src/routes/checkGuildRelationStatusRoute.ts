@@ -7,7 +7,7 @@ const router = Router();
 router.post(
   '/character/checkGuildRelationStatus',
   isValidCharacter,
-  checkGuildRelationStatusEnpoint
+  checkGuildRelationStatusEnpoint,
 );
 
 export default router;

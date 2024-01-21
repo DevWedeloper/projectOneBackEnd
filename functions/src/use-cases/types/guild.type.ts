@@ -3,7 +3,7 @@ import { IGuild } from '../../types/guildType';
 
 export type createGuild = (
   name: string,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<IGuild>;
 
 export type getPaginatedGuilds = (
@@ -11,7 +11,7 @@ export type getPaginatedGuilds = (
   pageSize: number,
   sortBy: string,
   sortOrder: 'asc' | 'desc',
-  searchQuery: string
+  searchQuery: string,
 ) => Promise<{
   page: number;
   pageSize: number;
@@ -26,13 +26,13 @@ export type getGuildByName = (name: string) => Promise<IGuild>;
 
 export type searchGuildsByName = (
   searchQuery: string,
-  limit: number
+  limit: number,
 ) => Promise<IGuild[]>;
 
 export type searchGuildMemberById = (
   guild: IGuild,
   searchQuery: string,
-  limit: number
+  limit: number,
 ) => Promise<ICharacter[] | null>;
 
 export type updateGuildNameById = (id: string, name: string) => Promise<IGuild>;
@@ -40,19 +40,19 @@ export type updateGuildNameById = (id: string, name: string) => Promise<IGuild>;
 export type updateGuildLeaderById = (
   id: string,
   guild: IGuild,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<IGuild>;
 
 export type addMemberToGuildById = (
   id: string,
   guild: IGuild,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<IGuild>;
 
 export type removeMemberFromGuildById = (
   id: string,
   guild: IGuild,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<IGuild>;
 
 export type deleteGuildById = (guild: IGuild) => Promise<IGuild>;

@@ -13,7 +13,7 @@ export const makeGetPaginatedGuilds = ({ guildDb }: { guildDb: GuildDb }) => {
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ) => {
     requiredParam(page, 'Page');
     requiredParam(pageSize, 'Page size');

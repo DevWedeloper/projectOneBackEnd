@@ -17,7 +17,7 @@ export const makeGetPaginatedCharacters = ({
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ) => {
     requiredParam(page, 'Page');
     requiredParam(pageSize, 'Page size');
@@ -43,7 +43,7 @@ export const makeGetPaginatedCharacters = ({
       pageSize,
       sortBy,
       sortOrder,
-      searchQuery
+      searchQuery,
     );
   };
   return getAllCharacters;

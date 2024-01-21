@@ -9,7 +9,7 @@ export const makeIsGuildFullEndpoint = ({
   const isGuildFullEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { guild } = req.body;

@@ -9,7 +9,7 @@ export const makeGetPaginatedCharactersEndpoint = ({
   const getPaginatedCharactersEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const page: number = parseInt(req.query.page as string) || 1;
@@ -24,7 +24,7 @@ export const makeGetPaginatedCharactersEndpoint = ({
         pageSize,
         sortBy,
         sortOrder,
-        searchQuery
+        searchQuery,
       );
       return res.status(200).json(characters);
     } catch (error) {

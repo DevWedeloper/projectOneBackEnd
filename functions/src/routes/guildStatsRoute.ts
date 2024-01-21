@@ -11,7 +11,7 @@ router.get('/topAttribute/:attribute', getTopGuildsByAttributeEndpoint);
 router.get('/topWellRounded', getTopWellRoundedGuildsEndpoint);
 router.get(
   '/averageAttribute/:attribute',
-  getTopGuildsByAverageAttributeEndpoint
+  getTopGuildsByAverageAttributeEndpoint,
 );
 
 export default router;

@@ -58,7 +58,7 @@ export const makeGuild = ({
 
   if (members.length !== totalMembers) {
     throw new InvalidOperationError(
-      'Members length and total members are not in sync.'
+      'Members length and total members are not in sync.',
     );
   }
 

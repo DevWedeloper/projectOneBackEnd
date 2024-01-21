@@ -9,7 +9,7 @@ export const makeDeleteAllCharactersEndpoint = ({
   const deleteAllCharactersEndpoint = async (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { characterDeletionResult, guildDeletionResult } =

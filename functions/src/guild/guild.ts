@@ -53,7 +53,7 @@ export const makeGuild = ({
 
   members.map((member) => {
     // TODO: Partial check on member
-    return Object.freeze(member);
+    Object.freeze(member);
   });
 
   if (members.length !== totalMembers) {

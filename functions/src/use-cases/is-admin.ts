@@ -19,7 +19,9 @@ export const makeIsAdmin = ({ verify }: { verify: VerifyToken }) => {
 
     const user = decodedToken;
     if (user?.role === 'standard' && method !== 'GET') {
-      throw new ForbiddenError('Standard users cannot perform this action.');
+      throw new ForbiddenError(
+        `Standard users cannot perform the ${method.toLocaleUpperCase()} action.`
+      );
     }
   };
   return isAdmin;

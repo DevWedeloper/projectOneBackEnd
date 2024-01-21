@@ -7,21 +7,17 @@ import {
   validateStringType,
 } from '../utils/validation-utils';
 
-export const makeCharacter = (
-  character: ICharacterWithoutId
-): ICharacterWithoutId => {
-  const {
-    name,
-    characterType,
-    health,
-    strength,
-    agility,
-    intelligence,
-    armor,
-    critChance,
-    guild,
-  } = character;
-
+export const makeCharacter = ({
+  name,
+  characterType,
+  health,
+  strength,
+  agility,
+  intelligence,
+  armor,
+  critChance,
+  guild,
+}: ICharacterWithoutId): ICharacterWithoutId => {
   requiredParam(name, 'Name');
   requiredParam(characterType, 'Character Type');
   requiredParam(health, 'Health');
@@ -56,5 +52,15 @@ export const makeCharacter = (
     Object.freeze(guild);
   }
 
-  return Object.freeze(character);
+  return Object.freeze({
+    name,
+    characterType,
+    health,
+    strength,
+    agility,
+    intelligence,
+    armor,
+    critChance,
+    guild,
+  });
 };

@@ -8,21 +8,19 @@ import {
   validateStringType,
 } from '../utils/validation-utils';
 
-export const makeGuild = (guild: IGuildWithoutId): IGuildWithoutId => {
-  const {
-    name,
-    leader,
-    members,
-    totalMembers,
-    maxMembers,
-    totalHealth,
-    totalStrength,
-    totalAgility,
-    totalIntelligence,
-    totalArmor,
-    totalCritChance,
-  } = guild;
-
+export const makeGuild = ({
+  name,
+  leader,
+  members,
+  totalMembers,
+  maxMembers,
+  totalHealth,
+  totalStrength,
+  totalAgility,
+  totalIntelligence,
+  totalArmor,
+  totalCritChance,
+}: IGuildWithoutId): IGuildWithoutId => {
   requiredParam(name, 'Name');
   requiredParam(leader, 'Leader');
   requiredParam(members, 'Members');
@@ -68,5 +66,17 @@ export const makeGuild = (guild: IGuildWithoutId): IGuildWithoutId => {
     throw new InvalidOperationError('Guild is full.');
   }
 
-  return Object.freeze(guild);
+  return Object.freeze({
+    name,
+    leader,
+    members,
+    totalMembers,
+    maxMembers,
+    totalHealth,
+    totalStrength,
+    totalAgility,
+    totalIntelligence,
+    totalArmor,
+    totalCritChance,
+  });
 };

@@ -9,7 +9,7 @@ export const makeGetTopWellRoundedCharactersEndpoint = ({
   const getTopWellRoundedCharactersEndpoint = async (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const limit = 5;

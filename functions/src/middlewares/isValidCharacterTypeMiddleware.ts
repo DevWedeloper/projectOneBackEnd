@@ -4,11 +4,11 @@ import { CharacterTypeService } from '../use-cases';
 export const isValidCharacterType = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void | Response> => {
   try {
     const { characterType } = req.body;
-    
+
     if (!characterType) {
       return next();
     }

@@ -9,7 +9,7 @@ export const makeGetCharacterDistributionByTypeEndpoint = ({
   const getCharacterDistributionByTypeEndpoint = async (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const characterDistribution = await getCharacterDistributionByType();

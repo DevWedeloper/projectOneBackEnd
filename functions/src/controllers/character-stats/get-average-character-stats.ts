@@ -9,7 +9,7 @@ export const makeGetAverageCharacterStatsEndpoint = ({
   const getAverageCharacterStatsEndpoint = async (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const averageStats = await getAverageCharacterStats();

@@ -4,7 +4,7 @@ import { CharacterService, GuildService } from '../use-cases';
 export const isValidCharacter = async (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void | Response> => {
   try {
     const { character } = req.body;
@@ -12,9 +12,8 @@ export const isValidCharacter = async (
       return next();
     }
 
-    const foundCharacter = await CharacterService.getCharacterByNameOrId(
-      character
-    );
+    const foundCharacter =
+      await CharacterService.getCharacterByNameOrId(character);
     req.body.character = foundCharacter;
     next();
   } catch (error) {
@@ -25,7 +24,7 @@ export const isValidCharacter = async (
 export const isValidGuild = async (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void | Response> => {
   try {
     const { guild } = req.body;

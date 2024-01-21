@@ -9,7 +9,7 @@ export const makeCharacterStatsDb = ({
 }) => {
   const getTopCharactersByAttribute = async (
     attribute: ValidStatsAttribute,
-    limit: number
+    limit: number,
   ): Promise<ICharacter[]> => {
     return await Character.aggregate([
       {
@@ -30,7 +30,7 @@ export const makeCharacterStatsDb = ({
   };
 
   const getTopWellRoundedCharacters = async (
-    limit: number
+    limit: number,
   ): Promise<ICharacter[]> => {
     return await Character.aggregate([
       {

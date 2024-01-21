@@ -9,7 +9,7 @@ const allowedOrigins = [
 export const corsOptions = {
   origin: (
     origin: string | undefined,
-    callback: (arg0: Error | null, arg1: boolean | undefined) => void
+    callback: (arg0: Error | null, arg1: boolean | undefined) => void,
   ) => {
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);

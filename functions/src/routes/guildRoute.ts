@@ -25,7 +25,7 @@ router.get('/search', searchGuildsByNameEndpoint);
 router.get(
   '/:id/searchMember',
   checkGuildExistence,
-  searchGuildMemberByIdEndpoint
+  searchGuildMemberByIdEndpoint,
 );
 router.get('/:id', getGuildByIdEndpoint);
 router.get('/name/:name', getGuildByNameEndpoint);
@@ -33,34 +33,34 @@ router.put(
   '/name/:id',
   isAdminMiddleware,
   checkGuildExistence,
-  updateGuildNameByIdEndpoint
+  updateGuildNameByIdEndpoint,
 );
 router.put(
   '/leader/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  updateGuildLeaderByIdEndpoint
+  updateGuildLeaderByIdEndpoint,
 );
 router.put(
   '/addMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  addMemberToGuildByIdEndpoint
+  addMemberToGuildByIdEndpoint,
 );
 router.put(
   '/removeMember/:id',
   isAdminMiddleware,
   checkGuildExistence,
   isValidCharacter,
-  removeMemberFromGuildByIdEndpoint
+  removeMemberFromGuildByIdEndpoint,
 );
 router.delete(
   '/:id',
   isAdminMiddleware,
   checkGuildExistence,
-  deleteGuildByIdEndpoint
+  deleteGuildByIdEndpoint,
 );
 router.delete('/', isAdminMiddleware, deleteAllGuildsEndpoint);
 

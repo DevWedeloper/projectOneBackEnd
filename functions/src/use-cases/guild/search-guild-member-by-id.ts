@@ -16,7 +16,7 @@ export const makeSearchGuildMemberById = ({
   const searchGuildMemberById = async (
     guild: IGuild,
     searchQuery: string,
-    limit: number
+    limit: number,
   ) => {
     requiredParam(guild, 'Guild');
     requiredParam(searchQuery, 'Search query');

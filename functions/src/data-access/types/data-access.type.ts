@@ -19,7 +19,7 @@ export type CharacterDb = {
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ) => Promise<{
     page: number;
     pageSize: number;
@@ -35,7 +35,7 @@ export type CharacterDb = {
   isExisting: (query: Partial<UniqueIdentifier>) => Promise<ICharacter | null>;
   updateById: (
     id: string,
-    query: Partial<ICharacterWithoutId>
+    query: Partial<ICharacterWithoutId>,
   ) => Promise<ICharacter>;
   deleteById: (id: string) => Promise<ICharacter>;
   deleteAll: () => Promise<{ acknowledged: boolean; deletedCount: number }>;
@@ -52,7 +52,7 @@ export type GuildDb = {
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ) => Promise<{
     page: number;
     pageSize: number;
@@ -67,7 +67,7 @@ export type GuildDb = {
   findMembersByGuild: (
     guildId: string,
     query: string,
-    limit: number
+    limit: number,
   ) => Promise<ICharacter[] | null>;
   isUnique: (params: { name: string }) => Promise<IGuild | null>;
   isExisting: (query: Partial<UniqueIdentifier>) => Promise<IGuild | null>;
@@ -76,7 +76,7 @@ export type GuildDb = {
   deleteAll: () => Promise<{ acknowledged: boolean; deletedCount: number }>;
   addCharacterToGuild: (
     character: ICharacter,
-    guild: IGuild
+    guild: IGuild,
   ) => Promise<IGuild>;
   removeCharacterFromGuild: (character: ICharacter) => Promise<IGuild>;
 };
@@ -84,7 +84,7 @@ export type GuildDb = {
 export type CharacterStatsDb = {
   getTopCharactersByAttribute: (
     attribute: ValidStatsAttribute,
-    limit: number
+    limit: number,
   ) => Promise<ICharacter[]>;
   getTopWellRoundedCharacters: (limit: number) => Promise<ICharacter[]>;
   getAverageCharacterStats: () => Promise<{
@@ -109,12 +109,12 @@ export type TopByAverageAttributeGuild = IGuild & {
 export type GuildStatsDb = {
   getTopGuildsByAttribute: (
     attribute: string,
-    limit: number
+    limit: number,
   ) => Promise<IGuild[]>;
   getTopWellRoundedGuilds: (limit: number) => Promise<WellRoundedGuild[]>;
   getTopGuildsByAverageAttribute: (
     attribute: string,
-    limit: number
+    limit: number,
   ) => Promise<TopByAverageAttributeGuild[]>;
 };
 

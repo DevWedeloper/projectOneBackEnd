@@ -9,7 +9,7 @@ export const makeCreateGuildEndpoint = ({
   const createGuildEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { name, character } = req.body;

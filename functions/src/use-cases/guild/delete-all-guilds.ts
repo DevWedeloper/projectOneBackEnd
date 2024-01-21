@@ -1,7 +1,4 @@
-import {
-  CharacterDb,
-  GuildDb,
-} from '../../data-access/types/data-access.type';
+import { CharacterDb, GuildDb } from '../../data-access/types/data-access.type';
 
 export const makeDeleteAllGuilds = ({
   characterDb,
@@ -13,7 +10,7 @@ export const makeDeleteAllGuilds = ({
   const deleteAllGuilds = async () => {
     const result = await guildDb.deleteAll();
     await characterDb.leaveAllGuild();
-    
+
     return result;
   };
   return deleteAllGuilds;

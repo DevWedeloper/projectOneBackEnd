@@ -11,7 +11,7 @@ export const makeUpdateCharacterAttributeById = ({
 }) => {
   const updateCharacterAttributeById = async (
     id: string,
-    query: Partial<ICharacterWithoutId>
+    query: Partial<ICharacterWithoutId>,
   ) => {
     requiredParam(id, 'Id');
     requiredParam(query, 'Attribute and attribute value');
@@ -28,7 +28,7 @@ export const makeUpdateCharacterAttributeById = ({
 
       if (expectedType !== actualType) {
         throw new InvalidPropertyError(
-          `Invalid type for property ${key}. Expected ${expectedType}, got ${actualType}.`
+          `Invalid type for property ${key}. Expected ${expectedType}, got ${actualType}.`,
         );
       }
     }

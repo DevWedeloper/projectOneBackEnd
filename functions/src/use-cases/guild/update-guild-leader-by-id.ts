@@ -15,7 +15,7 @@ export const makeUpdateGuildLeaderById = ({
   const updateGuildLeaderById = async (
     id: string,
     guild: IGuild,
-    character: ICharacter
+    character: ICharacter,
   ) => {
     requiredParam(id, 'Id');
     requiredParam(guild, 'Guild');
@@ -32,7 +32,7 @@ export const makeUpdateGuildLeaderById = ({
         guildCharacterUtils.isDifferentGuild(character.guild, id);
       if (isLeaderNotMemberOfGuild) {
         throw new InvalidOperationError(
-          'New leader must be a member of the guild'
+          'New leader must be a member of the guild',
         );
       }
     }

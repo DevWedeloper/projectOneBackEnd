@@ -1,7 +1,4 @@
-import {
-  CharacterDb,
-  GuildDb,
-} from '../../data-access/types/data-access.type';
+import { CharacterDb, GuildDb } from '../../data-access/types/data-access.type';
 
 export const makeDeleteAllCharacters = ({
   characterDb,

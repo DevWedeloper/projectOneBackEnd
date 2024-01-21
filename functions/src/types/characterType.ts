@@ -11,6 +11,6 @@ export type ICharacter = {
   armor: number;
   critChance: number;
   guild: IGuild | null;
-}
+};
 
 export type ICharacterWithoutId = Omit<ICharacter, '_id'>;

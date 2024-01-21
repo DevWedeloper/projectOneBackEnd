@@ -9,7 +9,7 @@ export const makeDeleteAllGuildsEndpoint = ({
   const deleteAllGuildsEndpoint = async (
     _: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const result = await deleteAllGuilds();

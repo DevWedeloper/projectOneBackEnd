@@ -9,7 +9,7 @@ export const makeSearchGuildsByNameEndpoint = ({
   const searchGuildsByNameEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const searchQuery = req.query.name as string;

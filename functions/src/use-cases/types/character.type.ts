@@ -2,7 +2,7 @@ import { ICharacter, ICharacterWithoutId } from '../../types/characterType';
 import { IGuild } from '../../types/guildType';
 
 export type createCharacter = (
-  data: ICharacterWithoutId
+  data: ICharacterWithoutId,
 ) => Promise<ICharacter>;
 
 export type getPaginatedCharacters = (
@@ -10,7 +10,7 @@ export type getPaginatedCharacters = (
   pageSize: number,
   sortBy: string,
   sortOrder: 'asc' | 'desc',
-  searchQuery: string
+  searchQuery: string,
 ) => Promise<{
   page: number;
   pageSize: number;
@@ -25,28 +25,28 @@ export type getCharacterByName = (name: string) => Promise<ICharacter>;
 
 export type searchCharactersByName = (
   searchQuery: string,
-  limit: number
+  limit: number,
 ) => Promise<ICharacter[]>;
 
 export type updateCharacterAttributeById = (
   id: string,
-  query: Partial<ICharacterWithoutId>
+  query: Partial<ICharacterWithoutId>,
 ) => Promise<ICharacter>;
 
 export type joinGuildById = (
   id: string,
   character: ICharacter,
-  guild: IGuild
+  guild: IGuild,
 ) => Promise<ICharacter>;
 
 export type leaveGuildById = (
   id: string,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<ICharacter>;
 
 export type deleteCharacterById = (
   id: string,
-  character: ICharacter
+  character: ICharacter,
 ) => Promise<ICharacter>;
 
 export type deleteAllCharacters = () => Promise<{

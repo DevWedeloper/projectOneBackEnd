@@ -8,11 +8,11 @@ export type getTopCharactersByAttribute = (
     | 'intelligence'
     | 'armor'
     | 'critChance',
-  limit: number
+  limit: number,
 ) => Promise<ICharacter[]>;
 
 export type getTopWellRoundedCharacters = (
-  limit: number
+  limit: number,
 ) => Promise<ICharacter[]>;
 
 export type getAverageCharacterStats = () => Promise<{

@@ -17,18 +17,18 @@ const populateGuildsWithCharacters = async () => {
         try {
           await guildCharacterUtils.joinGuild(character, randomGuild);
           console.log(
-            `Character ${character.name} joined guild ${randomGuild.name}`
+            `Character ${character.name} joined guild ${randomGuild.name}`,
           );
         } catch (error) {
           if (error instanceof Error) {
             if (error.message === 'Failed to join guild') {
               console.log(
-                `Skipped joining guild ${randomGuild.name} due to member limit.`
+                `Skipped joining guild ${randomGuild.name} due to member limit.`,
               );
               availableGuilds.splice(availableGuilds.indexOf(randomGuild), 1);
             } else {
               console.error(
-                `Some other error: ${randomGuild.name}: ${error.message}`
+                `Some other error: ${randomGuild.name}: ${error.message}`,
               );
             }
           }
@@ -39,7 +39,7 @@ const populateGuildsWithCharacters = async () => {
     if (error instanceof Error) {
       console.error(
         'Failed to populate guilds with characters:',
-        error.message
+        error.message,
       );
     }
   }
@@ -50,7 +50,7 @@ const fetchAvailableGuilds = async () => {
     availableGuilds = await GuildService.getAllGuilds();
     if (availableGuilds.length === 0) {
       throw new Error(
-        'No available guilds found in the database to choose from.'
+        'No available guilds found in the database to choose from.',
       );
     }
   } catch (error) {

@@ -3,7 +3,7 @@ import { InvalidPropertyError, RequiredParameterError } from './errors';
 
 export const requiredParam = (
   value: string | number | boolean | object,
-  paramName: string
+  paramName: string,
 ) => {
   const message = `${paramName} is required.`;
   if (
@@ -20,7 +20,7 @@ export const validateNumberRange = (
   value: number,
   min: number,
   max: number,
-  paramName: string
+  paramName: string,
 ) => {
   const message = `${paramName} must be between ${min} and ${max}.`;
   if (value < min || value > max) {
@@ -44,7 +44,7 @@ export const validateNumberType = (value: number, paramName: string) => {
 
 export const validateAlphanumericUnderscore = (
   value: string,
-  paramName: string
+  paramName: string,
 ) => {
   const pattern = /^[A-Za-z0-9_]*$/;
   const message = `${paramName} must only contain letters, numbers, and underscore.`;
@@ -68,9 +68,7 @@ export const validateSortOrder = (sortOrder: string, paramName: string) => {
   }
 };
 
-export const validateStatsAttribute = (
-  attribute: string,
-) => {
+export const validateStatsAttribute = (attribute: string) => {
   const validAttributes: ValidStatsAttribute[] = [
     'health',
     'strength',

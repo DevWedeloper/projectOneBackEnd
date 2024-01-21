@@ -4,7 +4,7 @@ import { CharacterService, GuildService } from '../use-cases';
 export const checkCharacterExistence = async (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;
@@ -20,7 +20,7 @@ export const checkCharacterExistence = async (
 export const checkGuildExistence = async (
   req: Request,
   _: Response,
-  next: NextFunction
+  next: NextFunction,
 ): Promise<void | Response> => {
   try {
     const { id } = req.params;

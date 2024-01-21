@@ -119,7 +119,7 @@ export const GuildService = Object.freeze({
   deleteAllGuilds,
   isGuildFull,
   getGuildByNameOrId,
-  getAllGuilds
+  getAllGuilds,
 });
 
 export const guildCharacterUtils = makeGuildCharacterUtils({
@@ -159,14 +159,16 @@ export const GuildStatsService = Object.freeze({
   getTopGuildsByAverageAttribute,
 });
 
-const getAllCharacterTypes = makeGetPaginatedCharacterTypes({ characterTypeDb });
+const getAllCharacterTypes = makeGetPaginatedCharacterTypes({
+  characterTypeDb,
+});
 const getCharacterType = makeGetCharacterType({ characterTypeDb });
 const populate = makePopulate({ characterTypeDb });
 
 export const CharacterTypeService = Object.freeze({
   getAllCharacterTypes,
   getCharacterType,
-  populate
+  populate,
 });
 
 const isCharacterNameUnique = makeIsCharacterUnique({ characterDb });

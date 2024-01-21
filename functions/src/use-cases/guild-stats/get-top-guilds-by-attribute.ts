@@ -17,7 +17,7 @@ export const makeGetTopGuildsByAttribute = ({
 }) => {
   const getTopGuildsByAttribute = async (
     attribute: ValidStatsAttribute,
-    limit: number
+    limit: number,
   ) => {
     requiredParam(attribute, 'Attribute');
     requiredParam(limit, 'Limit');

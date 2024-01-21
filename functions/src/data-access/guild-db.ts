@@ -33,7 +33,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ): Promise<{
     page: number;
     pageSize: number;
@@ -52,7 +52,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
             {
               leader: {
                 $in: (await Character.findMultipleByName(searchQuery, 0)).map(
-                  (guild) => guild._id.toString()
+                  (guild) => guild._id.toString(),
                 ),
               },
             },
@@ -79,7 +79,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
   };
 
   const findOneByNameOrId = async (
-    query: Partial<UniqueIdentifier>
+    query: Partial<UniqueIdentifier>,
   ): Promise<IGuild> => {
     try {
       return (
@@ -135,7 +135,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
 
   const findMultipleByName = async (
     query: string,
-    limit: number
+    limit: number,
   ): Promise<IGuild[]> => {
     const guilds = await Guild.find({
       name: { $regex: query, $options: 'i' },
@@ -149,7 +149,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
   const findMembersByGuild = async (
     guildId: string,
     query: string,
-    limit: number
+    limit: number,
   ): Promise<ICharacter[] | null> => {
     return (
       (
@@ -174,14 +174,14 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
   };
 
   const isExisting = async (
-    query: Partial<UniqueIdentifier>
+    query: Partial<UniqueIdentifier>,
   ): Promise<IGuild | null> => {
     return (await Guild.findOne(query))?.toObject() || null;
   };
 
   const updateById = async (
     id: string,
-    query: Partial<IGuildWithoutId>
+    query: Partial<IGuildWithoutId>,
   ): Promise<IGuild> => {
     try {
       return (
@@ -230,7 +230,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
 
   const addCharacterToGuild = async (
     character: ICharacter,
-    guild: IGuild
+    guild: IGuild,
   ): Promise<IGuild> => {
     return (
       (await Guild.findByIdAndUpdate(guild._id.toString(), {
@@ -249,7 +249,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
   };
 
   const removeCharacterFromGuild = async (
-    character: ICharacter
+    character: ICharacter,
   ): Promise<IGuild> => {
     if (!character.guild) {
       throw new InvalidOperationError('Character guild does not exist');
@@ -291,7 +291,7 @@ export const makeGuildDb = ({ Guild }: { Guild: GuildModel }) => {
 };
 
 const mapGuild = (
-  rawCharacter: MongooseDocument<unknown, unknown, IGuild>
+  rawCharacter: MongooseDocument<unknown, unknown, IGuild>,
 ): IGuild => {
   const { _id, ...guildWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...guildWithoutId } as IGuild;

@@ -22,7 +22,7 @@ router.post(
   '/',
   isAdminMiddleware,
   isValidCharacterType,
-  createCharacterEndpoint
+  createCharacterEndpoint,
 );
 router.get('/', getPaginatedCharactersEndpoint);
 router.get('/search', searchCharactersByNameEndpoint);
@@ -33,19 +33,19 @@ router.put(
   isAdminMiddleware,
   checkCharacterExistence,
   isValidGuild,
-  joinGuildByIdEndpoint
+  joinGuildByIdEndpoint,
 );
 router.put(
   '/leave/:id',
   isAdminMiddleware,
   checkCharacterExistence,
-  leaveGuildByIdEndpoint
+  leaveGuildByIdEndpoint,
 );
 router.delete(
   '/:id',
   isAdminMiddleware,
   checkCharacterExistence,
-  deleteCharacterByIdEndpoint
+  deleteCharacterByIdEndpoint,
 );
 router.delete('/', isAdminMiddleware, deleteAllCharactersEndpoint);
 router.put(
@@ -53,7 +53,7 @@ router.put(
   isAdminMiddleware,
   isValidCharacterType,
   checkCharacterExistence,
-  updateCharacterAttributeByIdEndpoint
+  updateCharacterAttributeByIdEndpoint,
 );
 
 export default router;

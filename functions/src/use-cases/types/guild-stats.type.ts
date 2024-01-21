@@ -7,14 +7,14 @@ import { ValidStatsAttribute } from '../../types/valid-stat-attribute.type';
 
 export type getTopGuildsByAttribute = (
   attribute: ValidStatsAttribute,
-  limit: number
+  limit: number,
 ) => Promise<IGuild[]>;
 
 export type getTopWellRoundedGuilds = (
-  limit: number
+  limit: number,
 ) => Promise<WellRoundedGuild[]>;
 
 export type getTopGuildsByAverageAttribute = (
   attribute: ValidStatsAttribute,
-  limit: number
+  limit: number,
 ) => Promise<TopByAverageAttributeGuild[]>;

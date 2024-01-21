@@ -15,7 +15,7 @@ export const makeCharacterDb = ({
   Character: CharacterModel;
 }) => {
   const create = async (
-    character: ICharacterWithoutId
+    character: ICharacterWithoutId,
   ): Promise<ICharacter> => {
     try {
       return (await Character.create(character)).toObject();
@@ -32,7 +32,7 @@ export const makeCharacterDb = ({
     pageSize: number,
     sortBy: string,
     sortOrder: 'asc' | 'desc',
-    searchQuery: string
+    searchQuery: string,
   ): Promise<{
     page: number;
     pageSize: number;
@@ -51,7 +51,7 @@ export const makeCharacterDb = ({
             {
               guild: {
                 $in: (await Guild.findMultipleByName(searchQuery, 0)).map(
-                  (guild) => guild._id.toString()
+                  (guild) => guild._id.toString(),
                 ),
               },
             },
@@ -78,7 +78,7 @@ export const makeCharacterDb = ({
   };
 
   const findOneByNameOrId = async (
-    query: Partial<UniqueIdentifier>
+    query: Partial<UniqueIdentifier>,
   ): Promise<ICharacter> => {
     try {
       return (
@@ -134,7 +134,7 @@ export const makeCharacterDb = ({
 
   const findMultipleByName = async (
     query: string,
-    limit: number
+    limit: number,
   ): Promise<ICharacter[]> => {
     const characters = await Character.find({
       name: { $regex: query, $options: 'i' },
@@ -154,14 +154,14 @@ export const makeCharacterDb = ({
   };
 
   const isExisting = async (
-    query: Partial<UniqueIdentifier>
+    query: Partial<UniqueIdentifier>,
   ): Promise<ICharacter | null> => {
     return (await Character.findOne(query))?.toObject() || null;
   };
 
   const updateById = async (
     id: string,
-    query: Partial<ICharacterWithoutId>
+    query: Partial<ICharacterWithoutId>,
   ): Promise<ICharacter> => {
     try {
       return (
@@ -217,11 +217,11 @@ export const makeCharacterDb = ({
   };
 
   const membersLeaveGuild = async (
-    memberList: ICharacter[]
+    memberList: ICharacter[],
   ): Promise<UpdateWriteOpResult> => {
     return await Character.updateMany(
       { _id: { $in: memberList } },
-      { $unset: { guild: 1 } }
+      { $unset: { guild: 1 } },
     );
   };
 
@@ -244,7 +244,7 @@ export const makeCharacterDb = ({
 };
 
 const mapCharacter = (
-  rawCharacter: MongooseDocument<unknown, unknown, ICharacter>
+  rawCharacter: MongooseDocument<unknown, unknown, ICharacter>,
 ): ICharacter => {
   const { _id, ...characterWithoutId } = rawCharacter.toObject();
   return { _id: _id.toString(), ...characterWithoutId } as ICharacter;

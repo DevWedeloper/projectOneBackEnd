@@ -13,6 +13,6 @@ export type IGuild = {
   totalIntelligence: number;
   totalArmor: number;
   totalCritChance: number;
-}
+};
 
 export type IGuildWithoutId = Omit<IGuild, '_id'>;

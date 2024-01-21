@@ -10,7 +10,7 @@ export const makeGetTopGuildsByAttributeEndpoint = ({
   const getTopGuildsByAttributeEndpoint = async (
     req: Request,
     res: Response,
-    next: NextFunction
+    next: NextFunction,
   ): Promise<void | Response> => {
     try {
       const { attribute } = req.params;
@@ -19,7 +19,7 @@ export const makeGetTopGuildsByAttributeEndpoint = ({
 
       const topGuilds = await getTopGuildsByAttribute(
         attribute as ValidStatsAttribute,
-        limit
+        limit,
       );
       return res.json(topGuilds);
     } catch (error) {

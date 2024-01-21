@@ -1,7 +1,5 @@
 import { IGuild } from '../../types/guildType';
-import {
-  InvalidOperationError
-} from '../../utils/errors';
+import { InvalidOperationError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 
 export const makeIsGuildFull = () => {

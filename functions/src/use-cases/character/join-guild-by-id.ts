@@ -17,7 +17,7 @@ export const makeJoinGuildById = ({
   const joinGuildById = async (
     id: string,
     character: ICharacter,
-    guild: IGuild
+    guild: IGuild,
   ) => {
     requiredParam(id, 'Id');
     requiredParam(character, 'Character');
@@ -31,7 +31,7 @@ export const makeJoinGuildById = ({
       if (
         guildCharacterUtils.isDifferentGuild(
           previousGuild,
-          guild._id.toString()
+          guild._id.toString(),
         )
       ) {
         await guildCharacterUtils.updateLeaderOrMembersGuild(previousGuild, id);

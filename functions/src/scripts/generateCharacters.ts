@@ -1,6 +1,6 @@
 import { ICharacterType } from '../types/characterTypeType';
 import { CharacterService, CharacterTypeService } from '../use-cases';
-import { generateUsername } from '../utils/usernameGenerator';
+import { generateUsername } from '../utils/username-generator';
 
 const numCharactersToGenerate = 100;
 let availableCharacterTypes: ICharacterType[] = [];

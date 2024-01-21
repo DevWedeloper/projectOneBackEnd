@@ -1,6 +1,6 @@
 import { ICharacter } from '../types/characterType';
 import { CharacterService, GuildService } from '../use-cases';
-import { generateUsername } from '../utils/usernameGenerator';
+import { generateUsername } from '../utils/username-generator';
 
 const numGuildsToGenerate = 10;
 let availableCharacters: ICharacter[] = [];

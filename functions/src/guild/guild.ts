@@ -56,8 +56,6 @@ export const makeGuild = ({
     Object.freeze(member);
   });
 
-  Object.freeze(members);
-
   if (members.length !== totalMembers) {
     throw new InvalidOperationError(
       'Members length and total members are not in sync.',

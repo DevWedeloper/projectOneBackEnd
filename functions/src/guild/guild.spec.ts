@@ -10,81 +10,23 @@ describe('guild', () => {
 
   // Required param
 
-  it('should throw an error for unprovided param name', () => {
-    const invalidGuildData = createInvalidGuildData({
-      name: undefined,
+  [
+    'name',
+    'leader',
+    'members',
+    'totalMembers',
+    'maxMembers',
+    'totalHealth',
+    'totalStrength',
+    'totalAgility',
+    'totalIntelligence',
+    'totalArmor',
+    'totalCritChance',
+  ].forEach((param) => {
+    it(`should throw an error for unprovided param ${param}`, () => {
+      const invalidGuildData = createInvalidGuildData({ [param]: undefined });
+      expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
     });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param leader', () => {
-    const invalidGuildData = createInvalidGuildData({
-      leader: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param members', () => {
-    const invalidGuildData = createInvalidGuildData({
-      members: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalMembers', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalMembers: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param maxMembers', () => {
-    const invalidGuildData = createInvalidGuildData({
-      maxMembers: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalHealth', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalHealth: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalStrength', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalStrength: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalAgility', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalAgility: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalIntelligence', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalIntelligence: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalArmor', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalArmor: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
-  });
-
-  it('should throw an error for unprovided param totalCritChance', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalCritChance: undefined,
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(RequiredParameterError);
   });
 
   // Valid string type
@@ -96,48 +38,20 @@ describe('guild', () => {
 
   // Valid number type
 
-  it('should throw an error for invalid number type totalMembers', () => {
-    const invalidGuildData = createInvalidGuildData({ totalMembers: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type maxMembers', () => {
-    const invalidGuildData = createInvalidGuildData({ maxMembers: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalHealth', () => {
-    const invalidGuildData = createInvalidGuildData({ totalHealth: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalStrength', () => {
-    const invalidGuildData = createInvalidGuildData({ totalStrength: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalAgility', () => {
-    const invalidGuildData = createInvalidGuildData({ totalAgility: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalIntelligence', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalIntelligence: '5000',
+  [
+    'totalMembers',
+    'maxMembers',
+    'totalHealth',
+    'totalStrength',
+    'totalAgility',
+    'totalIntelligence',
+    'totalArmor',
+    'totalCritChance',
+  ].forEach((property) => {
+    it(`should throw an error for invalid number type ${property}`, () => {
+      const invalidGuildData = createInvalidGuildData({ [property]: 'string' });
+      expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
     });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalArmor', () => {
-    const invalidGuildData = createInvalidGuildData({ totalArmor: '5000' });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
-  });
-
-  it('should throw an error for invalid number type totalCritChance', () => {
-    const invalidGuildData = createInvalidGuildData({
-      totalCritChance: '5000',
-    });
-    expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
   });
 
   // Valid number range
@@ -145,6 +59,13 @@ describe('guild', () => {
   it('should throw an error for invalid number range name.length min', () => {
     const invalidGuildData = createInvalidGuildData({ name: 'five_' });
     expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
+  });
+
+  it('should throw an error for invalid number range name.length max', () => {
+    const invalidCharacterData = createInvalidGuildData({
+      name: 'twenty_letter_word_12',
+    });
+    expect(() => makeGuild(invalidCharacterData)).toThrow(InvalidPropertyError);
   });
 
   // Validate alphanumeric underscore
@@ -160,10 +81,16 @@ describe('guild', () => {
 
   // TODO: Partial check on member
 
+  // TODO: Check members.length if equal to totalMembers
+
+  // TODO: Check if members.length or totalMembers is greater than or equal to maxMembers
+
   it('should freeze the guild on return', () => {
     const guild = makeGuild(validGuildData);
     expect(Object.isFrozen(guild)).toBe(true);
   });
+
+  // TODO: Return only valid parameters
 });
 
 const validGuildData: IGuildWithoutId = {

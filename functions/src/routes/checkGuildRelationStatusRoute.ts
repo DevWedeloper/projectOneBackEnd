@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { checkGuildRelationStatusEnpoint } from '../controllers';
+import { checkGuildRelationStatusEndpoint } from '../controllers';
 import { isValidCharacterMiddleware } from '../middlewares';
 
 const router = Router();
@@ -7,7 +7,7 @@ const router = Router();
 router.post(
   '/character/checkGuildRelationStatus',
   isValidCharacterMiddleware,
-  checkGuildRelationStatusEnpoint,
+  checkGuildRelationStatusEndpoint,
 );
 
 export default router;

@@ -6,15 +6,15 @@ import mongoSanitize from 'express-mongo-sanitize';
 import * as functions from 'firebase-functions';
 import { corsOptions } from './cors-config';
 import { errorHandler } from './middlewares/error-handler';
-import characterRoute from './routes/characterRoute';
-import characterStatsRoute from './routes/characterStatsRoute';
-import characterTypeRoute from './routes/characterTypeRoute';
-import checkGuildRelationStatusRoute from './routes/checkGuildRelationStatusRoute';
-import checkNameUniquenessRoute from './routes/checkNameUniquenessRoute';
-import guildRoute from './routes/guildRoute';
-import guildStatsRoute from './routes/guildStatsRoute';
-import isGuildFull from './routes/isGuildFullRoute';
-import checkIfMemberRoute from './routes/isMemberRoute';
+import characterRoute from './routes/character-route';
+import characterStatsRoute from './routes/character-stats-route';
+import characterTypeRoute from './routes/character-type-route';
+import checkGuildRelationStatusRoute from './routes/check-guild-relation-status-route';
+import checkNameUniquenessRoute from './routes/check-name-uniqueness-route';
+import guildRoute from './routes/guild-route';
+import guildStatsRoute from './routes/guild-stats-route';
+import isGuildFull from './routes/is-guild-full-route';
+import checkIfMemberRoute from './routes/is-member-route';
 
 dotenv.config();
 

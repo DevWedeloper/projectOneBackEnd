@@ -2,7 +2,7 @@ import { guildCharacterUtils } from '..';
 import { makeCharacter } from '../../character/character';
 import { GuildDb } from '../../data-access/types/data-access.type';
 import { makeGuild } from '../../guild/guild';
-import { ICharacter } from '../../types/characterType';
+import { ICharacter } from '../../types/character.type';
 import {
   requiredParam,
   validateStringType,

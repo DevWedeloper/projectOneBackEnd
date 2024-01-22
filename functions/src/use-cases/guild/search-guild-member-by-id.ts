@@ -1,6 +1,6 @@
 import { GuildDb } from '../../data-access/types/data-access.type';
 import { makeGuild } from '../../guild/guild';
-import { IGuild } from '../../types/guildType';
+import { IGuild } from '../../types/guild.type';
 import {
   requiredParam,
   validateNumberType,

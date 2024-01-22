@@ -1,4 +1,4 @@
-import { IGuildWithoutId } from '../types/guildType';
+import { IGuildWithoutId } from '../types/guild.type';
 import { InvalidOperationError } from '../utils/errors';
 import {
   requiredParam,

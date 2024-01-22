@@ -1,4 +1,4 @@
-import { ICharacter } from '../types/characterType';
+import { ICharacter } from '../types/character.type';
 import { ValidStatsAttribute } from '../types/valid-stat-attribute.type';
 import { CharacterModel } from './types/data-access.type';
 

@@ -1,4 +1,4 @@
-import { ICharacterWithoutId } from '../types/characterType';
+import { ICharacterWithoutId } from '../types/character.type';
 import { InvalidPropertyError, RequiredParameterError } from '../utils/errors';
 import { makeCharacter } from './character';
 

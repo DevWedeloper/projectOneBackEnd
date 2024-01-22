@@ -2,7 +2,7 @@ import {
   TopByAverageAttributeGuild,
   WellRoundedGuild,
 } from '../../data-access/types/data-access.type';
-import { IGuild } from '../../types/guildType';
+import { IGuild } from '../../types/guild.type';
 import { ValidStatsAttribute } from '../../types/valid-stat-attribute.type';
 
 export type getTopGuildsByAttribute = (

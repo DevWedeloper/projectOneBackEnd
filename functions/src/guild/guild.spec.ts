@@ -1,4 +1,4 @@
-import { IGuildWithoutId } from '../types/guildType';
+import { IGuildWithoutId } from '../types/guild.type';
 import { InvalidPropertyError, RequiredParameterError } from '../utils/errors';
 import { makeGuild } from './guild';
 

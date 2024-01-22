@@ -1,4 +1,4 @@
-import { ICharacterType } from '../types/characterTypeType';
+import { ICharacterType } from '../types/character-type.type';
 import { CharacterService, CharacterTypeService } from '../use-cases';
 import { generateUsername } from '../utils/username-generator';
 

@@ -2,7 +2,7 @@ import { Document as MongooseDocument } from 'mongoose';
 import {
   ICharacterType,
   ICharacterTypeWithoutId,
-} from '../types/characterTypeType';
+} from '../types/character-type.type';
 import { NotFoundError } from '../utils/errors';
 import { CharacterTypeModel } from './types/data-access.type';
 

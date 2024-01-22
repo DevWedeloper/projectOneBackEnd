@@ -1,8 +1,8 @@
 import { makeCharacter } from '../../character/character';
 import { CharacterDb, GuildDb } from '../../data-access/types/data-access.type';
 import { makeGuild } from '../../guild/guild';
-import { ICharacter } from '../../types/characterType';
-import { IGuild } from '../../types/guildType';
+import { ICharacter } from '../../types/character.type';
+import { IGuild } from '../../types/guild.type';
 import { InvalidOperationError } from '../../utils/errors';
 
 export const makeGuildCharacterUtils = ({

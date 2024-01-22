@@ -1,5 +1,5 @@
-import { ICharacter, ICharacterWithoutId } from '../../types/characterType';
-import { IGuild } from '../../types/guildType';
+import { ICharacter, ICharacterWithoutId } from '../../types/character.type';
+import { IGuild } from '../../types/guild.type';
 
 export type createCharacter = (
   data: ICharacterWithoutId,

@@ -1,8 +1,8 @@
 import { Document as MongooseDocument } from 'mongoose';
 import { characterDb as Character } from '.';
-import { ICharacter } from '../types/characterType';
-import { IGuild, IGuildWithoutId } from '../types/guildType';
-import { UniqueIdentifier } from '../types/uniqueIdentifier';
+import { ICharacter } from '../types/character.type';
+import { IGuild, IGuildWithoutId } from '../types/guild.type';
+import { UniqueIdentifier } from '../types/unique-identifier.type';
 import { InvalidOperationError, NotFoundError } from '../utils/errors';
 import { GuildModel } from './types/data-access.type';
 import {

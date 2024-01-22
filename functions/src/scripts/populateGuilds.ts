@@ -1,4 +1,4 @@
-import { IGuild } from '../types/guildType';
+import { IGuild } from '../types/guild.type';
 import {
   CharacterService,
   GuildService,

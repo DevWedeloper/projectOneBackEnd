@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { isGuildFullEndpoint } from '../controllers';
-import { isValidGuild } from '../middlewares/isValidMiddleware';
+import { isValidGuildMiddleware } from '../middlewares';
 
 const router = Router();
 
-router.post('/guild/isFull', isValidGuild, isGuildFullEndpoint);
+router.post('/guild/isFull', isValidGuildMiddleware, isGuildFullEndpoint);
 
 export default router;

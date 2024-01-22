@@ -24,6 +24,8 @@ export type getGuildById = (id: string) => Promise<IGuild>;
 
 export type getGuildByName = (name: string) => Promise<IGuild>;
 
+export type getGuildByNameOrId = (guild: string) => Promise<IGuild>;
+
 export type searchGuildsByName = (
   searchQuery: string,
   limit: number,

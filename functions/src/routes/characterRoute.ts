@@ -11,17 +11,19 @@ import {
   searchCharactersByNameEndpoint,
   updateCharacterAttributeByIdEndpoint,
 } from '../controllers';
-import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
-import { checkCharacterExistence } from '../middlewares/isExistingMiddleware';
-import { isValidCharacterType } from '../middlewares/isValidCharacterTypeMiddleware';
-import { isValidGuild } from '../middlewares/isValidMiddleware';
+import {
+  checkCharacterExistenceMiddleware,
+  isAdminMiddleware,
+  isValidCharacterTypeMiddleware,
+  isValidGuildMiddleware,
+} from '../middlewares';
 
 const router = Router();
 
 router.post(
   '/',
   isAdminMiddleware,
-  isValidCharacterType,
+  isValidCharacterTypeMiddleware,
   createCharacterEndpoint,
 );
 router.get('/', getPaginatedCharactersEndpoint);
@@ -31,28 +33,28 @@ router.get('/name/:name', getCharacterByNameEndpoint);
 router.put(
   '/join/:id',
   isAdminMiddleware,
-  checkCharacterExistence,
-  isValidGuild,
+  checkCharacterExistenceMiddleware,
+  isValidGuildMiddleware,
   joinGuildByIdEndpoint,
 );
 router.put(
   '/leave/:id',
   isAdminMiddleware,
-  checkCharacterExistence,
+  checkCharacterExistenceMiddleware,
   leaveGuildByIdEndpoint,
 );
 router.delete(
   '/:id',
   isAdminMiddleware,
-  checkCharacterExistence,
+  checkCharacterExistenceMiddleware,
   deleteCharacterByIdEndpoint,
 );
 router.delete('/', isAdminMiddleware, deleteAllCharactersEndpoint);
 router.put(
   '/:attribute/:id',
   isAdminMiddleware,
-  isValidCharacterType,
-  checkCharacterExistence,
+  isValidCharacterTypeMiddleware,
+  checkCharacterExistenceMiddleware,
   updateCharacterAttributeByIdEndpoint,
 );
 

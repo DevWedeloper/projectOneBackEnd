@@ -5,7 +5,7 @@ import express from 'express';
 import mongoSanitize from 'express-mongo-sanitize';
 import * as functions from 'firebase-functions';
 import { corsOptions } from './cors-config';
-import { errorHandler } from './middlewares/errorHandlerMiddleware';
+import { errorHandler } from './middlewares/error-handler';
 import characterRoute from './routes/characterRoute';
 import characterStatsRoute from './routes/characterStatsRoute';
 import characterTypeRoute from './routes/characterTypeRoute';

@@ -13,18 +13,25 @@ import {
   updateGuildLeaderByIdEndpoint,
   updateGuildNameByIdEndpoint,
 } from '../controllers';
-import { isAdminMiddleware } from '../middlewares/isAdminMiddleware';
-import { checkGuildExistence } from '../middlewares/isExistingMiddleware';
-import { isValidCharacter } from '../middlewares/isValidMiddleware';
+import {
+  checkGuildExistenceMiddleware,
+  isAdminMiddleware,
+  isValidCharacterMiddleware,
+} from '../middlewares';
 
 const router = Router();
 
-router.post('/', isAdminMiddleware, isValidCharacter, createGuildEndpoint);
+router.post(
+  '/',
+  isAdminMiddleware,
+  isValidCharacterMiddleware,
+  createGuildEndpoint,
+);
 router.get('/', getPaginatedGuildsEndpoint);
 router.get('/search', searchGuildsByNameEndpoint);
 router.get(
   '/:id/searchMember',
-  checkGuildExistence,
+  checkGuildExistenceMiddleware,
   searchGuildMemberByIdEndpoint,
 );
 router.get('/:id', getGuildByIdEndpoint);
@@ -32,34 +39,34 @@ router.get('/name/:name', getGuildByNameEndpoint);
 router.put(
   '/name/:id',
   isAdminMiddleware,
-  checkGuildExistence,
+  checkGuildExistenceMiddleware,
   updateGuildNameByIdEndpoint,
 );
 router.put(
   '/leader/:id',
   isAdminMiddleware,
-  checkGuildExistence,
-  isValidCharacter,
+  checkGuildExistenceMiddleware,
+  isValidCharacterMiddleware,
   updateGuildLeaderByIdEndpoint,
 );
 router.put(
   '/addMember/:id',
   isAdminMiddleware,
-  checkGuildExistence,
-  isValidCharacter,
+  checkGuildExistenceMiddleware,
+  isValidCharacterMiddleware,
   addMemberToGuildByIdEndpoint,
 );
 router.put(
   '/removeMember/:id',
   isAdminMiddleware,
-  checkGuildExistence,
-  isValidCharacter,
+  checkGuildExistenceMiddleware,
+  isValidCharacterMiddleware,
   removeMemberFromGuildByIdEndpoint,
 );
 router.delete(
   '/:id',
   isAdminMiddleware,
-  checkGuildExistence,
+  checkGuildExistenceMiddleware,
   deleteGuildByIdEndpoint,
 );
 router.delete('/', isAdminMiddleware, deleteAllGuildsEndpoint);

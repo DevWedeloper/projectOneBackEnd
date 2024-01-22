@@ -23,6 +23,8 @@ export type getCharacterById = (id: string) => Promise<ICharacter>;
 
 export type getCharacterByName = (name: string) => Promise<ICharacter>;
 
+export type getCharacterByNameOrId = (character: string) => Promise<ICharacter>;
+
 export type searchCharactersByName = (
   searchQuery: string,
   limit: number,

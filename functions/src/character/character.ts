@@ -1,4 +1,4 @@
-import { ICharacterWithoutId } from '../types/characterType';
+import { ICharacterWithoutId } from '../types/character.type';
 import {
   requiredParam,
   validateAlphanumericUnderscore,

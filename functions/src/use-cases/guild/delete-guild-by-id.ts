@@ -1,6 +1,6 @@
 import { guildCharacterUtils } from '..';
 import { makeGuild } from '../../guild/guild';
-import { IGuild } from '../../types/guildType';
+import { IGuild } from '../../types/guild.type';
 import { requiredParam } from '../../utils/validation-utils';
 
 export const makeDeleteGuildById = () => {

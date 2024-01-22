@@ -1,6 +1,6 @@
 import { makeCharacter } from '../../character/character';
 import { CharacterDb } from '../../data-access/types/data-access.type';
-import { ICharacterWithoutId } from '../../types/characterType';
+import { ICharacterWithoutId } from '../../types/character.type';
 import { InvalidPropertyError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 

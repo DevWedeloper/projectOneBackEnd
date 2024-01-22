@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { IGuildWithoutId } from '../../types/guildType';
+import { IGuildWithoutId } from '../../types/guild.type';
 
 const guildSchema = new Schema<IGuildWithoutId>({
   name: {

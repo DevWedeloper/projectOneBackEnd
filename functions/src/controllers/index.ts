@@ -77,7 +77,7 @@ export const deleteCharacterByIdEndpoint = makeDeleteCharacterByIdEndpoint({
 export const deleteAllCharactersEndpoint = makeDeleteAllCharactersEndpoint({
   deleteAllCharacters: CharacterService.deleteAllCharacters,
 });
-export const checkGuildRelationStatusEnpoint =
+export const checkGuildRelationStatusEndpoint =
   makeCheckGuildRelationStatusEndpoint({
     checkGuildRelation: CharacterService.checkGuildRelation,
   });

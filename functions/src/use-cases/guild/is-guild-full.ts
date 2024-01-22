@@ -1,4 +1,4 @@
-import { IGuild } from '../../types/guildType';
+import { IGuild } from '../../types/guild.type';
 import { InvalidOperationError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 

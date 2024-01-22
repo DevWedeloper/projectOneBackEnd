@@ -1,4 +1,4 @@
-import { IGuildWithoutId } from '../types/guildType';
+import { IGuildWithoutId } from '../types/guild.type';
 import { InvalidOperationError } from '../utils/errors';
 import {
   requiredParam,
@@ -53,7 +53,7 @@ export const makeGuild = ({
 
   members.map((member) => {
     // TODO: Partial check on member
-    return Object.freeze(member);
+    Object.freeze(member);
   });
 
   if (members.length !== totalMembers) {

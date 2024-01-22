@@ -1,5 +1,5 @@
 import { CharacterTypeDb } from '../../data-access/types/data-access.type';
-import { ICharacterTypeWithoutId } from '../../types/characterTypeType';
+import { ICharacterTypeWithoutId } from '../../types/character-type.type';
 
 export const makePopulate = ({
   characterTypeDb,

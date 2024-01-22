@@ -1,5 +1,5 @@
-import { ICharacter, ICharacterWithoutId } from '../../types/characterType';
-import { IGuild } from '../../types/guildType';
+import { ICharacter, ICharacterWithoutId } from '../../types/character.type';
+import { IGuild } from '../../types/guild.type';
 
 export type createCharacter = (
   data: ICharacterWithoutId,
@@ -22,6 +22,8 @@ export type getPaginatedCharacters = (
 export type getCharacterById = (id: string) => Promise<ICharacter>;
 
 export type getCharacterByName = (name: string) => Promise<ICharacter>;
+
+export type getCharacterByNameOrId = (character: string) => Promise<ICharacter>;
 
 export type searchCharactersByName = (
   searchQuery: string,

@@ -1,4 +1,4 @@
-import { ICharacter } from '../types/characterType';
+import { ICharacter } from '../types/character.type';
 import { CharacterService, GuildService } from '../use-cases';
 import { generateUsername } from '../utils/username-generator';
 

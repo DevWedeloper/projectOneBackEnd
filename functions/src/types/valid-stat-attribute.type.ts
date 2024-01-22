@@ -1,4 +1,4 @@
-import { ICharacterWithoutId } from './characterType';
+import { ICharacterWithoutId } from './character.type';
 
 export type ValidStatsAttribute = keyof Pick<
   ICharacterWithoutId,

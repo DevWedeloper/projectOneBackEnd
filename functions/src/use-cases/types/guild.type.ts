@@ -1,5 +1,5 @@
-import { ICharacter } from '../../types/characterType';
-import { IGuild } from '../../types/guildType';
+import { ICharacter } from '../../types/character.type';
+import { IGuild } from '../../types/guild.type';
 
 export type createGuild = (
   name: string,
@@ -23,6 +23,8 @@ export type getPaginatedGuilds = (
 export type getGuildById = (id: string) => Promise<IGuild>;
 
 export type getGuildByName = (name: string) => Promise<IGuild>;
+
+export type getGuildByNameOrId = (guild: string) => Promise<IGuild>;
 
 export type searchGuildsByName = (
   searchQuery: string,

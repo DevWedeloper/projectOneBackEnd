@@ -1,11 +1,11 @@
 import { Model, UpdateWriteOpResult } from 'mongoose';
-import { ICharacter, ICharacterWithoutId } from '../../types/characterType';
+import { ICharacter, ICharacterWithoutId } from '../../types/character.type';
 import {
   ICharacterType,
   ICharacterTypeWithoutId,
-} from '../../types/characterTypeType';
-import { IGuild, IGuildWithoutId } from '../../types/guildType';
-import { UniqueIdentifier } from '../../types/uniqueIdentifier';
+} from '../../types/character-type.type';
+import { IGuild, IGuildWithoutId } from '../../types/guild.type';
+import { UniqueIdentifier } from '../../types/unique-identifier.type';
 import { ValidStatsAttribute } from '../../types/valid-stat-attribute.type';
 
 export type CharacterModel = Model<ICharacterWithoutId>;

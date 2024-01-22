@@ -1,7 +1,7 @@
 import { Document as MongooseDocument, UpdateWriteOpResult } from 'mongoose';
 import { guildDb as Guild } from '.';
-import { ICharacter, ICharacterWithoutId } from '../types/characterType';
-import { UniqueIdentifier } from '../types/uniqueIdentifier';
+import { ICharacter, ICharacterWithoutId } from '../types/character.type';
+import { UniqueIdentifier } from '../types/unique-identifier.type';
 import { NotFoundError } from '../utils/errors';
 import { CharacterModel } from './types/data-access.type';
 import {

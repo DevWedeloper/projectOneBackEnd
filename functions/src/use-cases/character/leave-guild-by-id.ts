@@ -1,6 +1,6 @@
 import { guildCharacterUtils } from '..';
 import { CharacterDb, GuildDb } from '../../data-access/types/data-access.type';
-import { ICharacter } from '../../types/characterType';
+import { ICharacter } from '../../types/character.type';
 import { InvalidOperationError } from '../../utils/errors';
 import { requiredParam } from '../../utils/validation-utils';
 

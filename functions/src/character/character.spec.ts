@@ -1,3 +1,4 @@
+import { validCharacterData } from '../__tests__/character/character';
 import { ICharacterWithoutId } from '../types/character.type';
 import { InvalidPropertyError, RequiredParameterError } from '../utils/errors';
 import { makeCharacter } from './character';
@@ -99,18 +100,6 @@ describe('character', () => {
     expect(Object.isFrozen(character)).toBe(true);
   });
 });
-
-const validCharacterData: ICharacterWithoutId = {
-  name: 'JohnDoe',
-  characterType: 'Warrior',
-  health: 5000,
-  strength: 80,
-  agility: 60,
-  intelligence: 40,
-  armor: 75,
-  critChance: 0.05,
-  guild: null,
-};
 
 const createInvalidCharacterData = (
   overrides: Partial<Record<keyof ICharacterWithoutId, unknown>>,

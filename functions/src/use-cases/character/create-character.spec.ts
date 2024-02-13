@@ -1,6 +1,7 @@
 import { CharacterService } from '..';
+import { validCharacterData } from '../../__tests__/character/character';
 import { closeConnection } from '../../data-access/db';
-import { ICharacter, ICharacterWithoutId } from '../../types/character.type';
+import { ICharacter } from '../../types/character.type';
 import { UniqueConstraintError } from '../../utils/errors';
 import { createCharacter } from '../types/character.type';
 
@@ -44,15 +45,3 @@ describe('createCharacter', () => {
     );
   });
 });
-
-const validCharacterData: ICharacterWithoutId = {
-  name: 'JohnDoe',
-  characterType: 'Warrior',
-  health: 5000,
-  strength: 80,
-  agility: 60,
-  intelligence: 40,
-  armor: 75,
-  critChance: 0.05,
-  guild: null,
-};

@@ -8,8 +8,6 @@ describe('guild', () => {
     expect(guild).toEqual(validGuildData);
   });
 
-  // Required param
-
   [
     'name',
     'leader',
@@ -29,14 +27,10 @@ describe('guild', () => {
     });
   });
 
-  // Valid string type
-
   it('should throw an error for invalid string type name', () => {
     const invalidGuildData = createInvalidGuildData({ name: 12345 });
     expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
   });
-
-  // Valid number type
 
   [
     'totalMembers',
@@ -54,8 +48,6 @@ describe('guild', () => {
     });
   });
 
-  // Valid number range
-
   it('should throw an error for invalid number range name.length min', () => {
     const invalidGuildData = createInvalidGuildData({ name: 'five_' });
     expect(() => makeGuild(invalidGuildData)).toThrow(InvalidPropertyError);
@@ -67,8 +59,6 @@ describe('guild', () => {
     });
     expect(() => makeGuild(invalidCharacterData)).toThrow(InvalidPropertyError);
   });
-
-  // Validate alphanumeric underscore
 
   it('should throw an error for invalid alphanumeric underscore name', () => {
     const invalidGuildData = createInvalidGuildData({

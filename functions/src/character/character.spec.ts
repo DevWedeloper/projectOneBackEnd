@@ -8,8 +8,6 @@ describe('character', () => {
     expect(character).toEqual(validCharacterData);
   });
 
-  // Required param
-
   [
     'name',
     'characterType',
@@ -30,8 +28,6 @@ describe('character', () => {
     });
   });
 
-  // Valid string
-
   ['name', 'characterType'].forEach((property) => {
     it(`should throw an error for invalid string type ${property}`, () => {
       const invalidGuildData = createInvalidCharacterData({ [property]: 1 });
@@ -40,8 +36,6 @@ describe('character', () => {
       );
     });
   });
-
-  // Valid number
 
   [
     'health',
@@ -60,8 +54,6 @@ describe('character', () => {
       );
     });
   });
-
-  // Valid number range
 
   it('should throw an error for invalid number range name.length min', () => {
     const invalidCharacterData = createInvalidCharacterData({ name: 'five_' });
@@ -85,8 +77,6 @@ describe('character', () => {
   testNumberRange('intelligence', 1, 100);
   testNumberRange('armor', 1, 100);
   testNumberRange('critChance', 0.01, 1);
-
-  // Validate alphanumeric underscore
 
   it('should throw an error for invalid alphanumeric underscore name', () => {
     const invalidCharacterData = createInvalidCharacterData({

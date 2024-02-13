@@ -1,7 +1,7 @@
 import { makeCharacterDb } from './character-db';
 import { makeCharacterStatsDb } from './character-stats-db';
 import { makeCharacterTypeDb } from './character-type-db';
-import { connectToDatabase } from './connect-to-db';
+import { connectToDatabase } from './db';
 import { makeGuildDb } from './guild-db';
 import { makeGuildStatsDb } from './guild-stats-db';
 import { Character } from './schemas/character-schema';

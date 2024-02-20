@@ -1,6 +1,6 @@
 import { CharacterService } from '..';
-import { validCharacterData } from '../../__tests__/character/character';
 import { closeConnection } from '../../data-access/db';
+import { validCharacterData } from '../../tests/character/character';
 import { ICharacter } from '../../types/character.type';
 import { UniqueConstraintError } from '../../utils/errors';
 import { createCharacter } from '../types/character.type';

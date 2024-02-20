@@ -1,4 +1,4 @@
-import { validCharacterData } from '../__tests__/character/character';
+import { validCharacterData } from '../tests/character/character';
 import { ICharacterWithoutId } from '../types/character.type';
 import { InvalidPropertyError, RequiredParameterError } from '../utils/errors';
 import { makeCharacter } from './character';

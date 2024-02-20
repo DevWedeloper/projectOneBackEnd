@@ -1,6 +1,6 @@
 import { CharacterService } from '..';
-import { validCharacterData } from '../../__tests__/character/character';
 import { closeConnection } from '../../data-access/db';
+import { validCharacterData } from '../../tests/character/character';
 import { ICharacter } from '../../types/character.type';
 import { NotFoundError } from '../../utils/errors';
 import {

@@ -1,7 +1,7 @@
 import { CharacterService } from '..';
-import { validCharacterData } from '../../__tests__/character/character';
-import { generateFakeName } from '../../__tests__/generate-fake-name';
 import { closeConnection } from '../../data-access/db';
+import { validCharacterData } from '../../tests/character/character';
+import { generateFakeName } from '../../tests/generate-fake-name';
 import { ICharacter } from '../../types/character.type';
 import { NotFoundError } from '../../utils/errors';
 import { createCharacter, getCharacterByName } from '../types/character.type';
